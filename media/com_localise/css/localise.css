@@ -6,7 +6,7 @@
 }
 #localise-translation-form .translated,
 #localise-translation-form .untranslated,
-#localise-translation-form .unchanged,
+#localise-translation-form .sourcestrings,
 #localise-translation-form .extra {
 	padding: 2px;
 	float: left;
@@ -18,7 +18,7 @@
 #localise-translation-form .untranslated {
 	background-color:#FFCCCC;
 }
-#localise-translation-form .unchanged {
+#localise-translation-form .sourcestrings {
 	background-color:#FFDDBB;
 }
 #localise-translation-form .extra {
@@ -210,8 +210,8 @@ div.filter-select select {
 #adminForm .notinreference {
 	background-color: #aaddff;
 }
-#adminForm .unchanged td,
-#adminForm .unchanged {
+#adminForm .sourcestrings td,
+#adminForm .sourcestrings {
 	background-color: #ffddaa;
 }
 #adminForm .translated td,
