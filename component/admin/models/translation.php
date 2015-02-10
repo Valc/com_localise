@@ -430,7 +430,7 @@ class LocaliseModelTranslation extends JModelAdmin
 					}
 
 					$this->item->completed = $this->item->total
-						? intval(100 * $this->item->translated / $this->item->total) + $this->item->unchanged / $this->item->total
+						? intval(100 * $this->item->translated / $this->item->total)
 						: 100;
 
 					$this->item->complete = $this->item->complete
@@ -571,19 +571,19 @@ class LocaliseModelTranslation extends JModelAdmin
 
 		if (is_object($item))
 		{
-			$form->setFieldAttribute('legend', 'unchanged', $item->unchanged, 'legend');
 			$form->setFieldAttribute('legend', 'translated', $item->translated, 'legend');
-			$form->setFieldAttribute('legend', 'untranslated', $item->total - $item->translated - $item->unchanged, 'legend');
+			$form->setFieldAttribute('legend', 'untranslated', $item->total - $item->translated, 'legend');
 			$form->setFieldAttribute('legend', 'extra', $item->extra, 'legend');
 		}
 
 		if ($this->getState('translation.layout') != 'raw')
 		{
-			$path        = $this->getState('translation.path');
-			$refpath     = $this->getState('translation.refpath');
-			$sections    = LocaliseHelper::parseSections($path);
-			$refsections = LocaliseHelper::parseSections($refpath);
-			$addform     = new SimpleXMLElement('<form />');
+			$path          = $this->getState('translation.path');
+			$refpath       = $this->getState('translation.refpath');
+			$istranslation = 0;
+			$sections      = LocaliseHelper::parseSections($path);
+			$refsections   = LocaliseHelper::parseSections($refpath);
+			$addform       = new SimpleXMLElement('<form />');
 
 			$group = $addform->addChild('fields');
 			$group->addAttribute('name', 'strings');
@@ -591,6 +591,11 @@ class LocaliseModelTranslation extends JModelAdmin
 			$fieldset = $group->addChild('fieldset');
 			$fieldset->addAttribute('name', 'Default');
 			$fieldset->addAttribute('label', 'Default');
+
+			if ($this->getState('translation.path') == $this->getState('translation.refpath'))
+			{
+			$istranslation = 1;
+			}
 
 			if (JFile::exists($refpath))
 			{
