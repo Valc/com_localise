@@ -8,7 +8,7 @@
 #localise-translation-form .untranslatable,
 #localise-translation-form .blocked,
 #localise-translation-form .untranslated,
-#localise-translation-form .unchanged,
+#localise-translation-form .sourcestrings,
 #localise-translation-form .keytodelete,
 #localise-translation-form .extra {
 	padding: 2px;
@@ -33,7 +33,7 @@
 #localise-translation-form .blocked {
 	background-color:lightgray;
 }
-#localise-translation-form .unchanged {
+#localise-translation-form .sourcestrings {
 	background-color:#FFDDBB;
 }
 #localise-translation-form .extra {
@@ -232,8 +232,8 @@ div.filter-select select {
 #adminForm .keytodelete {
 	background-color: red;
 }
-#adminForm .unchanged td,
-#adminForm .unchanged {
+#adminForm .sourcestrings td,
+#adminForm .sourcestrings {
 	background-color: #ffddaa;
 }
 #adminForm .translated td,

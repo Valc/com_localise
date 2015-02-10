@@ -68,9 +68,7 @@ class JFormFieldKeystatus extends JFormFieldList
 		$options[] = JHtml::_('select.option', 'blockedkeys', JText::_('COM_LOCALISE_TEXT_TRANSLATION_BLOCKED'),
 						array('option.attr' => 'attributes', 'attr' => 'class="blocked"')
 						);
-		$options[] = JHtml::_('select.option', 'unchangedkeys', JText::_('COM_LOCALISE_TEXT_TRANSLATION_UNCHANGED'),
-						array('option.attr' => 'attributes', 'attr' => 'class="unchanged"')
-						);
+
 
 		return $options;
 	}

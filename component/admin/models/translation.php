@@ -234,11 +234,13 @@ class LocaliseModelTranslation extends JModelAdmin
 										'blockedkeys'           => (array) $blockedkeys,
 										'untranslatablekeys'    => (array) $untranslatablekeys,
 										'translated'            => 0,
+										'untranslated'        => 0,
 										'untranslatable'        => 0,
 										'blocked'               => 0,
 										'unchanged'             => 0,
 										'extra'                 => 0,
 										'keytodelete'           => 0,
+										'sourcestrings'         => 0,
 										'total'                 => 0,
 										'complete'              => false,
 										'source'                => '',
@@ -476,12 +478,12 @@ class LocaliseModelTranslation extends JModelAdmin
 								}
 								elseif ($this->getState('translation.path') == $this->getState('translation.refpath'))
 								{
-								$this->item->translated++;
+									$this->item->sourcestrings++;
 								}
 								else
 								{
-									$this->item->unchanged++;
-									$unchangedkeys[] = $key;
+									$this->item->untranslated++;
+									$untranslatedkeys[] = $key;
 								}
 							}
 							elseif (!array_key_exists($key, $sections['keys']))
@@ -531,7 +533,7 @@ class LocaliseModelTranslation extends JModelAdmin
 
 
 					$this->item->completed = $this->item->total
-						? intval(100 * $this->item->translated / $this->item->total) + $this->item->unchanged / $this->item->total
+						? intval(100 * $this->item->translated / $this->item->total)
 						: 100;
 
 					$this->item->complete = $this->item->complete
@@ -675,7 +677,6 @@ class LocaliseModelTranslation extends JModelAdmin
 
 		if (is_object($item))
 		{
-			$form->setFieldAttribute('legend', 'unchanged', $item->unchanged, 'legend');
 			$form->setFieldAttribute('legend', 'translated', $item->translated, 'legend');
 			$form->setFieldAttribute('legend', 'untranslatable', $item->untranslatable, 'legend');
 			$form->setFieldAttribute('legend', 'blocked', $item->blocked, 'legend');
@@ -686,11 +687,12 @@ class LocaliseModelTranslation extends JModelAdmin
 
 		if ($this->getState('translation.layout') != 'raw')
 		{
-			$path        = $this->getState('translation.path');
-			$refpath     = $this->getState('translation.refpath');
-			$sections    = LocaliseHelper::parseSections($path);
-			$refsections = LocaliseHelper::parseSections($refpath);
-			$addform     = new SimpleXMLElement('<form />');
+			$path          = $this->getState('translation.path');
+			$refpath       = $this->getState('translation.refpath');
+			$istranslation = 0;
+			$sections      = LocaliseHelper::parseSections($path);
+			$refsections   = LocaliseHelper::parseSections($refpath);
+			$addform       = new SimpleXMLElement('<form />');
 
 			$group = $addform->addChild('fields');
 			$group->addAttribute('name', 'strings');
@@ -698,6 +700,11 @@ class LocaliseModelTranslation extends JModelAdmin
 			$fieldset = $group->addChild('fieldset');
 			$fieldset->addAttribute('name', 'Default');
 			$fieldset->addAttribute('label', 'Default');
+
+			if ($this->getState('translation.path') == $this->getState('translation.refpath'))
+			{
+			$istranslation = 1;
+			}
 
 			if (JFile::exists($refpath))
 			{
@@ -757,8 +764,18 @@ class LocaliseModelTranslation extends JModelAdmin
 						$translated = isset($sections['keys'][$key]);
 						$modified   = ($translated && $sections['keys'][$key] != $refsections['keys'][$key])
 										|| ($translated && in_array($full_line, $untranslatablestrings));
-						$status     = $modified ? 'translated' : ($translated ? 'unchanged' : 'untranslated');
-						$default    = $translated ? $sections['keys'][$key] : '';
+
+						if ($istranslation == '0')
+						{
+						$status     = $modified
+							? 'translated'
+							: 'untranslated';
+						}
+						else
+						{
+						$status     = 'sourcestrings';
+						}
+
 						$label      = '<b>' . $key . '</b><br />' . htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 
 						if (in_array($full_line, $untranslatablestrings))
@@ -775,6 +792,10 @@ class LocaliseModelTranslation extends JModelAdmin
 							$field->addAttribute('isblocked', '0');
 						}
 
+						$default    = $translated
+							? $sections['keys'][$key]
+							: '';
+						$label      = '<b>' . $key . '</b><br />' . htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 						$field->addAttribute('status', $status);
 						$field->addAttribute('description', $string);
 
