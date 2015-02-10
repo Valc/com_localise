@@ -652,11 +652,18 @@ class LocaliseModelTranslation extends JModelAdmin
 						$string     = $refsections['keys'][$key];
 						$translated = isset($sections['keys'][$key]);
 						$modified   = $translated && $sections['keys'][$key] != $refsections['keys'][$key];
+
+						if ($istranslation == '0')
+						{
 						$status     = $modified
 							? 'translated'
-							: ($translated
-								? 'unchanged'
-								: 'untranslated');
+							: 'untranslated';
+						}
+						else
+						{
+						$status     = 'sourcestrings';
+						}
+
 						$default    = $translated
 							? $sections['keys'][$key]
 							: '';
