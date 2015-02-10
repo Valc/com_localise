@@ -402,13 +402,17 @@ class LocaliseModelTranslation extends JModelAdmin
 
 							if (!empty($sections['keys']) && array_key_exists($key, $sections['keys']) && $sections['keys'][$key] != '')
 							{
-								if ($sections['keys'][$key] != $string || $this->getState('translation.path') == $this->getState('translation.refpath'))
+								if ($sections['keys'][$key] != $string)
 								{
 									$this->item->translated++;
 								}
+								elseif ($this->getState('translation.path') == $this->getState('translation.refpath'))
+								{
+									$this->item->sourcestrings++;
+								}
 								else
 								{
-									$this->item->unchanged++;
+									$this->item->untranslated++;
 								}
 							}
 						}
