@@ -47,7 +47,7 @@ $lang = JFactory::getLanguage();
 				<?php endif; ?>
 				<?php echo JHtml::_('jgrid.action', $i, '', array('tip' => true, 'inactive_title' => JText::_($packages[$item->origin]->title) . '::' . JText::_($packages[$item->origin]->description), 'inactive_class' => '16-' . $icon, 'enabled' => false, 'translate' => false)); ?>
 			<?php endif; ?>
-			<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_STATE_'.$item->state, $item->translated, $item->unchanged, $item->total, $item->extra), 'inactive_class'=>'16-'.$item->state, 'enabled' => false, 'translate'=>false)); ?>
+			<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_STATE_'.$item->state, $item->translated, $item->total, $item->extra), 'inactive_class'=>'16-'.$item->state, 'enabled' => false, 'translate'=>false)); ?>
 			<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_TYPE_'.$item->type), 'inactive_class'=>'16-'.$item->type, 'enabled' => false, 'translate'=>false)); ?>
 			<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_CLIENT_'.$item->client), 'inactive_class'=>'16-'.$item->client, 'enabled' => false, 'translate'=>false)); ?>
 			<?php if ($item->tag == $reference && $item->type != 'override') : ?>
@@ -100,26 +100,19 @@ $lang = JFactory::getLanguage();
 			<?php elseif ($item->state == 'notinreference') : ?>
 				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_STATE_NOTINREFERENCE'), 'inactive_class'=>'16-notinreference', 'enabled' => false, 'translate'=>false)); ?>
 			<?php elseif ($item->state == 'unexisting') : ?>
-				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_STATE_UNEXISTING', $item->translated, $item->unchanged, $item->total, $item->extra), 'inactive_class'=>'16-unexisting', 'enabled' => false, 'translate'=>false)); ?>
+				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_STATE_UNEXISTING', $item->translated, $item->total, $item->extra), 'inactive_class'=>'16-unexisting', 'enabled' => false, 'translate'=>false)); ?>
 			<?php elseif ($item->tag == $reference) : ?>
 				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_REFERENCE'), 'inactive_class'=>'16-reference', 'enabled' => false, 'translate'=>false)); ?>
-			<?php elseif (($item->translated + $item->unchanged) == $item->total && $item->complete) : ?>
-				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_COMPLETE', $item->translated, $item->unchanged, $item->total, $item->extra), 'inactive_class'=>'16-complete', 'enabled' => false, 'translate'=>false)); ?>
+			<?php elseif ($item->translated == $item->total && $item->complete) : ?>
+				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_COMPLETE', $item->translated, $item->total, $item->extra), 'inactive_class'=>'16-complete', 'enabled' => false, 'translate'=>false)); ?>
 			<?php else : ?>
-				<span class="hasTooltip" title="<?php echo $item->translated + $item->unchanged == 0 ? JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_NOTSTARTED') : JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_INPROGRESS', $item->translated, $item->unchanged, $item->total, $item->extra); ?>">
+				<span class="hasTooltip" title="<?php echo $item->translated == 0 ? JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_NOTSTARTED') : JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_INPROGRESS', $item->translated, $item->total, $item->extra); ?>">
 				<?php $translated =  $item->total ? intval(100 * $item->translated / $item->total) : 0; ?>
-				<?php $unchanged =  ($item->translated+$item->unchanged==$item->total)?(100-$translated):($item->total ? intval(100 * $item->unchanged / $item->total) : 0); ?>
-					<?php if ($item->unchanged):?>
-						( <?php echo $translated; ?> %+ <?php echo $unchanged; ?> %)
-					<?php else :?>
-						<?php echo $translated; ?> %
-					<?php endif; ?>
+					<?php echo $translated; ?> %
 					<div style="text-align:left;border:solid silver 1px;width:100px;height:4px;">
 						<div class="pull-left" style="height:100%; width:<?php echo $translated; ?>% ;background:green;">
 						</div>
-						<div class="pull-left" style="height:100%; width:<?php echo $unchanged; ?>% ;background:orange;">
-						</div>
-						<div class="pull-left" style="height:100%; width:<?php echo 100-$translated-$unchanged; ?>% ;background:red;">
+						<div class="pull-left" style="height:100%; width:<?php echo 100-$translated; ?>% ;background:red;">
 						</div>
 					</div>
 					<div class="clr"></div>
@@ -133,10 +126,10 @@ $lang = JFactory::getLanguage();
 				<?php elseif ($item->type == 'override') : ?>
 				<?php
 				elseif ($item->tag == $reference) : ?>
-					<?php echo $item->translated; ?>
+					<?php echo $item->sourcestrings; ?>
 				<?php
 				else : ?>
-					<?php echo ($item->unchanged ? ("(" . $item->translated . "+" . $item->unchanged . ")") : $item->translated) . "/" . $item->total . ($item->extra ? "+" . $item->extra : ''); ?>
+					<?php echo $item->translated . "/" . $item->total . ($item->extra ? "+" . $item->extra : ''); ?>
 				<?php endif; ?>
 			<?php endif; ?>
 		</td>
