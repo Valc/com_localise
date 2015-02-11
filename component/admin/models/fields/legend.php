@@ -34,6 +34,8 @@ class JFormFieldLegend extends JFormField
 	protected function getInput()
 	{
 		$return = '<table class="pull-left">';
+	$return .= '<tr><td><input class="sourcestrings" size="30"  type="text" value="' . JText::_('COM_LOCALISE_TEXT_TRANSLATION_REFERENCE')
+					. '" readonly="readonly"/></td></tr>';
 		$return .= '<tr><td><input class="translated" size="30" type="text" value="' . JText::_('COM_LOCALISE_TEXT_TRANSLATION_TRANSLATED')
 					. '" readonly="readonly"/></td></tr>';
 		$return .= '<tr><td><input class="untranslated" size="30"  type="text" value="' . JText::_('COM_LOCALISE_TEXT_TRANSLATION_UNTRANSLATED')
