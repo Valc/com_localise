@@ -65,7 +65,7 @@
 	</administration>
 
 	<updateservers>
-		<server type="extension" priority="1" name="Localise Update Site">https://raw.githubusercontent.com/Valc/com_localise/develop/update-server.xml</server>
+		<server type="extension" priority="1" name="Localise Update Site">https://raw.githubusercontent.com/Valc/com_localise/all-features/update-server.xml</server>
 	</updateservers>
 
 </extension>
