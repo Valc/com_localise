@@ -821,10 +821,6 @@ class LocaliseModelTranslations extends JModelList
 					{
 						$item->completed = - ($item->total / ($item->total + 1));
 					}
-					elseif ($item->complete)
-					{
-						$item->completed = 100;
-					}
 
 					$this->translations[$key]->setProperties($item->getProperties());
 				}
