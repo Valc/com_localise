@@ -118,7 +118,7 @@ $lang = JFactory::getLanguage();
 			<?php elseif ($item->translated == $item->total) : ?>
 				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_COMPLETE', $item->translated, $item->total, $item->extra, $item->keytodelete, $item->blocked, $item->untranslatable), 'inactive_class'=>'16-complete', 'enabled' => false, 'translate'=>false)); ?>
 			<?php else : ?>
-				<span class="hasTooltip" title="<?php echo $item->translated == 0 ? JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_NOTSTARTED') : JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_INPROGRESS', $item->translated, $item->total, $item->extra, $item->keytodelete, $item->blocked, $item->untranslatable); ?>">
+				<span class="hasTooltip" title="<?php echo $item->translated == 0 ? JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_NOTSTARTED') : JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_INPROGRESS', $item->translated, $item->untranslated, $item->total, $item->extra, $item->keytodelete, $item->blocked, $item->untranslatable); ?>">
 				<?php $translated =  $item->total ? intval(100 * $item->translated / $item->total) : 0; ?>
 					<?php echo $translated; ?> %
 					<div style="text-align:left;border:solid silver 1px;width:100px;height:4px;">
