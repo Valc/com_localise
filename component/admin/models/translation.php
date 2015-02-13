@@ -242,7 +242,6 @@ class LocaliseModelTranslation extends JModelAdmin
 										'keytodelete'           => 0,
 										'sourcestrings'         => 0,
 										'total'                 => 0,
-										'complete'              => false,
 										'source'                => '',
 										'untranslatablestrings' => (array) $untranslatablestrings,
 										'blockedstrings'        => (array) $blockedstrings,
@@ -310,10 +309,6 @@ class LocaliseModelTranslation extends JModelAdmin
 							{
 								switch (strtolower($matches[2]))
 								{
-									case 'note':
-										preg_match('/(;)\s*@?(\pL+):?\s+(.*)/', $line, $matches2);
-										$this->item->complete = $this->item->complete || strtolower($matches2[3]) == 'complete';
-										break;
 									case 'version':
 										preg_match('/(;)\s*@?(\pL+):?\s+(.*)/', $line, $matches2);
 										$this->item->version = $matches2[3];
@@ -530,17 +525,6 @@ class LocaliseModelTranslation extends JModelAdmin
 					$this->setState('translation.unchangedkeys', $unchangedkeys);
 					$this->setState('translation.blockedkeys', $blockedkeys);
 					$this->setState('translation.untranslatablekeys', $untranslatablekeys);
-
-
-					$this->item->completed = $this->item->total
-						? intval(100 * $this->item->translated / $this->item->total)
-						: 100;
-
-					$this->item->complete = $this->item->complete
-						? 1
-						: ($this->item->completed == 100
-							? 1
-							: 0);
 				}
 
 				if ($this->getState('translation.id'))
@@ -1038,11 +1022,6 @@ class LocaliseModelTranslation extends JModelAdmin
 			if (!empty($data['license']))
 			{
 				$contents2 .= "; @license     " . $data['license'] . "\n";
-			}
-
-			if (array_key_exists('complete', $data) && ($data['complete'] == '1'))
-			{
-				$contents2 .= "; @note        Complete\n";
 			}
 
 			$contents2 .= "; @note        Client " . ucfirst($client) . "\n";
