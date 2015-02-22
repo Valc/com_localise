@@ -171,38 +171,116 @@ class LocaliseModelTranslation extends JModelAdmin
 					? $this->getState('translation.path')
 					: $this->getState('translation.refpath');
 
+				// Get Special keys cases
+				$filename              = basename ($path);
+				$params                = JComponentHelper::getParams('com_localise');
+				$bdclient                = $this->getState('translation.client');
+				$tag                   = $this->getState('translation.tag');
+				$filename              = basename ($path);
+
+				$untranslatablestrings = LocaliseHelper::loadUntranslatablestrings($bdclient, $tag, $filename);
+				$blockedstrings        = LocaliseHelper::loadBlockedstrings($bdclient, $tag, $filename);
+				$keystokeep            = LocaliseHelper::loadKeystokeep($bdclient, $tag, $filename);
+				$this->setState('translation.blockedstrings', (array) $blockedstrings);
+				$this->setState('translation.keystokeep', (array) $keystokeep);
+
 				$this->setState('translation.translatedkeys', array());
+				$this->setState('translation.untranslatablekeys', array());
+				$this->setState('translation.blockedkeys', array());
 				$this->setState('translation.untranslatedkeys', array());
 				$this->setState('translation.unchangedkeys', array());
+				$this->setState('translation.untranslatablestrings', (array) $untranslatablestrings);
 
-				$translatedkeys   = $this->getState('translation.translatedkeys');
-				$untranslatedkeys = $this->getState('translation.untranslatedkeys');
-				$unchangedkeys    = $this->getState('translation.unchangedkeys');
+				$translatedkeys     = $this->getState('translation.translatedkeys');
+				$untranslatablekeys = $this->getState('translation.untranslatablekeys');
+				$blockedkeys        = $this->getState('translation.blockedkeys');
+				$untranslatedkeys   = $this->getState('translation.untranslatedkeys');
+				$unchangedkeys      = $this->getState('translation.unchangedkeys');
+
+				$user = JFactory::getUser();
+				$allowed_groups_raw = (array) $params->get('allowed_groups_raw', null);
+				$allowed_groups_untranslatable = (array) $params->get('allowed_groups_untranslatable', null);
+				$allowed_groups_blocked = (array) $params->get('allowed_groups_blocked', null);
+				$allowed_groups_keep = (array) $params->get('allowed_groups_keep', null);
+				$user_groups = $user->get('groups');
+				$this->setState('translation.raw_mode', '1');
+				$this->setState('translation.untranslatable_mode', '1');
+				$this->setState('translation.blocked_mode', '1');
+				$this->setState('translation.keep_mode', '1');
+
+					if (!empty($allowed_groups_raw) && !empty($user_groups))
+					{
+						if (!array_intersect($allowed_groups_raw, $user_groups))
+						{
+						$this->setState('translation.raw_mode', '0');
+						}
+					}
+
+					if (!empty($allowed_groups_untranslatable) && !empty($user_groups))
+					{
+						if (!array_intersect($allowed_groups_untranslatable, $user_groups))
+						{
+						$this->setState('translation.untranslatable_mode', '0');
+						}
+					}
+
+					if (!empty($allowed_groups_blocked) && !empty($user_groups))
+					{
+						if (!array_intersect($allowed_groups_blocked, $user_groups))
+						{
+						$this->setState('translation.blocked_mode', '0');
+						}
+					}
+
+					if (!empty($allowed_groups_keep) && !empty($user_groups))
+					{
+						if (!array_intersect($allowed_groups_keep, $user_groups))
+						{
+						$this->setState('translation.keep_mode', '0');
+						}
+					}
+
+				$raw_mode            = $this->getState('translation.raw_mode');
+				$untranslatable_mode = $this->getState('translation.untranslatable_mode');
+				$blocked_mode        = $this->getState('translation.blocked_mode');
+				$keep_mode           = $this->getState('translation.keep_mode');
 
 				$this->item = new JObject(
 									array
 										(
-										'reference'           => $this->getState('translation.reference'),
-										'bom'                 => 'UTF-8',
-										'svn'                 => '',
-										'version'             => '',
-										'description'         => '',
-										'creationdate'        => '',
-										'author'              => '',
-										'maincopyright'       => '',
-										'additionalcopyright' => array(),
-										'license'             => '',
-										'exists'              => JFile::exists($this->getState('translation.path')),
-										'translatedkeys'      => (array) $translatedkeys,
-										'untranslatedkeys'    => (array) $untranslatedkeys,
-										'unchangedkeys'       => (array) $unchangedkeys,
-										'translated'          => 0,
-										'unchanged'           => 0,
-										'extra'               => 0,
-										'total'               => 0,
-										'complete'            => false,
-										'source'              => '',
-										'error'               => array()
+										'reference'             => $this->getState('translation.reference'),
+										'bom'                   => 'UTF-8',
+										'svn'                   => '',
+										'version'               => '',
+										'description'           => '',
+										'creationdate'          => '',
+										'author'                => '',
+										'maincopyright'         => '',
+										'additionalcopyright'   => array(),
+										'license'               => '',
+										'exists'                => JFile::exists($this->getState('translation.path')),
+										'untranslatablestrings' => (array) $untranslatablestrings,
+										'blockedstrings'        => (array) $blockedstrings,
+										'keystokeep'            => (array) $keystokeep,
+										'translatedkeys'        => (array) $translatedkeys,
+										'untranslatedkeys'      => (array) $untranslatedkeys,
+										'untranslatablekeys'    => (array) $untranslatablekeys,
+										'blockedkeys'           => (array) $blockedkeys,
+										'unchangedkeys'         => (array) $unchangedkeys,
+										'translated'            => 0,
+										'untranslatable'        => 0,
+										'blocked'               => 0,
+										'unchanged'             => 0,
+										'extra'                 => 0,
+										'keytodelete'           => 0,
+										'total'                 => 0,
+										'raw_mode'              => $raw_mode,
+										'untranslatable_mode'   => $untranslatable_mode,
+										'blocked_mode'          => $blocked_mode,
+										'keep_mode'             => $keep_mode,
+										'complete'              => false,
+										'source'                => '',
+										'error'                 => array()
 										)
 				);
 
