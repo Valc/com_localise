@@ -489,16 +489,33 @@ class LocaliseModelTranslation extends JModelAdmin
 						{
 							$this->item->total++;
 
-							if (!empty($sections['keys']) && array_key_exists($key, $sections['keys']) && $sections['keys'][$key] != '')
+							if (!empty($sections['keys']) && array_key_exists($key, $sections['keys']))
 							{
-								if ($sections['keys'][$key] != $string)
+								if (in_array($key, $blockedstrings))
+								{
+									$this->item->translated++;
+									$this->item->blocked++;
+									$blockedkeys[] = $key;
+								}
+								elseif (in_array($key, $untranslatablestrings))
+								{
+									if ($sections['keys'][$key] != $string)
+									{
+									$this->item->translated++;
+									$translatedkeys[] = $key;
+									}
+									else
+									{
+									$this->item->translated++;
+									$this->item->untranslatable++;
+									$untranslatablekeys[] = $key;
+									}
+
+								}
+								elseif ($sections['keys'][$key] != $string || $this->getState('translation.path') == $this->getState('translation.refpath'))
 								{
 									$this->item->translated++;
 									$translatedkeys[] = $key;
-								}
-								elseif ($this->getState('translation.path') == $this->getState('translation.refpath'))
-								{
-									$this->item->translated++;
 								}
 								else
 								{
@@ -514,11 +531,15 @@ class LocaliseModelTranslation extends JModelAdmin
 					}
 
 					$this->item->translatedkeys = $translatedkeys;
+					$this->item->untranslatablekeys = $untranslatablekeys;
+					$this->item->blockedkeys = $blockedkeys;
 					$this->item->untranslatedkeys = $untranslatedkeys;
 					$this->item->unchangedkeys = $unchangedkeys;
 
 					$this->setState('translation.translatedkeys', $translatedkeys);
 					$this->setState('translation.untranslatedkeys', $untranslatedkeys);
+					$this->setState('translation.untranslatablekeys', $untranslatablekeys);
+					$this->setState('translation.blockedkeys', $blockedkeys);
 					$this->setState('translation.unchangedkeys', $unchangedkeys);
 
 					if (!empty($sections['keys']))
@@ -527,7 +548,14 @@ class LocaliseModelTranslation extends JModelAdmin
 						{
 							if (empty($refsections['keys']) || !array_key_exists($key, $refsections['keys']))
 							{
-								$this->item->extra++;
+								if (in_array($key, $keystokeep))
+								{
+									$this->item->extra++;
+								}
+								else
+								{
+									$this->item->keytodelete++;
+								}
 							}
 						}
 					}
