@@ -172,11 +172,10 @@ class LocaliseModelTranslation extends JModelAdmin
 					: $this->getState('translation.refpath');
 
 				// Get Special keys cases
-				$filename              = basename ($path);
 				$params                = JComponentHelper::getParams('com_localise');
 				$bdclient                = $this->getState('translation.client');
 				$tag                   = $this->getState('translation.tag');
-				$filename              = basename ($path);
+				$filename              = basename($path);
 
 				$untranslatablestrings = LocaliseHelper::loadUntranslatablestrings($bdclient, $tag, $filename);
 				$blockedstrings        = LocaliseHelper::loadBlockedstrings($bdclient, $tag, $filename);
@@ -510,7 +509,6 @@ class LocaliseModelTranslation extends JModelAdmin
 									$this->item->untranslatable++;
 									$untranslatablekeys[] = $key;
 									}
-
 								}
 								elseif ($sections['keys'][$key] != $string || $this->getState('translation.path') == $this->getState('translation.refpath'))
 								{
@@ -691,7 +689,7 @@ class LocaliseModelTranslation extends JModelAdmin
 		$app                   = JFactory::getApplication();
 		$false                 = false;
 		$filepath              = $this->getState('translation.path');
-		$file                  = basename ($filepath);
+		$file                  = basename($filepath);
 		$untranslatablestrings = $this->getState('translation.untranslatablestrings');
 		$blockedstrings        = $this->getState('translation.blockedstrings');
 		$keystokeep            = $this->getState('translation.keystokeep');
@@ -1063,14 +1061,12 @@ class LocaliseModelTranslation extends JModelAdmin
 	 */
 	public function saveFile($data)
 	{
-
 		$path       = $this->getState('translation.path');
 		$refpath    = $this->getState('translation.refpath');
 		$exists     = JFile::exists($path);
 		$refexists  = JFile::exists($refpath);
 		$client     = $this->getState('translation.client');
 		$keystokeep = (array) $this->getState('translation.keystokeep');
-
 
 		// Set FTP credentials, if given.
 		JClientHelper::setCredentialsFromRequest('ftp');
@@ -1377,15 +1373,14 @@ class LocaliseModelTranslation extends JModelAdmin
 				}
 			}
 
-
 		$untranslatable_mode = $this->getState('translation.untranslatable_mode');
 		$blocked_mode        = $this->getState('translation.blocked_mode');
 		$keep_mode           = $this->getState('translation.keep_mode');
 
-		$bdclient            = $this->getState('translation.client');				
+		$bdclient            = $this->getState('translation.client');
 		$tag                 = $this->getState('translation.tag');
 		$path                = $this->getState('translation.path');
-		$filename            = basename ($path);
+		$filename            = basename($path);
 		$untranslatable_mode = $this->getState('translation.untranslatable_mode');
 		$blocked_mode        = $this->getState('translation.blocked_mode');
 		$keep_mode           = $this->getState('translation.keep_mode');

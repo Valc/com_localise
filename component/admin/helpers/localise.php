@@ -453,7 +453,17 @@ abstract class LocaliseHelper
 		return $id;
 	}
 
-
+	/**
+	 * Load untranslatable keys
+	 *
+	 * @param   string  $client    Client to get
+	 * @param   string  $tag       Tag to get
+	 * @param   string  $filename  Filename to get
+	 *
+	 * @return  array
+	 *
+	 * @since   4.11
+	 */
 	public static function loadUntranslatablestrings($client, $tag, $filename)
 	{
 		if (!empty($client) && !empty($tag) && !empty($filename))
@@ -465,22 +475,22 @@ abstract class LocaliseHelper
 				$searchClient   = $db->quote($client);
 				$searchTag      = $db->quote($tag);
 				$searchFilename = $db->quote($filename);
-				$query->select	(
+				$query->select(
 						array	(
 							$db->quoteName('untranslatablekeycase')
 							)
 						);
-				$query->from	(
+				$query->from(
 						$db->quoteName('#__localise_specialuntranslatablekeys')
 						);
-				$query->where	(
+				$query->where(
 						$db->quoteName('client') . '= ' . $searchClient
 						);
-				$query->where	(
+				$query->where(
 						$db->quoteName('tag') . '= ' . $searchTag
 
 						);
-				$query->where	(
+				$query->where(
 						$db->quoteName('filename') . '= ' . $searchFilename
 						);
 
@@ -490,12 +500,12 @@ abstract class LocaliseHelper
 					{
 						throw new Exception($db->getErrorMsg());
 					}
-
 			}
 
 			catch (JException $e)
 			{
-				$this->setError('COM_LOCALISE_ERROR_GETTING_SPECIAL_KEYS_CASES');
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GETTING_SPECIAL_KEYS_CASES'), 'warning');
+
 				return array();
 			}
 
@@ -514,6 +524,17 @@ abstract class LocaliseHelper
 		return array();
 	}
 
+	/**
+	 * Load blocked keys
+	 *
+	 * @param   string  $client    Client to get
+	 * @param   string  $tag       Tag to get
+	 * @param   string  $filename  Filename to get
+	 *
+	 * @return  array
+	 *
+	 * @since   4.11
+	 */
 	public static function loadBlockedstrings($client, $tag, $filename)
 	{
 		if (!empty($client) && !empty($tag) && !empty($filename))
@@ -525,22 +546,22 @@ abstract class LocaliseHelper
 				$searchClient   = $db->quote($client);
 				$searchTag      = $db->quote($tag);
 				$searchFilename = $db->quote($filename);
-				$query->select	(
+				$query->select(
 						array	(
 							$db->quoteName('blockedkeycase')
 							)
 						);
-				$query->from	(
+				$query->from(
 						$db->quoteName('#__localise_specialblockedkeys')
 						);
-				$query->where	(
+				$query->where(
 						$db->quoteName('client') . '= ' . $searchClient
 						);
-				$query->where	(
+				$query->where(
 						$db->quoteName('tag') . '= ' . $searchTag
 
 						);
-				$query->where	(
+				$query->where(
 						$db->quoteName('filename') . '= ' . $searchFilename
 						);
 
@@ -550,12 +571,12 @@ abstract class LocaliseHelper
 					{
 						throw new Exception($db->getErrorMsg());
 					}
-
 			}
 
 			catch (JException $e)
 			{
-				$this->setError('COM_LOCALISE_ERROR_GETTING_SPECIAL_KEYS_CASES');
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GETTING_SPECIAL_KEYS_CASES'), 'warning');
+
 				return array();
 			}
 
@@ -574,6 +595,17 @@ abstract class LocaliseHelper
 		return array();
 	}
 
+	/**
+	 * Load keys to keep keys
+	 *
+	 * @param   string  $client    Client to get
+	 * @param   string  $tag       Tag to get
+	 * @param   string  $filename  Filename to get
+	 *
+	 * @return  array
+	 *
+	 * @since   4.11
+	 */
 	public static function loadKeystokeep($client, $tag, $filename)
 	{
 		if (!empty($client) && !empty($tag) && !empty($filename))
@@ -585,22 +617,22 @@ abstract class LocaliseHelper
 				$searchClient   = $db->quote($client);
 				$searchTag      = $db->quote($tag);
 				$searchFilename = $db->quote($filename);
-				$query->select	(
+				$query->select(
 						array	(
 							$db->quoteName('extrakeycase')
 							)
 						);
-				$query->from	(
+				$query->from(
 						$db->quoteName('#__localise_specialextrakeys')
 						);
-				$query->where	(
+				$query->where(
 						$db->quoteName('client') . '= ' . $searchClient
 						);
-				$query->where	(
+				$query->where(
 						$db->quoteName('tag') . '= ' . $searchTag
 
 						);
-				$query->where	(
+				$query->where(
 						$db->quoteName('filename') . '= ' . $searchFilename
 						);
 
@@ -610,12 +642,12 @@ abstract class LocaliseHelper
 					{
 						throw new Exception($db->getErrorMsg());
 					}
-
 			}
 
 			catch (JException $e)
 			{
-				$this->setError('COM_LOCALISE_ERROR_GETTING_SPECIAL_KEYS_CASES');
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GETTING_SPECIAL_KEYS_CASES'), 'warning');
+
 				return array();
 			}
 
@@ -634,6 +666,17 @@ abstract class LocaliseHelper
 		return array();
 	}
 
+	/**
+	 * Delete untranslatable keys
+	 *
+	 * @param   string  $client    Client to get
+	 * @param   string  $tag       Tag to get
+	 * @param   string  $filename  Filename to get
+	 *
+	 * @return  bolean
+	 *
+	 * @since   4.11
+	 */
 	public static function deleteUntranslatablestrings($client, $tag, $filename)
 	{
 		if (!empty($client) && !empty($tag) && !empty($filename))
@@ -651,7 +694,7 @@ abstract class LocaliseHelper
 						$db->quoteName('filename') . '= ' . $searchFilename
 						);
 
-				$query->delete (
+				$query->delete(
 						$db->quoteName('#__localise_specialuntranslatablekeys')
 						);
 
@@ -664,7 +707,8 @@ abstract class LocaliseHelper
 
 			catch (JException $e)
 			{
-				$this->setError('COM_LOCALISE_ERROR_DELETING_SPECIAL_KEYS_CASES');
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_DELETING_SPECIAL_KEYS_CASES'), 'warning');
+
 				return false;
 			}
 
@@ -674,6 +718,17 @@ abstract class LocaliseHelper
 		return false;
 	}
 
+	/**
+	 * Delete blocked keys
+	 *
+	 * @param   string  $client    Client to get
+	 * @param   string  $tag       Tag to get
+	 * @param   string  $filename  Filename to get
+	 *
+	 * @return  bolean
+	 *
+	 * @since   4.11
+	 */
 	public static function deleteBlockedstrings($client, $tag, $filename)
 	{
 		if (!empty($client) && !empty($tag) && !empty($filename))
@@ -691,7 +746,7 @@ abstract class LocaliseHelper
 						$db->quoteName('filename') . '= ' . $searchFilename
 						);
 
-				$query->delete (
+				$query->delete(
 						$db->quoteName('#__localise_specialblockedkeys')
 						);
 
@@ -704,7 +759,8 @@ abstract class LocaliseHelper
 
 			catch (JException $e)
 			{
-				$this->setError('COM_LOCALISE_ERROR_DELETING_SPECIAL_KEYS_CASES');
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_DELETING_SPECIAL_KEYS_CASES'), 'warning');
+
 				return false;
 			}
 
@@ -714,6 +770,17 @@ abstract class LocaliseHelper
 		return false;
 	}
 
+	/**
+	 * Delete keys to keep
+	 *
+	 * @param   string  $client    Client to get
+	 * @param   string  $tag       Tag to get
+	 * @param   string  $filename  Filename to get
+	 *
+	 * @return  bolean
+	 *
+	 * @since   4.11
+	 */
 	public static function deleteExtrastrings($client, $tag, $filename)
 	{
 		if (!empty($client) && !empty($tag) && !empty($filename))
@@ -731,7 +798,7 @@ abstract class LocaliseHelper
 						$db->quoteName('filename') . '= ' . $searchFilename
 						);
 
-				$query->delete (
+				$query->delete(
 						$db->quoteName('#__localise_specialextrakeys')
 						);
 
@@ -744,7 +811,8 @@ abstract class LocaliseHelper
 
 			catch (JException $e)
 			{
-				$this->setError('COM_LOCALISE_ERROR_DELETING_SPECIAL_KEYS_CASES');
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_DELETING_SPECIAL_KEYS_CASES'), 'warning');
+
 				return false;
 			}
 
@@ -754,6 +822,18 @@ abstract class LocaliseHelper
 		return false;
 	}
 
+	/**
+	 * Save untranslatable keys
+	 *
+	 * @param   string  $client    Client to get
+	 * @param   string  $tag       Tag to get
+	 * @param   string  $filename  Filename to get
+	 * @param   string  $keydata   keydata to save
+	 *
+	 * @return  array
+	 *
+	 * @since   4.11
+	 */
 	public static function saveUntranslatablestrings($client, $tag, $filename, $keydata)
 	{
 		if (!empty($client) && !empty($tag) && !empty($filename) && !empty($keydata))
@@ -769,25 +849,26 @@ abstract class LocaliseHelper
 				$savedFilename = $db->quote($filename);
 
 				$savedKey = $db->quote($keydata);
-				 
+
 				$query = $db->getQuery(true);
-				 
+
 				$columns = array('client', 'tag', 'filename', 'untranslatablekeycase');
-				 
+
 				$values = array($savedClient, $savedTag, $savedFilename, $savedKey);
-				 
+
 				$query
-				    ->insert($db->quoteName('#__localise_specialuntranslatablekeys'))
-				    ->columns($db->quoteName($columns))
-				    ->values(implode(',', $values));
-				 
+					->insert($db->quoteName('#__localise_specialuntranslatablekeys'))
+					->columns($db->quoteName($columns))
+					->values(implode(',', $values));
+
 				$db->setQuery($query);
 				$db->execute();
 			}
 
 			catch (JException $e)
 			{
-				$this->setError('COM_LOCALISE_ERROR_SAVING_SPECIAL_KEYS_CASES');
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_SAVING_SPECIAL_KEYS_CASES'), 'warning');
+
 				return false;
 			}
 
@@ -797,6 +878,18 @@ abstract class LocaliseHelper
 		return false;
 	}
 
+	/**
+	 * Save blocked keys
+	 *
+	 * @param   string  $client    Client to get
+	 * @param   string  $tag       Tag to get
+	 * @param   string  $filename  Filename to get
+	 * @param   string  $keydata   keydata to save
+	 *
+	 * @return  array
+	 *
+	 * @since   4.11
+	 */
 	public static function saveBlockedstrings($client, $tag, $filename, $keydata)
 	{
 		if (!empty($client) && !empty($tag) && !empty($filename) && !empty($keydata))
@@ -812,25 +905,26 @@ abstract class LocaliseHelper
 				$savedFilename = $db->quote($filename);
 
 				$savedKey = $db->quote($keydata);
-				 
+
 				$query = $db->getQuery(true);
-				 
+
 				$columns = array('client', 'tag', 'filename', 'blockedkeycase');
-				 
+
 				$values = array($savedClient, $savedTag, $savedFilename, $savedKey);
-				 
+
 				$query
-				    ->insert($db->quoteName('#__localise_specialblockedkeys'))
-				    ->columns($db->quoteName($columns))
-				    ->values(implode(',', $values));
-				 
+					->insert($db->quoteName('#__localise_specialblockedkeys'))
+					->columns($db->quoteName($columns))
+					->values(implode(',', $values));
+
 				$db->setQuery($query);
 				$db->execute();
 			}
 
 			catch (JException $e)
 			{
-				$this->setError('COM_LOCALISE_ERROR_SAVING_SPECIAL_KEYS_CASES');
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_SAVING_SPECIAL_KEYS_CASES'), 'warning');
+
 				return false;
 			}
 
@@ -840,6 +934,18 @@ abstract class LocaliseHelper
 		return false;
 	}
 
+	/**
+	 * Save keys to keep
+	 *
+	 * @param   string  $client    Client to get
+	 * @param   string  $tag       Tag to get
+	 * @param   string  $filename  Filename to get
+	 * @param   string  $keydata   keydata to save
+	 *
+	 * @return  array
+	 *
+	 * @since   4.11
+	 */
 	public static function saveExtrastrings($client, $tag, $filename, $keydata)
 	{
 		if (!empty($client) && !empty($tag) && !empty($filename) && !empty($keydata))
@@ -855,25 +961,26 @@ abstract class LocaliseHelper
 				$savedFilename = $db->quote($filename);
 
 				$savedKey = $db->quote($keydata);
-				 
+
 				$query = $db->getQuery(true);
-				 
+
 				$columns = array('client', 'tag', 'filename', 'extrakeycase');
-				 
+
 				$values = array($savedClient, $savedTag, $savedFilename, $savedKey);
-				 
+
 				$query
-				    ->insert($db->quoteName('#__localise_specialextrakeys'))
-				    ->columns($db->quoteName($columns))
-				    ->values(implode(',', $values));
-				 
+					->insert($db->quoteName('#__localise_specialextrakeys'))
+					->columns($db->quoteName($columns))
+					->values(implode(',', $values));
+
 				$db->setQuery($query);
 				$db->execute();
 			}
 
 			catch (JException $e)
 			{
-				$this->setError('COM_LOCALISE_ERROR_SAVING_SPECIAL_KEYS_CASES');
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_SAVING_SPECIAL_KEYS_CASES'), 'warning');
+
 				return false;
 			}
 

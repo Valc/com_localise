@@ -46,14 +46,14 @@ class JFormFieldKey extends JFormField
 		$istranslation = (int) $this->element['istranslation'];
 		$status = (string) $this->element['status'];
 
-		$visibleiduntranslatable = "visible_untranslatable_".$this->element['name'];
-		$hiddediduntranslatable = "hidded_untranslatable_".$this->element['name'];
+		$visibleiduntranslatable = "visible_untranslatable_" . $this->element['name'];
+		$hiddediduntranslatable = "hidded_untranslatable_" . $this->element['name'];
 
-		$visibleidblocked = "visible_blocked_".$this->element['name'];
-		$hiddedidblocked = "hidded_blocked_".$this->element['name'];
+		$visibleidblocked = "visible_blocked_" . $this->element['name'];
+		$hiddedidblocked = "hidded_blocked_" . $this->element['name'];
 
-		$visibleidextra = "visible_extra_".$this->element['name'];
-		$hiddedidextra = "hidded_extra_".$this->element['name'];
+		$visibleidextra = "visible_extra_" . $this->element['name'];
+		$hiddedidextra = "hidded_extra_" . $this->element['name'];
 
 		$isuntranslatable = (int) $this->element['isuntranslatable'];
 		$isblocked        = (int) $this->element['isblocked'];
@@ -100,11 +100,11 @@ class JFormFieldKey extends JFormField
 					}
 				}
 
-			$onclickextra = "javascript:document.id(						
+			$onclickextra = "javascript:document.id(
 							'" . $hiddedidextra . "'
 							)
 							.set(
-							'value', document.getElementById('".$visibleidextra."' ).checked
+							'value', document.getElementById('" . $visibleidextra . "' ).checked
 							);
 							if (document.id('" . $hiddedidextra . "').get('value')=='true')
 							{
@@ -116,11 +116,19 @@ class JFormFieldKey extends JFormField
 								document.id('" . $this->id . "').set('class','width-45 keytodelete');
 							}";
 
-			$checkboxextra = '<div><b>Key to keep</b><input style="max-width:5%; min-width:5%;"  id="' . $visibleidextra . '" type="checkbox" '.$disabledextra.' name="jform[extracheckbox][]" value="' .$this->element['name'] . '" title="Extra" onclick="' .$onclickextra . '" '.$checkedextra.'></input></div><div><input  id="' . $hiddedidextra . '" type="hidden" name="jform[extras][' . $this->element['name'] . ']" value="'.$valueextra.'" ></input></div>';
+			$checkboxextra = '<div><b>Key to keep</b><input style="max-width:5%; min-width:5%;" 
+					id="' . $visibleidextra . '" type="checkbox" ' . $disabledextra . '
+					name="jform[extracheckbox][]" 
+					value="' . $this->element['name'] . '" 
+					title="Extra" onclick="' . $onclickextra . '" ' . $checkedextra . '></input></div>
+					<div><input id="' . $hiddedidextra . '" 
+					type="hidden" name="jform[extras][' . $this->element['name'] . ']" 
+					value="' . $valueextra . '" ></input></div>';
 
-			return '<div><label id="' . $this->id . '-lbl" for="' . $this->id . '">'
-						. $this->element['label']
-					 . '<br />' . $checkboxextra . '</div></label>';
+			return '<div><label id="' . $this->id . '-lbl" for="
+						' . $this->id . '">
+						' . $this->element['label'] . '<br />
+						' . $checkboxextra . '</div></label>';
 			}
 			else
 			{
@@ -135,7 +143,7 @@ class JFormFieldKey extends JFormField
 
 				if ($isuntranslatable == '1' && $isclickableuntranslatable == '1')
 				{
-					if ($untranslatable_mode  == '1')
+					if ($untranslatable_mode == '1')
 					{
 						$checkeduntranslatable = ' checked="checked" ';
 						$valueuntranslatable   = 'true';
@@ -174,7 +182,6 @@ class JFormFieldKey extends JFormField
 				}
 				elseif ($isuntranslatable == '0' && $isclickableuntranslatable == '1')
 				{
-
 					if ($isblocked == '1')
 					{
 						$checkedblocked = ' checked="checked" ';
@@ -208,7 +215,7 @@ class JFormFieldKey extends JFormField
 							$disabledblocked = ' disabled="disabled" ';
 						}
 
-						if ($untranslatable_mode  == '1')
+						if ($untranslatable_mode == '1')
 						{
 							$checkeduntranslatable = '';
 							$valueuntranslatable   = 'false';
@@ -242,7 +249,6 @@ class JFormFieldKey extends JFormField
 								$valueblocked   = 'true';
 								$disabledblocked = ' disabled="disabled" ';
 							}
-
 						}
 						else
 						{
@@ -260,23 +266,23 @@ class JFormFieldKey extends JFormField
 						}
 				}
 
-			$onclickuntranslatable = "javascript:document.id(						
+			$onclickuntranslatable = "javascript:document.id(
 							'" . $hiddediduntranslatable . "'
 							)
 							.set(
-							'value', document.getElementById('".$visibleiduntranslatable."' ).checked
+							'value', document.getElementById('" . $visibleiduntranslatable . "' ).checked
 							);
 							if (document.id('" . $hiddediduntranslatable . "').get('value')=='true')
 							{
 							document.id('"
 							. $this->id . "').set('class','width-45 untranslatable');
 							document.getElementById('"
-							.$visibleidblocked."').setAttribute('disabled', 'disabled');
+							. $visibleidblocked . "').setAttribute('disabled', 'disabled');
 							}
 							else if (document.id('" . $hiddediduntranslatable . "').get('value')=='false')
 							{
 							document.getElementById('"
-							.$visibleidblocked."').removeAttribute('disabled');
+							. $visibleidblocked . "').removeAttribute('disabled');
 
 								if (document.id('" . $this->id . "').get('value')=='"
 								. addslashes(htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8'))
@@ -290,30 +296,30 @@ class JFormFieldKey extends JFormField
 								}
 							}";
 
-			$onclickblocked = "javascript:document.id(						
+			$onclickblocked = "javascript:document.id(
 							'" . $hiddedidblocked . "'
 							)
 							.set(
-							'value', document.getElementById('".$visibleidblocked."' ).checked
+							'value', document.getElementById('" . $visibleidblocked . "' ).checked
 							);
 							if (document.id('" . $hiddedidblocked . "').get('value')=='true')
 							{
 							document.id('"
 							. $this->id . "').set('class','width-45 blocked');
 							document.getElementById('"
-							.$visibleiduntranslatable."').setAttribute('disabled', 'disabled');
+							. $visibleiduntranslatable . "').setAttribute('disabled', 'disabled');
 							document.id('" . $this->id . "').setAttribute('disabled', 'disabled');
 							}
 							else if (document.id('" . $hiddedidblocked . "').get('value')=='false')
 							{
-							document.getElementById('".$this->id."').removeAttribute('disabled');
+							document.getElementById('" . $this->id . "').removeAttribute('disabled');
 
 								if (document.id('" . $this->id . "').get('value')=='"
 								. addslashes(htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8'))
 								. "')
 								{
 								document.getElementById('"
-								.$visibleiduntranslatable."').removeAttribute('disabled');
+								. $visibleiduntranslatable . "').removeAttribute('disabled');
 								document.id('" . $this->id . "').set('class','width-45 unchanged');
 								}
 								else
@@ -322,23 +328,32 @@ class JFormFieldKey extends JFormField
 								}
 							}";
 
-			$checkboxuntranslatable = '<b>Untranslatable</b><input style="max-width:5%; min-width:5%;"  id="'
-				. $visibleiduntranslatable . '" type="checkbox" '.$disableduntranslatable.' name="jform[untranslatablecheckbox][]"  value="'
-				.$this->element['name'].'" title="Untranslatable" onclick="'
-				.$onclickuntranslatable.'" '.$checkeduntranslatable.'></input><input  id="' . $hiddediduntranslatable
-				. '" type="hidden" name="jform[untranslatables]['
-				. $this->element['name'] . ']" value="'.$valueuntranslatable.'" ></input>';
+			$checkboxuntranslatable = '<b>Untranslatable</b><input style="max-width:5%; min-width:5%;" id="
+						' . $visibleiduntranslatable . '
+						" type="checkbox" ' . $disableduntranslatable . ' name=
+						"jform[untranslatablecheckbox][]" value="
+						' . $this->element['name'] . '" title="Untranslatable" onclick="
+						' . $onclickuntranslatable . '" ' . $checkeduntranslatable . '>
+						</input><input id="
+						' . $hiddediduntranslatable . '" type="hidden" name=
+						"jform[untranslatables][' . $this->element['name'] . ']" value="
+						' . $valueuntranslatable . '" ></input>';
 
-			$checkboxblocked = '<b>Protected</b><input style="max-width:5%; min-width:5%;"  id="'
-				. $visibleidblocked . '" type="checkbox" '.$disabledblocked.' name="jform[blockedcheckbox][]"  value="'
-				.$this->element['name'].'" title="Blocked" onclick="'
-				.$onclickblocked.'" '.$checkedblocked.'></input><input  id="' . $hiddedidblocked
-				. '" type="hidden" name="jform[blockeds]['
-				. $this->element['name'] . ']" value="'.$valueblocked.'" ></input>';
+			$checkboxblocked = '<b>Protected</b><input style="max-width:5%; min-width:5%;" id="
+					' . $visibleidblocked . '" type=
+					"checkbox" ' . $disabledblocked . ' name=
+					"jform[blockedcheckbox][]" value=
+					"' . $this->element['name'] . '" title=
+					"Blocked" onclick="' . $onclickblocked . '" ' . $checkedblocked . '></input>
+					<input id="' . $hiddedidblocked . '" type=
+					"hidden" name="
+					jform[blockeds][' . $this->element['name'] . ']" value=
+					"' . $valueblocked . '" ></input>';
 
-			return '<div><label id="' . $this->id . '-lbl" for="' . $this->id . '">'
-						. $this->element['label']
-					 . '<br />' . $checkboxuntranslatable  . '<br />' . $checkboxblocked . '</label></div>';
+			return '<div><label id="' . $this->id . '-lbl" for=
+					"' . $this->id . '">' . $this->element['label'] . '
+					<br />' . $checkboxuntranslatable . '
+					<br />' . $checkboxblocked . '</label></div>';
 			}
 		}
 		else
@@ -347,7 +362,6 @@ class JFormFieldKey extends JFormField
 						. $this->element['label']
 					. '</label>';
 		}
-
 	}
 
 	/**
@@ -363,14 +377,14 @@ class JFormFieldKey extends JFormField
 		$istranslation = (int) $this->element['istranslation'];
 		$status = (string) $this->element['status'];
 
-		$visibleiduntranslatable = "visible_untranslatable_".$this->element['name'];
-		$hiddediduntranslatable = "hidded_untranslatable_".$this->element['name'];
+		$visibleiduntranslatable = "visible_untranslatable_" . $this->element['name'];
+		$hiddediduntranslatable = "hidded_untranslatable_" . $this->element['name'];
 
-		$visibleidblocked = "visible_blocked_".$this->element['name'];
-		$hiddedidblocked = "hidded_blocked_".$this->element['name'];
+		$visibleidblocked = "visible_blocked_" . $this->element['name'];
+		$hiddedidblocked = "hidded_blocked_" . $this->element['name'];
 
-		$visibleidextra = "visible_extra_".$this->element['name'];
-		$hiddedidextra = "hidded_extra_".$this->element['name'];
+		$visibleidextra = "visible_extra_" . $this->element['name'];
+		$hiddedidextra = "hidded_extra_" . $this->element['name'];
 
 		$isuntranslatable = (int) $this->element['isuntranslatable'];
 		$isblocked        = (int) $this->element['isblocked'];
@@ -412,14 +426,11 @@ class JFormFieldKey extends JFormField
 			{
 				$onclick = '';
 				$button  = '<span style="width:5%;">'
-						. JHtml::_('image', 'com_localise/icon-16-arrow-gray.png', '',
-						array('class' => 'pointer'), true) . '</span>';
+						. JHtml::_('image', 'com_localise/icon-16-arrow-gray.png', '', array('class' => 'pointer'), true) . '</span>';
 
 				$onclick2 = '';
 				$button2  = '<span style="width:5%;">'
-						. JHtml::_('image', 'com_localise/icon-16-bing-gray.png', '',
-						array('class' => 'pointer'), true) . '</span>';
-
+						. JHtml::_('image', 'com_localise/icon-16-bing-gray.png', '', array('class' => 'pointer'), true) . '</span>';
 			}
 			else
 			{
@@ -441,13 +452,12 @@ class JFormFieldKey extends JFormField
 								{
 								document.id('" . $this->id . "').set('class','width-45 untranslated');
 								}
-								document.getElementById('".$visibleiduntranslatable."').removeAttribute('disabled');
+								document.getElementById('" . $visibleiduntranslatable . "').removeAttribute('disabled');
 							}
 							else
 							{
 							window.alert('Protected');
 							}";
-							
 
 				$button  = '<i class="icon-reset hasTooltip return pointer" title="' . JText::_('COM_LOCALISE_TOOLTIP_TRANSLATION_INSERT')
 							. '" onclick="' . $onclick . '"></i>';
@@ -477,57 +487,53 @@ class JFormFieldKey extends JFormField
 			{
 				if ($untranslatable_mode == '1')
 				{
-					$um_conditions = "document.getElementById('".$visibleiduntranslatable."').removeAttribute('disabled');
+					$um_conditions = "document.getElementById('" . $visibleiduntranslatable . "').removeAttribute('disabled');
 							this.set('class','width-45 unchanged');";
 				}
 				else
 				{
 					$um_conditions = "document.id('" . $hiddediduntranslatable . "').set('value', 'false');
-						document.getElementById('".$visibleiduntranslatable."').setAttribute('disabled', 'disabled');
+						document.getElementById('" . $visibleiduntranslatable . "').setAttribute('disabled', 'disabled');
 						this.set('class','width-45 unchanged');";
-
 				}
 
 				if ($blocked_mode == '1')
 				{
-					$bm_conditions = "document.getElementById('".$visibleidblocked."').removeAttribute('disabled');";
+					$bm_conditions = "document.getElementById('" . $visibleidblocked . "').removeAttribute('disabled');";
 				}
 				else
 				{
 					$bm_conditions = "";
-
 				}
+
 			$onkeyup = "javascript:";
-			$onkeyup .= "if (this.get('value')=='') 
+			$onkeyup .= "if (this.get('value')=='')
 					{
 					this.set('class','width-45 untranslated');
 					}
 					else if (this.get('value')=='"
 					. addslashes(htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8'))
 					. "')
-					{".
-					$um_conditions
-					."}
+					{" . $um_conditions . "}
 					else
 					{
 					this.set('class','width-45 translated');
-					document.getElementById('".$visibleiduntranslatable."').checked = false;
+					document.getElementById('" . $visibleiduntranslatable . "').checked = false;
 					document.id('" . $hiddediduntranslatable . "').set('value', 'false');
-					document.getElementById('".$visibleiduntranslatable."').setAttribute('disabled', 'disabled');"
-					.$bm_conditions."
+					document.getElementById('" . $visibleiduntranslatable . "').setAttribute('disabled', 'disabled');"
+					. $bm_conditions . "
 					}";
 
 			$onfocus = "javascript:";
 			$onfocus .= "this.select();
 					if (document.id('" . $hiddedidblocked . "').get('value')=='true')
 					{
-					document.getElementById('".$this->id."').setAttribute('disabled', 'disabled');
+					document.getElementById('" . $this->id . "').setAttribute('disabled', 'disabled');
 					}";
-			$input = '<textarea name="' . $this->name . '" id="' . $this->id . '" onfocus="'.$onfocus.'"
+			$input = '<textarea name="' . $this->name . '" id="' . $this->id . '" onfocus="' . $onfocus . '"
 						class="width-45 ' . $status . '" onkeyup="'
 						. $onkeyup . '">' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '</textarea>';
 			}
-
 		}
 		else
 		{
@@ -604,12 +610,14 @@ class JFormFieldKey extends JFormField
 						else {if (this.get('value')=='" . addslashes(htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'))
 						. "') this.set('class','width-45 " . $status . "');
 						" . ($status == 'extra' ? "else this.set('class','width-45 extra');}" : "else this.set('class','width-45 translated');}");
-			$input = '<textarea name="' . $this->name . '" id="' . $this->id . '" onfocus="this.select()" class="width-45 ' . ($this->value == '' ?
-						'untranslated' : ($this->value == $this->element['description'] ? $status : 'translated')) . '" onkeyup="'
-						. $onkeyup . '">' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '</textarea>';
-
-
-		}	
+			$input = '<textarea name="' . $this->name . '" id=
+				"' . $this->id . '" onfocus=
+				"this.select()" class=
+				"width-45 ' . ($this->value == '' ? 'untranslated' :
+				($this->value == $this->element['description'] ? $status : 'translated')) . '" onkeyup=
+				"' . $onkeyup . '">
+				' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '</textarea>';
+		}
 
 		return $button . $button2 . $input;
 	}
