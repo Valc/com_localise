@@ -43,9 +43,311 @@ class JFormFieldKey extends JFormField
 	 */
 	protected function getLabel()
 	{
-		return '<label id="' . $this->id . '-lbl" for="' . $this->id . '">'
-					. $this->element['label']
-				. '</label>';
+		$istranslation = (int) $this->element['istranslation'];
+		$status = (string) $this->element['status'];
+
+		$visibleiduntranslatable = "visible_untranslatable_".$this->element['name'];
+		$hiddediduntranslatable = "hidded_untranslatable_".$this->element['name'];
+
+		$visibleidblocked = "visible_blocked_".$this->element['name'];
+		$hiddedidblocked = "hidded_blocked_".$this->element['name'];
+
+		$visibleidextra = "visible_extra_".$this->element['name'];
+		$hiddedidextra = "hidded_extra_".$this->element['name'];
+
+		$isuntranslatable = (int) $this->element['isuntranslatable'];
+		$isblocked        = (int) $this->element['isblocked'];
+		$iskeytokeep      = (int) $this->element['iskeytokeep'];
+		$iskeytodelete    = (int) $this->element['iskeytodelete'];
+		$istranslated     = (int) $this->element['istranslated'];
+		$isuntranslated   = (int) $this->element['isuntranslated'];
+		$isunchanged      = (int) $this->element['isunchanged'];
+
+		if ($istranslation == '1')
+		{
+		$untranslatable_mode = $this->element['untranslatable_mode'];
+		$blocked_mode = $this->element['blocked_mode'];
+		$keep_mode = $this->element['keep_mode'];
+
+			if ($status == 'keytodelete' || $status == 'extra')
+			{
+				if ($iskeytokeep == '1' || $status == 'extra')
+				{
+					$checkedextra = ' checked="checked" ';
+					$valueextra   = 'true';
+
+					if ($keep_mode == '1')
+					{
+					$disabledextra = '';
+					}
+					else
+					{
+					$disabledextra = ' disabled="disabled" ';
+					}
+				}
+				else
+				{
+					$checkedextra = '';
+					$valueextra   = 'false';
+
+					if ($keep_mode == '1')
+					{
+					$disabledextra = '';
+					}
+					else
+					{
+					$disabledextra = ' disabled="disabled" ';
+					}
+				}
+
+			$onclickextra = "javascript:document.id(						
+							'" . $hiddedidextra . "'
+							)
+							.set(
+							'value', document.getElementById('".$visibleidextra."' ).checked
+							);
+							if (document.id('" . $hiddedidextra . "').get('value')=='true')
+							{
+							document.id('"
+							. $this->id . "').set('class','width-45 extra');
+							}
+							else if (document.id('" . $hiddedidextra . "').get('value')=='false')
+							{
+								document.id('" . $this->id . "').set('class','width-45 keytodelete');
+							}";
+
+			$checkboxextra = '<div><b>Key to keep</b><input style="max-width:5%; min-width:5%;"  id="' . $visibleidextra . '" type="checkbox" '.$disabledextra.' name="jform[extracheckbox][]" value="' .$this->element['name'] . '" title="Extra" onclick="' .$onclickextra . '" '.$checkedextra.'></input></div><div><input  id="' . $hiddedidextra . '" type="hidden" name="jform[extras][' . $this->element['name'] . ']" value="'.$valueextra.'" ></input></div>';
+
+			return '<div><label id="' . $this->id . '-lbl" for="' . $this->id . '">'
+						. $this->element['label']
+					 . '<br />' . $checkboxextra . '</div></label>';
+			}
+			else
+			{
+				if ($this->value == $this->element['description'])
+				{
+					$isclickableuntranslatable = '1';
+				}
+				else
+				{
+					$isclickableuntranslatable = '0';
+				}
+
+				if ($isuntranslatable == '1' && $isclickableuntranslatable == '1')
+				{
+					if ($untranslatable_mode  == '1')
+					{
+						$checkeduntranslatable = ' checked="checked" ';
+						$valueuntranslatable   = 'true';
+						$disableduntranslatable = '';
+					}
+					else
+					{
+						$checkeduntranslatable = ' checked="checked" ';
+						$valueuntranslatable   = 'true';
+						$disableduntranslatable = ' disabled="disabled" ';
+					}
+
+					$checkedblocked = '';
+					$valueblocked   = 'false';
+					$disabledblocked = ' disabled="disabled" ';
+				}
+				elseif ($isuntranslatable == '1' && $isclickableuntranslatable == '0')
+				{
+					$status = 'translated';
+					$checkeduntranslatable = '';
+					$valueuntranslatable   = 'false';
+					$disableduntranslatable = ' disabled="disabled" ';
+
+					if ($blocked_mode == '1')
+					{
+						$checkedblocked = '';
+						$valueblocked   = 'false';
+						$disabledblocked = '';
+					}
+					else
+					{
+						$checkedblocked = '';
+						$valueblocked   = 'false';
+						$disabledblocked = ' disabled="disabled" ';
+					}
+				}
+				elseif ($isuntranslatable == '0' && $isclickableuntranslatable == '1')
+				{
+
+					if ($isblocked == '1')
+					{
+						$checkedblocked = ' checked="checked" ';
+						$valueblocked   = 'true';
+
+							if ($blocked_mode == '1')
+							{
+								$disabledblocked = '';
+							}
+							else
+							{
+								$disabledblocked = ' disabled="disabled" ';
+							}
+
+						$checkeduntranslatable = '';
+						$valueuntranslatable   = 'false';
+						$disableduntranslatable = ' disabled="disabled" ';
+					}
+					else
+					{
+						if ($blocked_mode == '1')
+						{
+							$checkedblocked = '';
+							$valueblocked   = 'false';
+							$disabledblocked = '';
+						}
+						else
+						{
+							$checkedblocked = '';
+							$valueblocked   = 'false';
+							$disabledblocked = ' disabled="disabled" ';
+						}
+
+						if ($untranslatable_mode  == '1')
+						{
+							$checkeduntranslatable = '';
+							$valueuntranslatable   = 'false';
+							$disableduntranslatable = '';
+						}
+						else
+						{
+							$checkeduntranslatable = '';
+							$valueuntranslatable   = 'false';
+							$disableduntranslatable = ' disabled="disabled" ';
+						}
+					}
+				}
+				elseif ($isuntranslatable == '0' && $isclickableuntranslatable == '0')
+				{
+					$checkeduntranslatable = '';
+					$valueuntranslatable   = 'false';
+					$disableduntranslatable = ' disabled="disabled" ';
+
+						if ($isblocked == '1')
+						{
+							if ($blocked_mode == '1')
+							{
+								$checkedblocked = ' checked="checked" ';
+								$valueblocked   = 'true';
+								$disabledblocked = '';
+							}
+							else
+							{
+								$checkedblocked = ' checked="checked" ';
+								$valueblocked   = 'true';
+								$disabledblocked = ' disabled="disabled" ';
+							}
+
+						}
+						else
+						{
+							$checkedblocked = '';
+							$valueblocked   = 'false';
+
+							if ($blocked_mode == '1')
+							{
+								$disabledblocked = '';
+							}
+							else
+							{
+								$disabledblocked = ' disabled="disabled" ';
+							}
+						}
+				}
+
+			$onclickuntranslatable = "javascript:document.id(						
+							'" . $hiddediduntranslatable . "'
+							)
+							.set(
+							'value', document.getElementById('".$visibleiduntranslatable."' ).checked
+							);
+							if (document.id('" . $hiddediduntranslatable . "').get('value')=='true')
+							{
+							document.id('"
+							. $this->id . "').set('class','width-45 untranslatable');
+							document.getElementById('"
+							.$visibleidblocked."').setAttribute('disabled', 'disabled');
+							}
+							else if (document.id('" . $hiddediduntranslatable . "').get('value')=='false')
+							{
+							document.getElementById('"
+							.$visibleidblocked."').removeAttribute('disabled');
+
+								if (document.id('" . $this->id . "').get('value')=='"
+								. addslashes(htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8'))
+								. "')
+								{
+								document.id('" . $this->id . "').set('class','width-45 unchanged');
+								}
+								else
+								{
+								document.id('" . $this->id . "').set('class','width-45 translated');
+								}
+							}";
+
+			$onclickblocked = "javascript:document.id(						
+							'" . $hiddedidblocked . "'
+							)
+							.set(
+							'value', document.getElementById('".$visibleidblocked."' ).checked
+							);
+							if (document.id('" . $hiddedidblocked . "').get('value')=='true')
+							{
+							document.id('"
+							. $this->id . "').set('class','width-45 blocked');
+							document.getElementById('"
+							.$visibleiduntranslatable."').setAttribute('disabled', 'disabled');
+							document.id('" . $this->id . "').setAttribute('disabled', 'disabled');
+							}
+							else if (document.id('" . $hiddedidblocked . "').get('value')=='false')
+							{
+							document.getElementById('".$this->id."').removeAttribute('disabled');
+
+								if (document.id('" . $this->id . "').get('value')=='"
+								. addslashes(htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8'))
+								. "')
+								{
+								document.getElementById('"
+								.$visibleiduntranslatable."').removeAttribute('disabled');
+								document.id('" . $this->id . "').set('class','width-45 unchanged');
+								}
+								else
+								{
+								document.id('" . $this->id . "').set('class','width-45 translated');
+								}
+							}";
+
+			$checkboxuntranslatable = '<b>Untranslatable</b><input style="max-width:5%; min-width:5%;"  id="'
+				. $visibleiduntranslatable . '" type="checkbox" '.$disableduntranslatable.' name="jform[untranslatablecheckbox][]"  value="'
+				.$this->element['name'].'" title="Untranslatable" onclick="'
+				.$onclickuntranslatable.'" '.$checkeduntranslatable.'></input><input  id="' . $hiddediduntranslatable
+				. '" type="hidden" name="jform[untranslatables]['
+				. $this->element['name'] . ']" value="'.$valueuntranslatable.'" ></input>';
+
+			$checkboxblocked = '<b>Protected</b><input style="max-width:5%; min-width:5%;"  id="'
+				. $visibleidblocked . '" type="checkbox" '.$disabledblocked.' name="jform[blockedcheckbox][]"  value="'
+				.$this->element['name'].'" title="Blocked" onclick="'
+				.$onclickblocked.'" '.$checkedblocked.'></input><input  id="' . $hiddedidblocked
+				. '" type="hidden" name="jform[blockeds]['
+				. $this->element['name'] . ']" value="'.$valueblocked.'" ></input>';
+
+			return '<div><label id="' . $this->id . '-lbl" for="' . $this->id . '">'
+						. $this->element['label']
+					 . '<br />' . $checkboxuntranslatable  . '<br />' . $checkboxblocked . '</label></div>';
+			}
+		}
+		else
+		{
+			return '<label id="' . $this->id . '-lbl" for="' . $this->id . '">'
+						. $this->element['label']
+					. '</label>';
+		}
+
 	}
 
 	/**
