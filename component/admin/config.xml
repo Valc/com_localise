@@ -57,6 +57,38 @@
 			label="COM_LOCALISE_LABEL_SAVE_PERMISSION"
 			description="COM_LOCALISE_LABEL_SAVE_PERMISSION_DESC" />
 		<field
+			name="allowed_groups_raw"
+			type="usergroup"
+			description="COM_LOCALISE_LABEL_ALLOWED_GROUPS_DESC"
+			label="COM_LOCALISE_LABEL_ALLOWED_GROUPS"
+			multiple="true"
+			size="10"
+			required="false" />
+		<field
+			name="allowed_groups_untranslatable"
+			type="usergroup"
+			description="COM_LOCALISE_LABEL_ALLOWED_GROUPS_UNTRANSLATABLE_DESC"
+			label="COM_LOCALISE_LABEL_ALLOWED_GROUPS_UNTRANSLATABLE"
+			multiple="true"
+			size="10"
+			required="false" />
+		<field
+			name="allowed_groups_blocked"
+			type="usergroup"
+			description="COM_LOCALISE_LABEL_ALLOWED_GROUPS_BLOCKED_DESC"
+			label="COM_LOCALISE_LABEL_ALLOWED_GROUPS_BLOCKED"
+			multiple="true"
+			size="10"
+			required="false" />
+		<field
+			name="allowed_groups_keep"
+			type="usergroup"
+			description="COM_LOCALISE_LABEL_ALLOWED_GROUPS_TO_KEEP_DESC"
+			label="COM_LOCALISE_LABEL_ALLOWED_GROUPS_TO_KEEP"
+			multiple="true"
+			size="10"
+			required="false" />
+		<field
 			name="installation"
 			type="folderlist"
 			label="COM_LOCALISE_LABEL_INSTALLATION_FOLDER"
