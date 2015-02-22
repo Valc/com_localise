@@ -116,19 +116,39 @@ class JFormFieldKey extends JFormField
 								document.id('" . $this->id . "').set('class','width-45 keytodelete');
 							}";
 
-			$checkboxextra = '<div><b>Key to keep</b><input style="max-width:5%; min-width:5%;" 
-					id="' . $visibleidextra . '" type="checkbox" ' . $disabledextra . '
-					name="jform[extracheckbox][]" 
-					value="' . $this->element['name'] . '" 
-					title="Extra" onclick="' . $onclickextra . '" ' . $checkedextra . '></input></div>
-					<div><input id="' . $hiddedidextra . '" 
-					type="hidden" name="jform[extras][' . $this->element['name'] . ']" 
-					value="' . $valueextra . '" ></input></div>';
+			$checkboxextra = '';
 
-			return '<div><label id="' . $this->id . '-lbl" for="
-						' . $this->id . '">
-						' . $this->element['label'] . '<br />
-						' . $checkboxextra . '</div></label>';
+			$checkboxextra .= '<div><b>Key to keep</b><input style="max-width:5%; min-width:5%;" id="';
+			$checkboxextra .= $visibleidextra;
+			$checkboxextra .= '" type="checkbox" ';
+			$checkboxextra .= $disabledextra;
+			$checkboxextra .= 'name="jform[extracheckbox][]" value="';
+			$checkboxextra .= $this->element['name'];
+			$checkboxextra .= '" title="Extra" onclick="';
+			$checkboxextra .= $onclickextra;
+			$checkboxextra .= '" ';
+			$checkboxextra .= $checkedextra;
+			$checkboxextra .= '></input></div><div><input id="';
+			$checkboxextra .= $hiddedidextra;
+			$checkboxextra .= '" type="hidden" name="jform[extras][';
+			$checkboxextra .= $this->element['name'];
+			$checkboxextra .= ']" value="';
+			$checkboxextra .= $valueextra;
+			$checkboxextra .= '" ></input></div>';
+
+			$return = '';
+
+			$return .= '<div><label id="';
+			$return .= $this->id;
+			$return .= '-lbl" for="';
+			$return .= $this->id;
+			$return .= '">';
+			$return .= $this->element['label'];
+			$return .= '<br />';
+			$return .= $checkboxextra;
+			$return .= '</div></label>';
+
+			return $return;
 			}
 			else
 			{
@@ -327,33 +347,60 @@ class JFormFieldKey extends JFormField
 								document.id('" . $this->id . "').set('class','width-45 translated');
 								}
 							}";
+			$checkboxuntranslatable = '';
 
-			$checkboxuntranslatable = '<b>Untranslatable</b><input style="max-width:5%; min-width:5%;" id="
-						' . $visibleiduntranslatable . '
-						" type="checkbox" ' . $disableduntranslatable . ' name=
-						"jform[untranslatablecheckbox][]" value="
-						' . $this->element['name'] . '" title="Untranslatable" onclick="
-						' . $onclickuntranslatable . '" ' . $checkeduntranslatable . '>
-						</input><input id="
-						' . $hiddediduntranslatable . '" type="hidden" name=
-						"jform[untranslatables][' . $this->element['name'] . ']" value="
-						' . $valueuntranslatable . '" ></input>';
+			$checkboxuntranslatable .= '<b>Untranslatable</b><input style="max-width:5%; min-width:5%;" id="';
+			$checkboxuntranslatable .= $visibleiduntranslatable;
+			$checkboxuntranslatable .= '" type="checkbox" ';
+			$checkboxuntranslatable .= $disableduntranslatable;
+			$checkboxuntranslatable .= ' name="jform[untranslatablecheckbox][]" value="';
+			$checkboxuntranslatable .= $this->element['name'];
+			$checkboxuntranslatable .= '" title="Untranslatable" onclick="';
+			$checkboxuntranslatable .= $onclickuntranslatable;
+			$checkboxuntranslatable .= '" ';
+			$checkboxuntranslatable .= $checkeduntranslatable;
+			$checkboxuntranslatable .= '></input><input id="';
+			$checkboxuntranslatable .= $hiddediduntranslatable;
+			$checkboxuntranslatable .= '" type="hidden" name="jform[untranslatables][';
+			$checkboxuntranslatable .= $this->element['name'] . ']" value="';
+			$checkboxuntranslatable .= $valueuntranslatable;
+			$checkboxuntranslatable .= '" ></input>';
 
-			$checkboxblocked = '<b>Protected</b><input style="max-width:5%; min-width:5%;" id="
-					' . $visibleidblocked . '" type=
-					"checkbox" ' . $disabledblocked . ' name=
-					"jform[blockedcheckbox][]" value=
-					"' . $this->element['name'] . '" title=
-					"Blocked" onclick="' . $onclickblocked . '" ' . $checkedblocked . '></input>
-					<input id="' . $hiddedidblocked . '" type=
-					"hidden" name="
-					jform[blockeds][' . $this->element['name'] . ']" value=
-					"' . $valueblocked . '" ></input>';
+			$checkboxblocked = '';
 
-			return '<div><label id="' . $this->id . '-lbl" for=
-					"' . $this->id . '">' . $this->element['label'] . '
-					<br />' . $checkboxuntranslatable . '
-					<br />' . $checkboxblocked . '</label></div>';
+			$checkboxblocked .= '<b>Protected</b><input style="max-width:5%; min-width:5%;" id="';
+			$checkboxblocked .= $visibleidblocked;
+			$checkboxblocked .= '" type="checkbox" ';
+			$checkboxblocked .= $disabledblocked;
+			$checkboxblocked .= ' name="jform[blockedcheckbox][]" value="';
+			$checkboxblocked .= $this->element['name'];
+			$checkboxblocked .= '" title="Blocked" onclick="';
+			$checkboxblocked .= $onclickblocked;
+			$checkboxblocked .= '" ';
+			$checkboxblocked .= $checkedblocked;
+			$checkboxblocked .= '></input><input id="';
+			$checkboxblocked .= $hiddedidblocked;
+			$checkboxblocked .= '" type="hidden" name="jform[blockeds][';
+			$checkboxblocked .= $this->element['name'];
+			$checkboxblocked .= ']" value="';
+			$checkboxblocked .= $valueblocked;
+			$checkboxblocked .= '" ></input>';
+
+			$return = '';
+
+			$return .= '<div><label id="';
+			$return .= $this->id;
+			$return .= '-lbl" for="';
+			$return .= $this->id;
+			$return .= '">';
+			$return .= $this->element['label'];
+			$return .= '<br />';
+			$return .= $checkboxuntranslatable;
+			$return .= '<br />';
+			$return .= $checkboxblocked;
+			$return .= '</label></div>';
+
+			return $return;
 			}
 		}
 		else
