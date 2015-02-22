@@ -59,8 +59,8 @@
 		<field
 			name="allowed_groups_raw"
 			type="usergroup"
-			description="COM_LOCALISE_LABEL_ALLOWED_GROUPS_DESC"
-			label="COM_LOCALISE_LABEL_ALLOWED_GROUPS"
+			description="COM_LOCALISE_LABEL_ALLOWED_GROUPS_RAW_DESC"
+			label="COM_LOCALISE_LABEL_ALLOWED_GROUPS_RAW"
 			multiple="true"
 			size="10"
 			required="false" />
