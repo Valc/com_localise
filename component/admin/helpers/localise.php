@@ -453,6 +453,436 @@ abstract class LocaliseHelper
 		return $id;
 	}
 
+
+	public static function loadUntranslatablestrings($client, $tag, $filename)
+	{
+		if (!empty($client) && !empty($tag) && !empty($filename))
+		{
+			try
+			{
+				$db             = JFactory::getDbo();
+				$query	        = $db->getQuery(true);
+				$searchClient   = $db->quote($client);
+				$searchTag      = $db->quote($tag);
+				$searchFilename = $db->quote($filename);
+				$query->select	(
+						array	(
+							$db->quoteName('untranslatablekeycase')
+							)
+						);
+				$query->from	(
+						$db->quoteName('#__localise_specialuntranslatablekeys')
+						);
+				$query->where	(
+						$db->quoteName('client') . '= ' . $searchClient
+						);
+				$query->where	(
+						$db->quoteName('tag') . '= ' . $searchTag
+
+						);
+				$query->where	(
+						$db->quoteName('filename') . '= ' . $searchFilename
+						);
+
+				$db->setQuery($query);
+
+					if (!$db->query())
+					{
+						throw new Exception($db->getErrorMsg());
+					}
+
+			}
+
+			catch (JException $e)
+			{
+				$this->setError('COM_LOCALISE_ERROR_GETTING_SPECIAL_KEYS_CASES');
+				return array();
+			}
+
+			$result = $db->loadColumn();
+
+				if (!is_null($result))
+				{
+					return (array) $result;
+				}
+				else
+				{
+					return array();
+				}
+		}
+
+		return array();
+	}
+
+	public static function loadBlockedstrings($client, $tag, $filename)
+	{
+		if (!empty($client) && !empty($tag) && !empty($filename))
+		{
+			try
+			{
+				$db             = JFactory::getDbo();
+				$query	        = $db->getQuery(true);
+				$searchClient   = $db->quote($client);
+				$searchTag      = $db->quote($tag);
+				$searchFilename = $db->quote($filename);
+				$query->select	(
+						array	(
+							$db->quoteName('blockedkeycase')
+							)
+						);
+				$query->from	(
+						$db->quoteName('#__localise_specialblockedkeys')
+						);
+				$query->where	(
+						$db->quoteName('client') . '= ' . $searchClient
+						);
+				$query->where	(
+						$db->quoteName('tag') . '= ' . $searchTag
+
+						);
+				$query->where	(
+						$db->quoteName('filename') . '= ' . $searchFilename
+						);
+
+				$db->setQuery($query);
+
+					if (!$db->query())
+					{
+						throw new Exception($db->getErrorMsg());
+					}
+
+			}
+
+			catch (JException $e)
+			{
+				$this->setError('COM_LOCALISE_ERROR_GETTING_SPECIAL_KEYS_CASES');
+				return array();
+			}
+
+			$result = $db->loadColumn();
+
+				if (!is_null($result))
+				{
+					return (array) $result;
+				}
+				else
+				{
+					return array();
+				}
+		}
+
+		return array();
+	}
+
+	public static function loadKeystokeep($client, $tag, $filename)
+	{
+		if (!empty($client) && !empty($tag) && !empty($filename))
+		{
+			try
+			{
+				$db             = JFactory::getDbo();
+				$query	        = $db->getQuery(true);
+				$searchClient   = $db->quote($client);
+				$searchTag      = $db->quote($tag);
+				$searchFilename = $db->quote($filename);
+				$query->select	(
+						array	(
+							$db->quoteName('extrakeycase')
+							)
+						);
+				$query->from	(
+						$db->quoteName('#__localise_specialextrakeys')
+						);
+				$query->where	(
+						$db->quoteName('client') . '= ' . $searchClient
+						);
+				$query->where	(
+						$db->quoteName('tag') . '= ' . $searchTag
+
+						);
+				$query->where	(
+						$db->quoteName('filename') . '= ' . $searchFilename
+						);
+
+				$db->setQuery($query);
+
+					if (!$db->query())
+					{
+						throw new Exception($db->getErrorMsg());
+					}
+
+			}
+
+			catch (JException $e)
+			{
+				$this->setError('COM_LOCALISE_ERROR_GETTING_SPECIAL_KEYS_CASES');
+				return array();
+			}
+
+			$result = $db->loadColumn();
+
+				if (!is_null($result))
+				{
+					return (array) $result;
+				}
+				else
+				{
+					return array();
+				}
+		}
+
+		return array();
+	}
+
+	public static function deleteUntranslatablestrings($client, $tag, $filename)
+	{
+		if (!empty($client) && !empty($tag) && !empty($filename))
+		{
+			try
+			{
+				$db = JFactory::getDbo();
+				$query	= $db->getQuery(true);
+				$searchClient = $db->quote($client);
+				$searchTag = $db->quote($tag);
+				$searchFilename = $db->quote($filename);
+				$conditions = array(
+						$db->quoteName('client') . '= ' . $searchClient,
+						$db->quoteName('tag') . '= ' . $searchTag,
+						$db->quoteName('filename') . '= ' . $searchFilename
+						);
+
+				$query->delete (
+						$db->quoteName('#__localise_specialuntranslatablekeys')
+						);
+
+				$query->where($conditions);
+
+				$db->setQuery($query);
+
+				$result = $db->execute();
+			}
+
+			catch (JException $e)
+			{
+				$this->setError('COM_LOCALISE_ERROR_DELETING_SPECIAL_KEYS_CASES');
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public static function deleteBlockedstrings($client, $tag, $filename)
+	{
+		if (!empty($client) && !empty($tag) && !empty($filename))
+		{
+			try
+			{
+				$db = JFactory::getDbo();
+				$query	= $db->getQuery(true);
+				$searchClient = $db->quote($client);
+				$searchTag = $db->quote($tag);
+				$searchFilename = $db->quote($filename);
+				$conditions = array(
+						$db->quoteName('client') . '= ' . $searchClient,
+						$db->quoteName('tag') . '= ' . $searchTag,
+						$db->quoteName('filename') . '= ' . $searchFilename
+						);
+
+				$query->delete (
+						$db->quoteName('#__localise_specialblockedkeys')
+						);
+
+				$query->where($conditions);
+
+				$db->setQuery($query);
+
+				$result = $db->execute();
+			}
+
+			catch (JException $e)
+			{
+				$this->setError('COM_LOCALISE_ERROR_DELETING_SPECIAL_KEYS_CASES');
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public static function deleteExtrastrings($client, $tag, $filename)
+	{
+		if (!empty($client) && !empty($tag) && !empty($filename))
+		{
+			try
+			{
+				$db = JFactory::getDbo();
+				$query	= $db->getQuery(true);
+				$searchClient = $db->quote($client);
+				$searchTag = $db->quote($tag);
+				$searchFilename = $db->quote($filename);
+				$conditions = array(
+						$db->quoteName('client') . '= ' . $searchClient,
+						$db->quoteName('tag') . '= ' . $searchTag,
+						$db->quoteName('filename') . '= ' . $searchFilename
+						);
+
+				$query->delete (
+						$db->quoteName('#__localise_specialextrakeys')
+						);
+
+				$query->where($conditions);
+
+				$db->setQuery($query);
+
+				$result = $db->execute();
+			}
+
+			catch (JException $e)
+			{
+				$this->setError('COM_LOCALISE_ERROR_DELETING_SPECIAL_KEYS_CASES');
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public static function saveUntranslatablestrings($client, $tag, $filename, $keydata)
+	{
+		if (!empty($client) && !empty($tag) && !empty($filename) && !empty($keydata))
+		{
+			try
+			{
+				$db = JFactory::getDbo();
+
+				$savedClient = $db->quote($client);
+
+				$savedTag = $db->quote($tag);
+
+				$savedFilename = $db->quote($filename);
+
+				$savedKey = $db->quote($keydata);
+				 
+				$query = $db->getQuery(true);
+				 
+				$columns = array('client', 'tag', 'filename', 'untranslatablekeycase');
+				 
+				$values = array($savedClient, $savedTag, $savedFilename, $savedKey);
+				 
+				$query
+				    ->insert($db->quoteName('#__localise_specialuntranslatablekeys'))
+				    ->columns($db->quoteName($columns))
+				    ->values(implode(',', $values));
+				 
+				$db->setQuery($query);
+				$db->execute();
+			}
+
+			catch (JException $e)
+			{
+				$this->setError('COM_LOCALISE_ERROR_SAVING_SPECIAL_KEYS_CASES');
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public static function saveBlockedstrings($client, $tag, $filename, $keydata)
+	{
+		if (!empty($client) && !empty($tag) && !empty($filename) && !empty($keydata))
+		{
+			try
+			{
+				$db = JFactory::getDbo();
+
+				$savedClient = $db->quote($client);
+
+				$savedTag = $db->quote($tag);
+
+				$savedFilename = $db->quote($filename);
+
+				$savedKey = $db->quote($keydata);
+				 
+				$query = $db->getQuery(true);
+				 
+				$columns = array('client', 'tag', 'filename', 'blockedkeycase');
+				 
+				$values = array($savedClient, $savedTag, $savedFilename, $savedKey);
+				 
+				$query
+				    ->insert($db->quoteName('#__localise_specialblockedkeys'))
+				    ->columns($db->quoteName($columns))
+				    ->values(implode(',', $values));
+				 
+				$db->setQuery($query);
+				$db->execute();
+			}
+
+			catch (JException $e)
+			{
+				$this->setError('COM_LOCALISE_ERROR_SAVING_SPECIAL_KEYS_CASES');
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public static function saveExtrastrings($client, $tag, $filename, $keydata)
+	{
+		if (!empty($client) && !empty($tag) && !empty($filename) && !empty($keydata))
+		{
+			try
+			{
+				$db = JFactory::getDbo();
+
+				$savedClient = $db->quote($client);
+
+				$savedTag = $db->quote($tag);
+
+				$savedFilename = $db->quote($filename);
+
+				$savedKey = $db->quote($keydata);
+				 
+				$query = $db->getQuery(true);
+				 
+				$columns = array('client', 'tag', 'filename', 'extrakeycase');
+				 
+				$values = array($savedClient, $savedTag, $savedFilename, $savedKey);
+				 
+				$query
+				    ->insert($db->quoteName('#__localise_specialextrakeys'))
+				    ->columns($db->quoteName($columns))
+				    ->values(implode(',', $values));
+				 
+				$db->setQuery($query);
+				$db->execute();
+			}
+
+			catch (JException $e)
+			{
+				$this->setError('COM_LOCALISE_ERROR_SAVING_SPECIAL_KEYS_CASES');
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Get file path in the database for the given file id
 	 *
