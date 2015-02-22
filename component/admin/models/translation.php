@@ -1063,11 +1063,14 @@ class LocaliseModelTranslation extends JModelAdmin
 	 */
 	public function saveFile($data)
 	{
-		$path      = $this->getState('translation.path');
-		$refpath   = $this->getState('translation.refpath');
-		$exists    = JFile::exists($path);
-		$refexists = JFile::exists($refpath);
-		$client    = $this->getState('translation.client');
+
+		$path       = $this->getState('translation.path');
+		$refpath    = $this->getState('translation.refpath');
+		$exists     = JFile::exists($path);
+		$refexists  = JFile::exists($refpath);
+		$client     = $this->getState('translation.client');
+		$keystokeep = (array) $this->getState('translation.keystokeep');
+
 
 		// Set FTP credentials, if given.
 		JClientHelper::setCredentialsFromRequest('ftp');
@@ -1242,17 +1245,42 @@ class LocaliseModelTranslation extends JModelAdmin
 
 			if (!empty($strings))
 			{
-				$contents[] = "\n[New Strings]\n\n";
+				$contents_to_add = array();
+				$contents_to_delete = array();
 
 				foreach ($strings as $key => $string)
 				{
-					$contents[] = $key . '="' . str_replace('"', '"_QQ_"', $string) . "\"\n";
+					if (in_array($key, $keystokeep))
+					{
+						$contents_to_add[] = $key . '="' . str_replace('"', '"_QQ_"', $string) . "\"\n";
+					}
+					else
+					{
+						$contents_to_delete[] = $key . '="' . str_replace('"', '"_QQ_"', $string) . "\"\n";
+					}
 				}
 			}
 
 			$stream->close();
 			$contents = implode($contents);
 			$contents = $contents2 . $contents;
+
+			if (!empty($contents_to_add))
+			{
+				$contents .= "\n[Keys to keep in target]\n\n";
+				$contents .= ";The next keys are not present in en-GB language but are used as extra in this language
+							(extra plural cases, custom CAPTCHA translations, etc).\n\n";
+				$contents_to_add = implode($contents_to_add);
+				$contents .= $contents_to_add;
+			}
+
+			if (!empty($contents_to_delete))
+			{
+				$contents .= "\n[Keys to delete]\n\n";
+				$contents .= ";This keys are not used in en-GB language and are not required in this language.\n\n";
+				$contents_to_delete = implode($contents_to_delete);
+				$contents .= $contents_to_delete;
+			}
 		}
 
 		$return = JFile::write($path, $contents);
@@ -1305,13 +1333,114 @@ class LocaliseModelTranslation extends JModelAdmin
 	public function save($data)
 	{
 		// Fix DOT saving issue
-		$input = JFactory::getApplication()->input;
-
+		$input    = JFactory::getApplication()->input;
 		$formData = $input->get('jform', array(), 'ARRAY');
 
 		if (!empty($formData['strings']))
 		{
 			$data['strings'] = $formData['strings'];
+		}
+
+		$params                = JComponentHelper::getParams('com_localise');
+		$user = JFactory::getUser();
+		$allowed_groups_raw = (array) $params->get('allowed_groups_raw', null);
+		$allowed_groups_untranslatable = (array) $params->get('allowed_groups_untranslatable', null);
+		$allowed_groups_blocked = (array) $params->get('allowed_groups_blocked', null);
+		$allowed_groups_keep = (array) $params->get('allowed_groups_keep', null);
+		$user_groups = $user->get('groups');
+
+		$this->setState('translation.untranslatable_mode', '1');
+		$this->setState('translation.blocked_mode', '1');
+		$this->setState('translation.keep_mode', '1');
+
+			if (!empty($allowed_groups_untranslatable) && !empty($user_groups))
+			{
+				if (!array_intersect($allowed_groups_untranslatable, $user_groups))
+				{
+				$this->setState('translation.untranslatable_mode', '0');
+				}
+			}
+
+			if (!empty($allowed_groups_blocked) && !empty($user_groups))
+			{
+				if (!array_intersect($allowed_groups_blocked, $user_groups))
+				{
+				$this->setState('translation.blocked_mode', '0');
+				}
+			}
+
+			if (!empty($allowed_groups_keep) && !empty($user_groups))
+			{
+				if (!array_intersect($allowed_groups_keep, $user_groups))
+				{
+				$this->setState('translation.keep_mode', '0');
+				}
+			}
+
+
+		$untranslatable_mode = $this->getState('translation.untranslatable_mode');
+		$blocked_mode        = $this->getState('translation.blocked_mode');
+		$keep_mode           = $this->getState('translation.keep_mode');
+
+		$bdclient            = $this->getState('translation.client');				
+		$tag                 = $this->getState('translation.tag');
+		$path                = $this->getState('translation.path');
+		$filename            = basename ($path);
+		$untranslatable_mode = $this->getState('translation.untranslatable_mode');
+		$blocked_mode        = $this->getState('translation.blocked_mode');
+		$keep_mode           = $this->getState('translation.keep_mode');
+
+		if ($this->getState('translation.path') == $this->getState('translation.refpath'))
+		{
+			$this->setState('translation.istranslation', '0');
+			$istranslation = 0;
+		}
+		else
+		{
+			$this->setState('translation.istranslation', '1');
+			$istranslation = 1;
+		}
+
+		if ($istranslation == '1' && $this->getState('translation.layout') != 'raw')
+		{
+			if (isset($data['untranslatables']) && $untranslatable_mode == '1')
+			{
+				LocaliseHelper::deleteUntranslatablestrings($bdclient, $tag, $filename);
+
+				foreach ($data['untranslatables'] as $specialkey => $status)
+				{
+					if ($status == 'true')
+					{
+					LocaliseHelper::saveUntranslatablestrings($bdclient, $tag, $filename, $specialkey);
+					}
+				}
+			}
+
+			if (isset($data['blockeds']) && $blocked_mode == '1')
+			{
+				LocaliseHelper::deleteBlockedstrings($bdclient, $tag, $filename);
+
+				foreach ($data['blockeds'] as $specialkey => $status)
+				{
+					if ($status == 'true')
+					{
+					LocaliseHelper::saveBlockedstrings($bdclient, $tag, $filename, $specialkey);
+					}
+				}
+			}
+
+			if (isset($data['extras']) && $keep_mode == '1')
+			{
+				LocaliseHelper::deleteExtrastrings($bdclient, $tag, $filename);
+
+				foreach ($data['extras'] as $specialkey => $status)
+				{
+					if ($status == 'true')
+					{
+					LocaliseHelper::saveExtrastrings($bdclient, $tag, $filename, $specialkey);
+					}
+				}
+			}
 		}
 
 		// Special case for lib_joomla
