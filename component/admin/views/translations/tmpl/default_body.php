@@ -15,10 +15,12 @@ $reference = $params->get('reference', 'en-GB');
 $packages = LocaliseHelper::getPackages();
 $user = JFactory::getUser();
 $userId = $user->get('id');
+
 $lang = JFactory::getLanguage();
 ?>
 <?php foreach ($this->items as $i => $item) : ?>
 	<?php $canEdit = $user->authorise('localise.edit', 'com_localise' . (isset($item->id) ? ('.' . $item->id) : '')); ?>
+	<?php $raw_mode = $item->raw_mode;?>
 	<tr class="<?php echo $item->state; ?> row<?php echo $i % 2; ?>">
 		<td width="20" class="center hidden-phone"><?php echo $i + 1; ?></td>
 		<td width="120" class="center hidden-phone">
@@ -47,7 +49,7 @@ $lang = JFactory::getLanguage();
 				<?php endif; ?>
 				<?php echo JHtml::_('jgrid.action', $i, '', array('tip' => true, 'inactive_title' => JText::_($packages[$item->origin]->title) . '::' . JText::_($packages[$item->origin]->description), 'inactive_class' => '16-' . $icon, 'enabled' => false, 'translate' => false)); ?>
 			<?php endif; ?>
-			<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_STATE_'.$item->state, $item->translated, $item->unchanged, $item->total, $item->extra), 'inactive_class'=>'16-'.$item->state, 'enabled' => false, 'translate'=>false)); ?>
+			<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_STATE_'.$item->state, $item->translated, $item->unchanged, $item->total, $item->extra, $item->blocked, $item->untranslatable), 'inactive_class'=>'16-'.$item->state, 'enabled' => false, 'translate'=>false)); ?>
 			<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_TYPE_'.$item->type), 'inactive_class'=>'16-'.$item->type, 'enabled' => false, 'translate'=>false)); ?>
 			<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_CLIENT_'.$item->client), 'inactive_class'=>'16-'.$item->client, 'enabled' => false, 'translate'=>false)); ?>
 			<?php if ($item->tag == $reference && $item->type != 'override') : ?>
@@ -63,7 +65,7 @@ $lang = JFactory::getLanguage();
 				<input type="checkbox" id="cb<?php echo $i; ?>" class="hidden" name="cid[]" value="<?php echo $item->id; ?>">
 			<?php endif; ?>
 			<?php if ($item->writable && !$item->error && $canEdit) : ?>
-				<a class="hasTooltip" href="<?php echo JRoute::_('index.php?option=com_localise&task=translation.edit&client='.$item->client.'&tag='.$item->tag.'&filename='.$item->filename.'&storage='.$item->storage.'&id='.LocaliseHelper::getFileId(LocaliseHelper::getTranslationPath($item->client,$item->tag, $item->filename, $item->storage)).($item->filename=='override' ? '&layout=raw' :'')); ?>" title="<?php echo JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_' . ($item->state=='unexisting' ? 'NEW' : 'EDIT')); ?>">
+				<a class="hasTooltip" href="<?php echo JRoute::_('index.php?option=com_localise&task=translation.edit&client='.$item->client.'&tag='.$item->tag.'&filename='.$item->filename.'&storage='.$item->storage.'&id='.LocaliseHelper::getFileId(LocaliseHelper::getTranslationPath($item->client,$item->tag, $item->filename, $item->storage)).(($item->filename=='override' && $raw_mode) ? '&layout=raw' :'')); ?>" title="<?php echo JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_' . ($item->state=='unexisting' ? 'NEW' : 'EDIT')); ?>">
 				<?php echo $item->name; ?>.ini
 				</a>
 			<?php elseif (!$canEdit) : ?>
@@ -78,7 +80,7 @@ $lang = JFactory::getLanguage();
 				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_ERROR', substr($item->path, strlen(JPATH_ROOT)) , implode(', ',$item->error)), 'inactive_class'=>'16-error', 'enabled' => false, 'translate'=>false)); ?>
 				<?php echo $item->name; ?>.ini
 			<?php endif; ?>
-			<?php if ($item->writable && $canEdit) : ?>
+			<?php if ($item->writable && $canEdit && $raw_mode) : ?>
 				(<a class="hasTooltip" href="<?php echo JRoute::_('index.php?option=com_localise&task=translation.edit&client=' . $item->client . '&tag=' . $item->tag . '&filename=' . $item->filename . '&storage=' . $item->storage . '&id=' . LocaliseHelper::getFileId(LocaliseHelper::getTranslationPath($item->client,$item->tag, $item->filename, $item->storage)) . '&layout=raw'); ?>" title="<?php echo JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_' . ($item->state=='unexisting' ? 'NEWRAW' : 'EDITRAW')); ?>"><?php echo JText::_('COM_LOCALISE_TEXT_TRANSLATIONS_SOURCE'); ?></a>)
 			<?php else : ?>
 				<?php echo substr($item->path,strlen(JPATH_ROOT)); ?>
@@ -100,13 +102,13 @@ $lang = JFactory::getLanguage();
 			<?php elseif ($item->state == 'notinreference') : ?>
 				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_STATE_NOTINREFERENCE'), 'inactive_class'=>'16-notinreference', 'enabled' => false, 'translate'=>false)); ?>
 			<?php elseif ($item->state == 'unexisting') : ?>
-				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_STATE_UNEXISTING', $item->translated, $item->unchanged, $item->total, $item->extra), 'inactive_class'=>'16-unexisting', 'enabled' => false, 'translate'=>false)); ?>
+				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_STATE_UNEXISTING', $item->translated, $item->unchanged, $item->total, $item->extra, $item->keytodelete, $item->blocked, $item->untranslatable), 'inactive_class'=>'16-unexisting', 'enabled' => false, 'translate'=>false)); ?>
 			<?php elseif ($item->tag == $reference) : ?>
 				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_REFERENCE'), 'inactive_class'=>'16-reference', 'enabled' => false, 'translate'=>false)); ?>
-			<?php elseif (($item->translated + $item->unchanged) == $item->total && $item->complete) : ?>
-				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_COMPLETE', $item->translated, $item->unchanged, $item->total, $item->extra), 'inactive_class'=>'16-complete', 'enabled' => false, 'translate'=>false)); ?>
+			<?php elseif ($item->translated == $item->total) : ?>
+				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_COMPLETE', $item->translated, $item->unchanged, $item->total, $item->extra, $item->keytodelete, $item->blocked, $item->untranslatable), 'inactive_class'=>'16-complete', 'enabled' => false, 'translate'=>false)); ?>
 			<?php else : ?>
-				<span class="hasTooltip" title="<?php echo $item->translated + $item->unchanged == 0 ? JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_NOTSTARTED') : JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_INPROGRESS', $item->translated, $item->unchanged, $item->total, $item->extra); ?>">
+				<span class="hasTooltip" title="<?php echo $item->translated + $item->unchanged == 0 ? JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_NOTSTARTED') : JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_INPROGRESS', $item->translated, $item->unchanged, $item->total, $item->extra, $item->keytodelete, $item->blocked, $item->untranslatable); ?>">
 				<?php $translated =  $item->total ? intval(100 * $item->translated / $item->total) : 0; ?>
 				<?php $unchanged =  ($item->translated+$item->unchanged==$item->total)?(100-$translated):($item->total ? intval(100 * $item->unchanged / $item->total) : 0); ?>
 					<?php if ($item->unchanged):?>
@@ -136,7 +138,7 @@ $lang = JFactory::getLanguage();
 					<?php echo $item->translated; ?>
 				<?php
 				else : ?>
-					<?php echo ($item->unchanged ? ("(" . $item->translated . "+" . $item->unchanged . ")") : $item->translated) . "/" . $item->total . ($item->extra ? "+" . $item->extra : ''); ?>
+					<?php echo ($item->unchanged ? ("(" . $item->translated . "+" . $item->unchanged . ")") : $item->translated) . "/" . $item->total . ($item->extra ? "<br />Extra keys: " . $item->extra : '') . ($item->keytodelete ? "<br />Keys to delete: " . $item->keytodelete : ''); ?>
 				<?php endif; ?>
 			<?php endif; ?>
 		</td>
