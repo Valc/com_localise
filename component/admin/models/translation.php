@@ -684,12 +684,32 @@ class LocaliseModelTranslation extends JModelAdmin
 	protected function preprocessForm(JForm $form, $item, $group = 'content')
 	{
 		// Initialize variables.
-		$filename = $this->getState('translation.filename');
-		$client   = $this->getState('translation.client');
-		$tag      = $this->getState('translation.tag');
-		$origin   = LocaliseHelper::getOrigin($filename, $client);
-		$app      = JFactory::getApplication();
-		$false    = false;
+		$filename              = $this->getState('translation.filename');
+		$client                = $this->getState('translation.client');
+		$tag                   = $this->getState('translation.tag');
+		$origin                = LocaliseHelper::getOrigin($filename, $client);
+		$app                   = JFactory::getApplication();
+		$false                 = false;
+		$filepath              = $this->getState('translation.path');
+		$file                  = basename ($filepath);
+		$untranslatablestrings = $this->getState('translation.untranslatablestrings');
+		$blockedstrings        = $this->getState('translation.blockedstrings');
+		$keystokeep            = $this->getState('translation.keystokeep');
+		$raw_mode              = $this->getState('translation.raw_mode');
+		$untranslatable_mode   = $this->getState('translation.untranslatable_mode');
+		$blocked_mode          = $this->getState('translation.blocked_mode');
+		$keep_mode             = $this->getState('translation.keep_mode');
+
+		if ($this->getState('translation.path') == $this->getState('translation.refpath'))
+		{
+			$this->setState('translation.istranslation', '0');
+			$istranslation = 0;
+		}
+		else
+		{
+			$this->setState('translation.istranslation', '1');
+			$istranslation = 1;
+		}
 
 		// Compute all known languages
 		static $languages = array();
@@ -704,8 +724,11 @@ class LocaliseModelTranslation extends JModelAdmin
 		{
 			$form->setFieldAttribute('legend', 'unchanged', $item->unchanged, 'legend');
 			$form->setFieldAttribute('legend', 'translated', $item->translated, 'legend');
+			$form->setFieldAttribute('legend', 'untranslatable', $item->untranslatable, 'legend');
+			$form->setFieldAttribute('legend', 'blocked', $item->blocked, 'legend');
 			$form->setFieldAttribute('legend', 'untranslated', $item->total - $item->translated - $item->unchanged, 'legend');
 			$form->setFieldAttribute('legend', 'extra', $item->extra, 'legend');
+			$form->setFieldAttribute('legend', 'keytodelete', $item->keytodelete, 'legend');
 		}
 
 		if ($this->getState('translation.layout') != 'raw')
@@ -777,16 +800,66 @@ class LocaliseModelTranslation extends JModelAdmin
 						$field      = $fieldset->addChild('field');
 						$string     = $refsections['keys'][$key];
 						$translated = isset($sections['keys'][$key]);
-						$modified   = $translated && $sections['keys'][$key] != $refsections['keys'][$key];
-						$status     = $modified
-							? 'translated'
-							: ($translated
-								? 'unchanged'
-								: 'untranslated');
-						$default    = $translated
-							? $sections['keys'][$key]
-							: '';
+						$modified   = ($translated && $sections['keys'][$key] != $refsections['keys'][$key])
+										|| ($translated && in_array($key, $untranslatablestrings));
+						$status     = $modified ? 'translated' : ($translated ? 'unchanged' : 'untranslated');
+						$default    = $translated ? $sections['keys'][$key] : '';
 						$label      = '<b>' . $key . '</b><br />' . htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+
+						if (in_array($key, $blockedstrings))
+						{
+							$status = "blocked";
+							$field->addAttribute('isblocked', '1');
+							$field->addAttribute('isuntranslatable', '0');
+							$field->addAttribute('iskeytokeep', '0');
+							$field->addAttribute('iskeytodelete', '0');
+							$field->addAttribute('istranslated', '0');
+							$field->addAttribute('isuntranslated', '0');
+							$field->addAttribute('isunchanged', '0');
+						}
+						elseif (in_array($key, $untranslatablestrings))
+						{
+							$status = "untranslatable";
+							$field->addAttribute('isuntranslatable', '1');
+							$field->addAttribute('isblocked', '0');
+							$field->addAttribute('iskeytokeep', '0');
+							$field->addAttribute('iskeytodelete', '0');
+							$field->addAttribute('istranslated', '0');
+							$field->addAttribute('isuntranslated', '0');
+							$field->addAttribute('isunchanged', '0');
+						}
+						elseif ($status == 'translated')
+						{
+							$field->addAttribute('isuntranslatable', '0');
+							$field->addAttribute('isblocked', '0');
+							$field->addAttribute('iskeytokeep', '0');
+							$field->addAttribute('iskeytodelete', '0');
+							$field->addAttribute('istranslated', '1');
+							$field->addAttribute('isuntranslated', '0');
+							$field->addAttribute('isunchanged', '0');
+						}
+						elseif ($status == 'untranslated')
+						{
+							$field->addAttribute('isuntranslatable', '0');
+							$field->addAttribute('isblocked', '0');
+							$field->addAttribute('iskeytokeep', '0');
+							$field->addAttribute('iskeytodelete', '0');
+							$field->addAttribute('istranslated', '0');
+							$field->addAttribute('isuntranslated', '1');
+							$field->addAttribute('isunchanged', '0');
+						}
+						elseif ($status == 'unchanged')
+						{
+							$field->addAttribute('isuntranslatable', '0');
+							$field->addAttribute('isblocked', '0');
+							$field->addAttribute('iskeytokeep', '0');
+							$field->addAttribute('iskeytodelete', '0');
+							$field->addAttribute('istranslated', '0');
+							$field->addAttribute('isuntranslated', '0');
+							$field->addAttribute('isunchanged', '1');
+						}
+
+						$field->addAttribute('istranslation', $istranslation);
 						$field->addAttribute('status', $status);
 						$field->addAttribute('description', $string);
 
@@ -799,6 +872,10 @@ class LocaliseModelTranslation extends JModelAdmin
 							$field->addAttribute('default', $string);
 						}
 
+						$field->addAttribute('raw_mode', $raw_mode);
+						$field->addAttribute('untranslatable_mode', $untranslatable_mode);
+						$field->addAttribute('blocked_mode', $blocked_mode);
+						$field->addAttribute('keep_mode', $keep_mode);
 						$field->addAttribute('label', $label);
 						$field->addAttribute('name', $key);
 						$field->addAttribute('type', 'key');
@@ -813,6 +890,8 @@ class LocaliseModelTranslation extends JModelAdmin
 
 				$stream->close();
 				$newstrings = false;
+				$todeletestrings = false;
+				$keystodelete = array();
 
 				if (!empty($sections['keys']))
 				{
@@ -820,11 +899,71 @@ class LocaliseModelTranslation extends JModelAdmin
 					{
 						if (!isset($refsections['keys'][$key]))
 						{
-							if (!$newstrings)
+							if (in_array($key, $keystokeep))
 							{
-								$newstrings = true;
+								if (!$newstrings)
+								{
+									$newstrings = true;
+									$form->load($addform, false);
+									$section = 'Keys to keep as extra';
+									$addform = new SimpleXMLElement('<form />');
+									$group   = $addform->addChild('fields');
+									$group->addAttribute('name', 'strings');
+									$fieldset = $group->addChild('fieldset');
+									$fieldset->addAttribute('name', $section);
+									$fieldset->addAttribute('label', $section);
+								}
+
+								$status  = 'extra';
+
+								$field   = $fieldset->addChild('field');
+								$default = $string;
+								$label   = '<b>' . $key . '</b>';
+								$field->addAttribute('istranslation', $istranslation);
+								$field->addAttribute('status', $status);
+								$field->addAttribute('description', $string);
+								$field->addAttribute('isuntranslatable', '0');
+								$field->addAttribute('isblocked', '0');
+								$field->addAttribute('iskeytokeep', '1');
+								$field->addAttribute('iskeytodelete', '0');
+								$field->addAttribute('istranslated', '0');
+								$field->addAttribute('isuntranslated', '0');
+								$field->addAttribute('isunchanged', '0');
+
+								if ($default)
+								{
+									$field->addAttribute('default', $default);
+								}
+								else
+								{
+									$field->addAttribute('default', $string);
+								}
+
+								$field->addAttribute('raw_mode', $raw_mode);
+								$field->addAttribute('untranslatable_mode', $untranslatable_mode);
+								$field->addAttribute('blocked_mode', $blocked_mode);
+								$field->addAttribute('keep_mode', $keep_mode);
+								$field->addAttribute('label', $label);
+								$field->addAttribute('name', $key);
+								$field->addAttribute('type', 'key');
+								$field->addAttribute('filter', 'raw');
+							}
+							else
+							{
+							$keystodelete[$key] = $string;
+							}
+						}
+					}
+
+					if (!empty($keystodelete))
+					{
+						foreach ($keystodelete as $key => $string)
+						{
+							if (!$todeletestrings)
+							{
+								$todeletestrings = true;
 								$form->load($addform, false);
-								$section = 'New Strings';
+								$section = 'Keys to delete';
 								$addform = new SimpleXMLElement('<form />');
 								$group   = $addform->addChild('fields');
 								$group->addAttribute('name', 'strings');
@@ -833,12 +972,21 @@ class LocaliseModelTranslation extends JModelAdmin
 								$fieldset->addAttribute('label', $section);
 							}
 
+							$status  = 'keytodelete';
+
 							$field   = $fieldset->addChild('field');
-							$status  = 'extra';
 							$default = $string;
 							$label   = '<b>' . $key . '</b>';
+							$field->addAttribute('istranslation', $istranslation);
 							$field->addAttribute('status', $status);
 							$field->addAttribute('description', $string);
+							$field->addAttribute('isuntranslatable', '0');
+							$field->addAttribute('isblocked', '0');
+							$field->addAttribute('iskeytokeep', '0');
+							$field->addAttribute('iskeytodelete', '1');
+							$field->addAttribute('istranslated', '0');
+							$field->addAttribute('isuntranslated', '0');
+							$field->addAttribute('isunchanged', '0');
 
 							if ($default)
 							{
@@ -849,6 +997,10 @@ class LocaliseModelTranslation extends JModelAdmin
 								$field->addAttribute('default', $string);
 							}
 
+							$field->addAttribute('raw_mode', $raw_mode);
+							$field->addAttribute('untranslatable_mode', $untranslatable_mode);
+							$field->addAttribute('blocked_mode', $blocked_mode);
+							$field->addAttribute('keep_mode', $keep_mode);
 							$field->addAttribute('label', $label);
 							$field->addAttribute('name', $key);
 							$field->addAttribute('type', 'key');
