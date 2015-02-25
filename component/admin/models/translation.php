@@ -173,13 +173,13 @@ class LocaliseModelTranslation extends JModelAdmin
 
 				// Get Special keys cases
 				$params                = JComponentHelper::getParams('com_localise');
-				$bdclient                = $this->getState('translation.client');
+				$dbclient              = $this->getState('translation.client');
 				$tag                   = $this->getState('translation.tag');
 				$filename              = basename($path);
 
-				$untranslatablestrings = LocaliseHelper::loadUntranslatablestrings($bdclient, $tag, $filename);
-				$blockedstrings        = LocaliseHelper::loadBlockedstrings($bdclient, $tag, $filename);
-				$keystokeep            = LocaliseHelper::loadKeystokeep($bdclient, $tag, $filename);
+				$untranslatablestrings = LocaliseHelper::loadUntranslatablestrings($dbclient, $tag, $filename);
+				$blockedstrings        = LocaliseHelper::loadBlockedstrings($dbclient, $tag, $filename);
+				$keystokeep            = LocaliseHelper::loadKeystokeep($dbclient, $tag, $filename);
 				$this->setState('translation.blockedstrings', (array) $blockedstrings);
 				$this->setState('translation.keystokeep', (array) $keystokeep);
 
@@ -1337,13 +1337,13 @@ class LocaliseModelTranslation extends JModelAdmin
 			$data['strings'] = $formData['strings'];
 		}
 
-		$params                = JComponentHelper::getParams('com_localise');
-		$user = JFactory::getUser();
-		$allowed_groups_raw = (array) $params->get('allowed_groups_raw', null);
+		$params                        = JComponentHelper::getParams('com_localise');
+		$user                          = JFactory::getUser();
+		$allowed_groups_raw            = (array) $params->get('allowed_groups_raw', null);
 		$allowed_groups_untranslatable = (array) $params->get('allowed_groups_untranslatable', null);
-		$allowed_groups_blocked = (array) $params->get('allowed_groups_blocked', null);
-		$allowed_groups_keep = (array) $params->get('allowed_groups_keep', null);
-		$user_groups = $user->get('groups');
+		$allowed_groups_blocked        = (array) $params->get('allowed_groups_blocked', null);
+		$allowed_groups_keep           = (array) $params->get('allowed_groups_keep', null);
+		$user_groups                   = $user->get('groups');
 
 		$this->setState('translation.untranslatable_mode', '1');
 		$this->setState('translation.blocked_mode', '1');
@@ -1377,13 +1377,10 @@ class LocaliseModelTranslation extends JModelAdmin
 		$blocked_mode        = $this->getState('translation.blocked_mode');
 		$keep_mode           = $this->getState('translation.keep_mode');
 
-		$bdclient            = $this->getState('translation.client');
+		$dbclient            = $this->getState('translation.client');
 		$tag                 = $this->getState('translation.tag');
 		$path                = $this->getState('translation.path');
 		$filename            = basename($path);
-		$untranslatable_mode = $this->getState('translation.untranslatable_mode');
-		$blocked_mode        = $this->getState('translation.blocked_mode');
-		$keep_mode           = $this->getState('translation.keep_mode');
 
 		if ($this->getState('translation.path') == $this->getState('translation.refpath'))
 		{
@@ -1400,39 +1397,39 @@ class LocaliseModelTranslation extends JModelAdmin
 		{
 			if (isset($data['untranslatables']) && $untranslatable_mode == '1')
 			{
-				LocaliseHelper::deleteUntranslatablestrings($bdclient, $tag, $filename);
+				LocaliseHelper::deleteUntranslatablestrings($dbclient, $tag, $filename);
 
 				foreach ($data['untranslatables'] as $specialkey => $status)
 				{
 					if ($status == 'true')
 					{
-					LocaliseHelper::saveUntranslatablestrings($bdclient, $tag, $filename, $specialkey);
+					LocaliseHelper::saveUntranslatablestrings($dbclient, $tag, $filename, $specialkey);
 					}
 				}
 			}
 
 			if (isset($data['blockeds']) && $blocked_mode == '1')
 			{
-				LocaliseHelper::deleteBlockedstrings($bdclient, $tag, $filename);
+				LocaliseHelper::deleteBlockedstrings($dbclient, $tag, $filename);
 
 				foreach ($data['blockeds'] as $specialkey => $status)
 				{
 					if ($status == 'true')
 					{
-					LocaliseHelper::saveBlockedstrings($bdclient, $tag, $filename, $specialkey);
+					LocaliseHelper::saveBlockedstrings($dbclient, $tag, $filename, $specialkey);
 					}
 				}
 			}
 
 			if (isset($data['extras']) && $keep_mode == '1')
 			{
-				LocaliseHelper::deleteExtrastrings($bdclient, $tag, $filename);
+				LocaliseHelper::deleteExtrastrings($dbclient, $tag, $filename);
 
 				foreach ($data['extras'] as $specialkey => $status)
 				{
 					if ($status == 'true')
 					{
-					LocaliseHelper::saveExtrastrings($bdclient, $tag, $filename, $specialkey);
+					LocaliseHelper::saveExtrastrings($dbclient, $tag, $filename, $specialkey);
 					}
 				}
 			}
