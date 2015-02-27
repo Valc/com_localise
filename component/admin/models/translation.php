@@ -1236,8 +1236,7 @@ class LocaliseModelTranslation extends JModelAdmin
 	public function save($data)
 	{
 		// Fix DOT saving issue
-		$input = JFactory::getApplication()->input;
-
+		$input    = JFactory::getApplication()->input;
 		$formData = $input->get('jform', array(), 'ARRAY');
 
 		if (!empty($formData['strings']))
