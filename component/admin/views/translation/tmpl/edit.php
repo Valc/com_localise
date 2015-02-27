@@ -35,21 +35,21 @@ if (isset($posted['select']['keystatus'])
 	&& $posted['select']['keystatus'] != 'allkeys'
 	)
 {
-	$filter			= $posted['select']['keystatus'];
-	$keystofilter	= array ($this->item->$filter);
-	$tabchoised		= 'strings';
+	$filter       = $posted['select']['keystatus'];
+	$keystofilter = array ($this->item->$filter);
+	$tabchoised   = 'strings';
 }
 elseif (empty($posted['select']['keystatus']))
 {
-	$filter			= 'allkeys';
-	$keystofilter	= array();
-	$tabchoised		= 'default';
+	$filter       = 'allkeys';
+	$keystofilter = array();
+	$tabchoised   = 'default';
 }
 else
 {
-	$filter			= 'allkeys';
-	$keystofilter	= array();
-	$tabchoised		= 'default';
+	$filter       = 'allkeys';
+	$keystofilter = array();
+	$tabchoised   = 'default';
 }
 
 $document = JFactory::getDocument();
