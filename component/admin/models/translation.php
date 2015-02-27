@@ -805,6 +805,7 @@ class LocaliseModelTranslation extends JModelAdmin
 				$stream->close();
 				$newstrings = false;
 				$todeletestrings = false;
+				$keystodelete = array();
 
 				if (!empty($sections['keys']))
 				{
@@ -828,28 +829,67 @@ class LocaliseModelTranslation extends JModelAdmin
 								}
 
 								$status  = 'extra';
+
+								$field   = $fieldset->addChild('field');
+								$default = $string;
+								$label   = '<b>' . $key . '</b>';
+								$field->addAttribute('istranslation', $istranslation);
+								$field->addAttribute('status', $status);
+								$field->addAttribute('description', $string);
+
+								if ($default)
+								{
+									$field->addAttribute('default', $default);
+								}
+								else
+								{
+									$field->addAttribute('default', $string);
+								}
+
+								$field->addAttribute('label', $label);
+								$field->addAttribute('name', $key);
+								$field->addAttribute('type', 'key');
+								$field->addAttribute('filter', 'raw');
+
+								if (in_array($full_line, $blockedstrings))
+								{
+									$field->addAttribute('isblocked', '1');
+								}
+								else
+								{
+									$field->addAttribute('isblocked', '0');
+								}
 							}
 							else
 							{
-								if (!$todeletestrings)
-								{
-									$todeletestrings = true;
-									$form->load($addform, false);
-									$section = 'Keys to delete';
-									$addform = new SimpleXMLElement('<form />');
-									$group   = $addform->addChild('fields');
-									$group->addAttribute('name', 'strings');
-									$fieldset = $group->addChild('fieldset');
-									$fieldset->addAttribute('name', $section);
-									$fieldset->addAttribute('label', $section);
-								}
-
-								$status  = 'keytodelete';
+							$keystodelete[$key] = $string;
 							}
+						}
+					}
+
+					if (!empty($keystodelete))
+					{
+						foreach ($keystodelete as $key => $string)
+						{
+							if (!$todeletestrings)
+							{
+								$todeletestrings = true;
+								$form->load($addform, false);
+								$section = 'Keys to delete';
+								$addform = new SimpleXMLElement('<form />');
+								$group   = $addform->addChild('fields');
+								$group->addAttribute('name', 'strings');
+								$fieldset = $group->addChild('fieldset');
+								$fieldset->addAttribute('name', $section);
+								$fieldset->addAttribute('label', $section);
+							}
+
+							$status  = 'keytodelete';
 
 							$field   = $fieldset->addChild('field');
 							$default = $string;
 							$label   = '<b>' . $key . '</b>';
+							$field->addAttribute('istranslation', $istranslation);
 							$field->addAttribute('status', $status);
 							$field->addAttribute('description', $string);
 
