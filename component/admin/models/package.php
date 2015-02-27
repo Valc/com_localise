@@ -319,7 +319,15 @@ class LocaliseModelPackage extends JModelAdmin
 
 		if ($package->standalone)
 		{
+			if (!empty($data['title']))
+			{
+			$title = $data['title'];
+			}
+			else
+			{
 			$title = $name;
+			}
+
 			$description = $data['description'];
 
 			$dom = new DOMDocument('1.0', 'utf-8');
