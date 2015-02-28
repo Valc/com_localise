@@ -226,9 +226,14 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 								if (count($sections) > 1) :
 									echo '<br />';
 									echo JHtml::_('bootstrap.startAccordion', 'localise-translation-sliders');
+								endif;
 									$i = 0;
 									foreach ($sections as $name => $fieldSet) :
-										echo JHtml::_('bootstrap.addSlide', 'localise-translation-sliders', JText::_($fieldSet->label), 'collapse' . $i++);
+										if (count($sections) > 1) :
+										echo JHtml::_('bootstrap.addSlide',
+										'localise-translation-sliders',
+										JText::_($fieldSet->label), 'collapse' . $i++);
+										endif;
 							?>
 							<ul class="adminformlist">
 								<?php foreach ($this->form->getFieldset($name) as $field) : ?>
@@ -284,66 +289,17 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 								<?php endforeach; ?>
 							</ul>
 							<?php
+								if (count($sections) > 1) :
 								echo JHtml::_('bootstrap.endSlide');
+								endif;
+
 								endforeach;
+
+								if (count($sections) > 1) :
 								echo JHtml::_('bootstrap.endAccordion');
+								endif;
 							?>
-							<?php else : ?>
-								<ul class="adminformlist">
-								<?php $sections = array_keys($sections);?>
-								<?php foreach ($this->form->getFieldset($sections[0]) as $field) :?>
-									<?php
-										$showkey = 0;
 
-										if ($filter != 'allkeys' && !empty($keystofilter))
-										{
-											foreach ($keystofilter as $data  => $ids)
-											{
-												foreach ($ids as $keytofilter)
-												{
-													$showkey = 0;
-													$pregkey = preg_quote('<b>'.$keytofilter.'</b>', '/<>');
-
-													if (preg_match("/$pregkey/", $field->label))
-													{
-														$showkey = 1;
-														break;
-													}
-												}
-											}
-
-											if ($showkey == '1')
-											{
-											?>
-												<li>
-													<?php echo $field->label; ?>
-													<?php echo $field->input; ?>
-												</li>
-											<?php
-											}
-											else
-											{
-											?>
-												<div style="display:none;">
-													<?php echo $field->label; ?>
-													<?php echo $field->input; ?>
-												</div>
-											<?php
-											}
-										}
-										elseif ($filter == 'allkeys')
-										{
-										?>
-											<li>
-												<?php echo $field->label; ?>
-												<?php echo $field->input; ?>
-											</li>
-										<?php
-										}
-									?>
-								<?php endforeach; ?>
-								</ul>
-							<?php endif;?>
 						</div>
 					<?php echo JHtml::_('bootstrap.endTab'); ?>
 					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_($fieldSets['permissions']->label, true)); ?>
