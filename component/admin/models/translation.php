@@ -175,18 +175,19 @@ class LocaliseModelTranslation extends JModelAdmin
 				$tag                   = $this->getState('translation.tag');
 				$filename              = basename($path);
 
-				$untranslatablestrings = LocaliseHelper::loadUntranslatablestrings($dbclient, $tag, $filename);
-				$blockedstrings        = LocaliseHelper::loadBlockedstrings($dbclient, $tag, $filename);
-				$keystokeep            = LocaliseHelper::loadKeystokeep($dbclient, $tag, $filename);
-				$this->setState('translation.blockedstrings', (array) $blockedstrings);
-				$this->setState('translation.keystokeep', (array) $keystokeep);
+				$dbuntranslatables = LocaliseHelper::loadUntranslatablestrings($dbclient, $tag, $filename);
+				$dbblockeds        = LocaliseHelper::loadBlockedstrings($dbclient, $tag, $filename);
+				$dbkeystokeep      = LocaliseHelper::loadKeystokeep($dbclient, $tag, $filename);
+
+				$this->setState('translation.dbuntranslatables', (array) $dbuntranslatables);
+				$this->setState('translation.dbblockeds', (array) $dbblockeds);
+				$this->setState('translation.dbkeystokeep', (array) $dbkeystokeep);
 
 				$this->setState('translation.translatedkeys', array());
 				$this->setState('translation.untranslatablekeys', array());
 				$this->setState('translation.blockedkeys', array());
 				$this->setState('translation.untranslatedkeys', array());
 				$this->setState('translation.unchangedkeys', array());
-				$this->setState('translation.untranslatablestrings', (array) $untranslatablestrings);
 
 				$translatedkeys     = $this->getState('translation.translatedkeys');
 				$untranslatablekeys = $this->getState('translation.untranslatablekeys');
@@ -256,9 +257,9 @@ class LocaliseModelTranslation extends JModelAdmin
 										'additionalcopyright'   => array(),
 										'license'               => '',
 										'exists'                => JFile::exists($this->getState('translation.path')),
-										'untranslatablestrings' => (array) $untranslatablestrings,
-										'blockedstrings'        => (array) $blockedstrings,
-										'keystokeep'            => (array) $keystokeep,
+										'dbuntranslatables'     => (array) $dbuntranslatables,
+										'dbblockeds'            => (array) $dbblockeds,
+										'dbkeystokeep'          => (array) $dbkeystokeep,
 										'translatedkeys'        => (array) $translatedkeys,
 										'untranslatedkeys'      => (array) $untranslatedkeys,
 										'untranslatablekeys'    => (array) $untranslatablekeys,
@@ -488,13 +489,13 @@ class LocaliseModelTranslation extends JModelAdmin
 
 							if (!empty($sections['keys']) && array_key_exists($key, $sections['keys']))
 							{
-								if (in_array($key, $blockedstrings))
+								if (in_array($key, $dbblockeds))
 								{
 									$this->item->translated++;
 									$this->item->blocked++;
 									$blockedkeys[] = $key;
 								}
-								elseif (in_array($key, $untranslatablestrings))
+								elseif (in_array($key, $dbuntranslatables))
 								{
 									if ($sections['keys'][$key] != $string)
 									{
@@ -544,7 +545,7 @@ class LocaliseModelTranslation extends JModelAdmin
 						{
 							if (empty($refsections['keys']) || !array_key_exists($key, $refsections['keys']))
 							{
-								if (in_array($key, $keystokeep))
+								if (in_array($key, $dbkeystokeep))
 								{
 									$this->item->extra++;
 								}
@@ -680,21 +681,21 @@ class LocaliseModelTranslation extends JModelAdmin
 	protected function preprocessForm(JForm $form, $item, $group = 'content')
 	{
 		// Initialize variables.
-		$filename              = $this->getState('translation.filename');
-		$client                = $this->getState('translation.client');
-		$tag                   = $this->getState('translation.tag');
-		$origin                = LocaliseHelper::getOrigin($filename, $client);
-		$app                   = JFactory::getApplication();
-		$false                 = false;
-		$filepath              = $this->getState('translation.path');
-		$file                  = basename($filepath);
-		$untranslatablestrings = $this->getState('translation.untranslatablestrings');
-		$blockedstrings        = $this->getState('translation.blockedstrings');
-		$keystokeep            = $this->getState('translation.keystokeep');
-		$raw_mode              = $this->getState('translation.raw_mode');
-		$untranslatable_mode   = $this->getState('translation.untranslatable_mode');
-		$blocked_mode          = $this->getState('translation.blocked_mode');
-		$keep_mode             = $this->getState('translation.keep_mode');
+		$filename            = $this->getState('translation.filename');
+		$client              = $this->getState('translation.client');
+		$tag                 = $this->getState('translation.tag');
+		$origin              = LocaliseHelper::getOrigin($filename, $client);
+		$app                 = JFactory::getApplication();
+		$false               = false;
+		$filepath            = $this->getState('translation.path');
+		$file                = basename($filepath);
+		$dbuntranslatables   = $this->getState('translation.dbuntranslatables');
+		$dbblockeds          = $this->getState('translation.dbblockeds');
+		$dbkeystokeep        = $this->getState('translation.dbkeystokeep');
+		$raw_mode            = $this->getState('translation.raw_mode');
+		$untranslatable_mode = $this->getState('translation.untranslatable_mode');
+		$blocked_mode        = $this->getState('translation.blocked_mode');
+		$keep_mode           = $this->getState('translation.keep_mode');
 
 		if ($this->getState('translation.path') == $this->getState('translation.refpath'))
 		{
@@ -797,12 +798,12 @@ class LocaliseModelTranslation extends JModelAdmin
 						$string     = $refsections['keys'][$key];
 						$translated = isset($sections['keys'][$key]);
 						$modified   = ($translated && $sections['keys'][$key] != $refsections['keys'][$key])
-										|| ($translated && in_array($key, $untranslatablestrings));
+										|| ($translated && in_array($key, $dbuntranslatables));
 						$status     = $modified ? 'translated' : ($translated ? 'unchanged' : 'untranslated');
 						$default    = $translated ? $sections['keys'][$key] : '';
 						$label      = '<b>' . $key . '</b><br />' . htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 
-						if (in_array($key, $blockedstrings))
+						if (in_array($key, $dbblockeds))
 						{
 							$status = "blocked";
 							$field->addAttribute('isblocked', '1');
@@ -813,7 +814,7 @@ class LocaliseModelTranslation extends JModelAdmin
 							$field->addAttribute('isuntranslated', '0');
 							$field->addAttribute('isunchanged', '0');
 						}
-						elseif (in_array($key, $untranslatablestrings))
+						elseif (in_array($key, $dbuntranslatables))
 						{
 							$status = "untranslatable";
 							$field->addAttribute('isuntranslatable', '1');
@@ -895,7 +896,7 @@ class LocaliseModelTranslation extends JModelAdmin
 					{
 						if (!isset($refsections['keys'][$key]))
 						{
-							if (in_array($key, $keystokeep))
+							if (in_array($key, $dbkeystokeep))
 							{
 								if (!$newstrings)
 								{
@@ -1059,12 +1060,12 @@ class LocaliseModelTranslation extends JModelAdmin
 	 */
 	public function saveFile($data)
 	{
-		$path       = $this->getState('translation.path');
-		$refpath    = $this->getState('translation.refpath');
-		$exists     = JFile::exists($path);
-		$refexists  = JFile::exists($refpath);
-		$client     = $this->getState('translation.client');
-		$keystokeep = (array) $this->getState('translation.keystokeep');
+		$path         = $this->getState('translation.path');
+		$refpath      = $this->getState('translation.refpath');
+		$exists       = JFile::exists($path);
+		$refexists    = JFile::exists($refpath);
+		$client       = $this->getState('translation.client');
+		$dbkeystokeep = (array) $this->getState('translation.dbkeystokeep');
 
 		// Set FTP credentials, if given.
 		JClientHelper::setCredentialsFromRequest('ftp');
@@ -1244,7 +1245,7 @@ class LocaliseModelTranslation extends JModelAdmin
 
 				foreach ($strings as $key => $string)
 				{
-					if (in_array($key, $keystokeep))
+					if (in_array($key, $dbkeystokeep))
 					{
 						$contents_to_add[] = $key . '="' . str_replace('"', '"_QQ_"', $string) . "\"\n";
 					}
