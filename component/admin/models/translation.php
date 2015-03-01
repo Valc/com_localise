@@ -819,7 +819,7 @@ class LocaliseModelTranslation extends JModelAdmin
 						else
 						{
 							$status  = 'sourcestrings';
-							$default = '';
+							$default = $string;
 							$field->addAttribute('default', $default);
 						}
 
