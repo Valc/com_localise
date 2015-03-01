@@ -328,11 +328,11 @@ class JFormFieldKey extends JFormField
 							. $this->id . "').set('class','width-45 blocked');
 							document.getElementById('"
 							. $visibleiduntranslatable . "').setAttribute('disabled', 'disabled');
-							document.id('" . $this->id . "').setAttribute('disabled', 'disabled');
+							document.id('" . $this->id . "').readOnly = true;
 							}
 							else if (document.id('" . $hiddedidblocked . "').get('value')=='false')
 							{
-							document.getElementById('" . $this->id . "').removeAttribute('disabled');
+							document.getElementById('" . $this->id . "').readOnly = false;
 
 								if (document.id('" . $this->id . "').get('value')=='"
 								. addslashes(htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8'))
@@ -575,7 +575,7 @@ class JFormFieldKey extends JFormField
 			$onfocus .= "this.select();
 					if (document.id('" . $hiddedidblocked . "').get('value')=='true')
 					{
-					document.getElementById('" . $this->id . "').setAttribute('disabled', 'disabled');
+					document.getElementById('" . $this->id . "').readOnly = true;
 					}";
 			$input = '<textarea name="' . $this->name . '" id="' . $this->id . '" onfocus="' . $onfocus . '"
 						class="width-45 ' . $status . '" onkeyup="'
