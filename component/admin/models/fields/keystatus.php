@@ -62,10 +62,10 @@ class JFormFieldKeystatus extends JFormFieldList
 		$options[] = JHtml::_('select.option', 'untranslatedkeys', JText::_('COM_LOCALISE_TEXT_TRANSLATION_UNTRANSLATED'),
 						array('option.attr' => 'attributes', 'attr' => 'class="untranslated"')
 						);
-		$options[] = JHtml::_('select.option', 'untranslatablekeys', JText::_('COM_LOCALISE_TEXT_TRANSLATION_UNTRANSLATABLE'),
+		$options[] = JHtml::_('select.option', 'dbuntranslatables', JText::_('COM_LOCALISE_TEXT_TRANSLATION_UNTRANSLATABLE'),
 						array('option.attr' => 'attributes', 'attr' => 'class="untranslatable"')
 						);
-		$options[] = JHtml::_('select.option', 'blockedkeys', JText::_('COM_LOCALISE_TEXT_TRANSLATION_BLOCKED'),
+		$options[] = JHtml::_('select.option', 'dbblockeds', JText::_('COM_LOCALISE_TEXT_TRANSLATION_BLOCKED'),
 						array('option.attr' => 'attributes', 'attr' => 'class="blocked"')
 						);
 		$options[] = JHtml::_('select.option', 'unchangedkeys', JText::_('COM_LOCALISE_TEXT_TRANSLATION_UNCHANGED'),
