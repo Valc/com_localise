@@ -55,7 +55,6 @@ class JFormFieldKeystatus extends JFormFieldList
 		$options[] = JHtml::_('select.option', 'allkeys', JText::_('JALL'),
 						array('option.attr' => 'attributes', 'attr' => 'class="allkeys"')
 						);
-
 		$options[] = JHtml::_('select.option', 'translatedkeys', JText::_('COM_LOCALISE_TEXT_TRANSLATION_TRANSLATED'),
 						array('option.attr' => 'attributes', 'attr' => 'class="translated"')
 						);

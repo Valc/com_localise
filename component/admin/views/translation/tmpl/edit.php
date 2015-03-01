@@ -39,12 +39,6 @@ if (isset($posted['select']['keystatus'])
 	$keystofilter = array ($this->item->$filter);
 	$tabchoised   = 'strings';
 }
-elseif (empty($posted['select']['keystatus']))
-{
-	$filter       = 'allkeys';
-	$keystofilter = array();
-	$tabchoised   = 'default';
-}
 else
 {
 	$filter       = 'allkeys';
@@ -236,56 +230,39 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 										endif;
 							?>
 							<ul class="adminformlist">
-								<?php foreach ($this->form->getFieldset($name) as $field) : ?>
 								<?php
+								foreach ($this->form->getFieldset($name) as $field) :
 									$showkey = 0;
-
-									if ($filter != 'allkeys' && !empty($keystofilter))
-									{
-										foreach ($keystofilter as $data => $ids)
-										{
-											foreach ($ids as $keytofilter)
-											{
+									if ($filter != 'allkeys' && !empty($keystofilter)) :
+										foreach ($keystofilter as $data => $ids) :
+											foreach ($ids as $keytofilter) :
 												$showkey = 0;
-												$pregkey = preg_quote('<b>'. $keytofilter .'</b>', '/<>');
-
-												if (preg_match("/$pregkey/", $field->label))
-												{
+												$pregkey = preg_quote('<b>'
+												. $keytofilter
+												.'</b>', '/<>');
+												if (preg_match("/$pregkey/", $field->label)) :
 													$showkey = 1;
 													break;
-												}
-											}
-										}
-
-										if ($showkey == '1')
-										{
-										?>
+												endif;
+											endforeach;
+										endforeach;
+										if ($showkey == '1') : ?>
 											<li>
 												<?php echo $field->label; ?>
 												<?php echo $field->input; ?>
 											</li>
-										<?php
-										}
-										else
-										{
-										?>
+										<?php else : ?>
 											<div style="display:none;">
 												<?php echo $field->label; ?>
 												<?php echo $field->input; ?>
 											</div>
-										<?php
-										}
-									}
-									elseif ($filter == 'allkeys')
-									{
-									?>
+										<?php endif; ?>
+									<?php elseif ($filter == 'allkeys') : ?>
 										<li>
 											<?php echo $field->label; ?>
 											<?php echo $field->input; ?>
 										</li>
-									<?php
-									}
-									?>
+									<?php endif; ?>
 								<?php endforeach; ?>
 							</ul>
 							<?php
