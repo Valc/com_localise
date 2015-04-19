@@ -1218,7 +1218,9 @@ class LocaliseModelTranslation extends JModelAdmin
 							$dev_name = $gh_project . 'LOCSEP' . $gh_user . 'LOCSEP' . $gh_trunk;
 							$short_name = $gh_user . '|' . $gh_project . '|' . $gh_trunk;
 
-							$devname = "develop{$i++}";
+							$devname = "develop";
+							$devname .= $i++;
+
 							$form->load($addform, false);
 
 							$addform = new SimpleXMLElement('<form />');
