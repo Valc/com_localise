@@ -924,13 +924,16 @@ abstract class LocaliseHelper
 
 			$options = new JRegistry;
 
-			if (empty($gh_token))
+			if (!empty($gh_token))
 			{
-				$gh_token = '15a139209fd42f7008750762933d2cb90374f4df';
+				$options->set('gh.token', $gh_token);
+				$gh_token = '';
+				$github = new JGithub($options);
 			}
-
-			$options->set('gh.token', $gh_token);
-			$github = new JGithub($options);
+			else
+			{
+				$github = new JGithub;
+			}
 
 			try
 			{

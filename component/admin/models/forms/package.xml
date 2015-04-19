@@ -221,7 +221,7 @@
 		<field
 			name="githubtoken"
 			type="text"
-			default="15a139209fd42f7008750762933d2cb90374f4df"
+			default=""
 			label="COM_LOCALISE_LABEL_GITHUB_TOKEN"
 			description="COM_LOCALISE_LABEL_GITHUB_TOKEN_DESC" />
 	</fieldset>
