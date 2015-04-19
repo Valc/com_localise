@@ -46,7 +46,11 @@ class JFormFieldLegend extends JFormField
 					. '" readonly="readonly"/></td></tr>';
 		$return .= '<tr><td><input class="extra" size="30" type="text" value="' . JText::_('COM_LOCALISE_TEXT_TRANSLATION_KEYTOKEEP')
 					. '" readonly="readonly"/></td></tr>';
+		$return .= '<tr><td><input class="extraindev" size="30" type="text" value="' . JText::_('COM_LOCALISE_TEXT_TRANSLATION_EXTRAINDEV')
+					. '" readonly="readonly"/></td></tr>';
 		$return .= '<tr><td><input class="keytodelete" size="30" type="text" value="' . JText::_('COM_LOCALISE_TEXT_TRANSLATION_NOTINREFERENCE')
+					. '" readonly="readonly"/></td></tr>';
+		$return .= '<tr><td><input class="textchange" size="30" type="text" value="' . JText::_('COM_LOCALISE_TEXT_TRANSLATION_TEXTCHANGE')
 					. '" readonly="readonly"/></td></tr>';
 		$return .= '</table>';
 

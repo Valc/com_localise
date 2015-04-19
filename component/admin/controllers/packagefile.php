@@ -122,4 +122,20 @@ class LocaliseControllerPackageFile extends JControllerForm
 		}
 		*/
 	}
+
+	/**
+	 * Todo: description missing
+	 *
+	 * @return void
+	 */
+	public function downloaddev()
+	{
+		// Initialise variables.
+		$app = JFactory::getApplication();
+		$input = $app->input;
+		$model   = $this->getModel();
+
+		$data = $input->get('jform', array(), 'array');
+		$model->download($data);
+	}
 }

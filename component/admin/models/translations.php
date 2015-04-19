@@ -785,6 +785,7 @@ class LocaliseModelTranslations extends JModelList
 				$model->setState('translation.filename', $translation->filename);
 
 				$item = $model->getItem();
+
 				$state = count($item->error) ? 'error' : $translation->state;
 
 				if (preg_match("/$filter_state/", $state) && preg_match("/$filter_tag/", $translation->tag))

@@ -33,9 +33,11 @@
 	</update>
 	<media destination="com_localise" folder="media/com_localise">
 		<folder>images</folder>
+		<folder>in_dev</folder>
 		<folder>css</folder>
 		<folder>js</folder>
 		<folder>packages</folder>
+		<folder>task_in_dev</folder>
 		<filename>index.html</filename>
 	</media>
 	<administration>

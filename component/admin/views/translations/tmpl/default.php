@@ -38,17 +38,24 @@ $sortFields = $this->getSortFields();
 <form action="<?php echo JRoute::_('index.php?option=com_localise&view=translations');?>" method="post" name="adminForm" id="adminForm">
 	<?php echo $this->loadTemplate('filter');?>
 		<?php echo $this->loadTemplate('legend');?>
-		<table class="table table-striped" id="localiseList">
-			<thead>
-				<?php echo $this->loadTemplate('head');?>
-			</thead>
-			<tfoot>
-				<?php echo $this->loadTemplate('foot');?>
-			</tfoot>
-			<tbody>
-				<?php echo $this->loadTemplate('body');?>
-			</tbody>
-		</table>
+		<?php echo JHtml::_('bootstrap.startTabSet', 'translationsTab', array('active' => 'frozen')); ?>
+			<?php echo JHtml::_('bootstrap.addTab', 'translationsTab', 'frozen', 'Frozen', true); ?>
+			<table class="table table-striped" id="localiseList">
+				<thead>
+					<?php echo $this->loadTemplate('head');?>
+				</thead>
+				<tfoot>
+					<?php echo $this->loadTemplate('foot');?>
+				</tfoot>
+				<tbody>
+					<?php echo $this->loadTemplate('body');?>
+				</tbody>
+			</table>
+			<?php echo JHtml::_('bootstrap.endTab'); ?>
+			<?php echo JHtml::_('bootstrap.addTab', 'translationsTab', 'in_dev', 'In dev changes', true); ?>
+				<?php echo $this->loadTemplate('dev');?>
+			<?php echo JHtml::_('bootstrap.endTab'); ?>
+		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 		<div>
 			<input type="hidden" name="boxchecked" value="0" />
 			<input type="hidden" name="task" value="" />

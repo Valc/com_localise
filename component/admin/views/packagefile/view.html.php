@@ -92,6 +92,7 @@ class LocaliseViewPackageFile extends JViewLegacy
 		}
 
 		JToolbarHelper::custom('packagefile.download', 'out.png', 'out.png', 'COM_LOCALISE_TOOLBAR_PACKAGE_DOWNLOAD', false);
+		JToolbarHelper::custom('packagefile.downloaddev', 'out.png', 'out.png', 'COM_LOCALISE_TOOLBAR_PACKAGE_DOWNLOAD_DEV', false);
 
 		JToolBarHelper::cancel("packagefile.cancel", $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
 		JToolBarHelper::divider();

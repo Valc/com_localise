@@ -68,7 +68,6 @@ class JFormFieldKeystatus extends JFormFieldList
 						array('option.attr' => 'attributes', 'attr' => 'class="blocked"')
 						);
 
-
 		return $options;
 	}
 }

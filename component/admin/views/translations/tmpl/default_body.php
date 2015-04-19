@@ -13,6 +13,7 @@ $app = JFactory::getApplication('administrator');
 $params = JComponentHelper::getParams('com_localise');
 $reference = $params->get('reference', 'en-GB');
 $packages = LocaliseHelper::getPackages();
+$files_in_dev = LocaliseHelper::scanFilesindev();
 $user = JFactory::getUser();
 $userId = $user->get('id');
 $allowed_groups = (array) $params->get('allowed_groups', null);
@@ -28,8 +29,50 @@ $have_raw_mode = 1;
 	}
 
 $lang = JFactory::getLanguage();
+$dev_files_report = array();
 ?>
 <?php foreach ($this->items as $i => $item) : ?>
+<?php
+
+	$textchangesindevs = $item->textchangesindev;
+	$extrakeysindevs = $item->extrakeysindev;
+
+	if (!empty($textchangesindevs))
+	{
+		$gh_filename = "$reference" . "." . $item->filename . ".ini";
+
+		foreach ($textchangesindevs as $target_dev => $textchangesindev)
+		{
+		$ghparts = explode('|', $target_dev);
+		$gh_user = $ghparts[0];
+		$gh_project = $ghparts[1];
+		$gh_trunk = $ghparts[2];
+
+			foreach ($textchangesindev as $key => $textchange)
+			{
+				$dev_files_report[$gh_project][$gh_trunk][$gh_user][$gh_filename]['text_changes'][$key] = $textchange;
+			}
+		}
+	}
+
+	if (!empty($extrakeysindevs))
+	{
+		$gh_filename = "$reference" . "." . $item->filename . ".ini";
+
+		foreach ($extrakeysindevs as $target_dev => $extrakeysindev)
+		{
+		$ghparts = explode('|', $target_dev);
+		$gh_user = $ghparts[0];
+		$gh_project = $ghparts[1];
+		$gh_trunk = $ghparts[2];
+
+			foreach ($extrakeysindev as $key => $extrakey)
+			{
+				$dev_files_report[$gh_project][$gh_trunk][$gh_user][$gh_filename]['extra_keys_in_dev'][$key] = $extrakey;
+			}
+		}
+	}
+?>
 	<?php $canEdit = $user->authorise('localise.edit', 'com_localise' . (isset($item->id) ? ('.' . $item->id) : '')); ?>
 	<tr class="<?php echo $item->state; ?> row<?php echo $i % 2; ?>">
 		<td width="20" class="center hidden-phone"><?php echo $i + 1; ?></td>
@@ -98,6 +141,11 @@ $lang = JFactory::getLanguage();
 			<div class="small">
 				<?php echo substr($item->path, strlen(JPATH_ROOT)); ?>
 			</div>
+			<?php if ($item->havedev) : ?>
+			<div class="small">
+				<?php echo "<b>Have dev</b>"; ?>
+			</div>
+			<?php endif; ?>
 		</td>
 		<td width="100" class="center" dir="ltr">
 			<?php if ($item->bom != 'UTF-8') : ?>
@@ -116,7 +164,7 @@ $lang = JFactory::getLanguage();
 			<?php elseif ($item->tag == $reference) : ?>
 				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_REFERENCE'), 'inactive_class'=>'16-reference', 'enabled' => false, 'translate'=>false)); ?>
 			<?php elseif ($item->translated == $item->total) : ?>
-				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_COMPLETE', $item->translated, $item->total, $item->extra, $item->keytodelete, $item->blocked, $item->untranslatable), 'inactive_class'=>'16-complete', 'enabled' => false, 'translate'=>false)); ?>
+				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_COMPLETE', $item->total, $item->extra, $item->keytodelete, $item->blocked, $item->untranslatable), 'inactive_class'=>'16-complete', 'enabled' => false, 'translate'=>false)); ?>
 			<?php else : ?>
 				<span class="hasTooltip" title="<?php echo $item->translated == 0 ? JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_NOTSTARTED') : JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_INPROGRESS', $item->translated, $item->untranslated, $item->total, $item->extra, $item->keytodelete, $item->blocked, $item->untranslatable); ?>">
 				<?php $translated =  $item->total ? intval(100 * $item->translated / $item->total) : 0; ?>
@@ -138,10 +186,16 @@ $lang = JFactory::getLanguage();
 				<?php elseif ($item->type == 'override') : ?>
 				<?php
 				elseif ($item->tag == $reference) : ?>
-					<?php echo $item->sourcestrings; ?>
+					<?php echo $item->sourcestrings
+					. ($item->extraindev ? "<br />Extra in dev: " . $item->extraindev : '')
+					. ($item->textchange ? "<br />Text changes: " . $item->textchange : ''); ?>
 				<?php
 				else : ?>
-					<?php echo $item->translated . "/" . $item->total . ($item->extra ? "<br />Extra keys: " . $item->extra : '') . ($item->keytodelete ? "<br />Keys to delete: " . $item->keytodelete : ''); ?>
+					<?php echo $item->translated . "/" . $item->total
+					. ($item->extra ? "<br />Extra keys: " . $item->extra : '')
+					. ($item->keytodelete ? "<br />Keys to delete: " . $item->keytodelete : '')
+					. ($item->extraindev ? "<br />Extra in dev: " . $item->extraindev : '')
+					. ($item->textchange ? "<br />Text changes: " . $item->textchange : ''); ?>
 				<?php endif; ?>
 			<?php endif; ?>
 		</td>
@@ -158,3 +212,4 @@ $lang = JFactory::getLanguage();
 		</td>
 	</tr>
 <?php endforeach; ?>
+<?php $this->set('devfilesreport', $dev_files_report); ?>

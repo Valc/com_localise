@@ -10,7 +10,9 @@
 #localise-translation-form .untranslated,
 #localise-translation-form .sourcestrings,
 #localise-translation-form .keytodelete,
-#localise-translation-form .extra {
+#localise-translation-form .extra,
+#localise-translation-form .extraindev,
+#localise-translation-form .textchange  {
 	padding: 2px;
 	float: left;
 	margin: 3px 0 0 2px;
@@ -39,8 +41,14 @@
 #localise-translation-form .extra {
 	background-color:#CCCCFF;
 }
+#localise-translation-form .extraindev {
+	background-color:lightgreen;
+}
 #localise-translation-form .keytodelete {
 	background-color:red;
+}
+#localise-translation-form .textchange {
+	background-color:orange;
 }
 #localise-translation-form .width-50 {
 	width: 50%;
@@ -299,7 +307,7 @@ ul.adminformlist li {
 }
 #translationbar {
 	text-align: right;
-	padding-right:7%
+	padding-right:7%;
 }
 .CodeMirror {
 	direction: ltr;
@@ -310,3 +318,97 @@ ul.adminformlist li {
 	background-position: bottom left;
 	background-repeat: repeat-x;
 }
+.diff_del {
+background-color: #E3A0AB !important;
+}
+
+.diff_ins {
+background-color: lightgreen !important;
+}
+.client_administrator {
+background-color: #FF9966;
+color:black !important;
+border: 1px dashed gray;
+font-size: 2.4em !important;
+}
+.client_site {
+color:black !important;
+background-color: #CCFFFF;
+border: 1px dashed gray;
+font-size: 2.4em !important;
+}
+.client_installation {
+color:black !important;
+background-color: #FFFF99;
+border: 1px dashed gray;
+font-size: 2.4em !important;
+}
+.common_file_diff {
+border: 1px dashed gray;
+background-color: #FFFFCC;
+margin-top: 1.4em;
+}
+.file_to_add {
+color:green;
+}
+.new_file {
+font-size: 1.3em;
+color:black !important;
+margin-top:2em;
+background-color: #E7FF00;
+line-height: 2em;
+}
+.new_word {
+color:#8B0000 !important;
+}
+.new_file_content {
+border: 1px dashed gray;
+background-color: #CCFF99;
+margin-top: 1.4em;
+}
+.show_new_files {
+font-size: 1.5em;
+color:black !important;
+}
+.diff_del {
+background-color: #E3A0AB !important;
+}
+
+.diff_ins {
+background-color: lightgreen !important;
+}
+.keys_to_add {
+font-size: 1.2em;
+color:green !important;
+text-decoration: underline;
+margin-top:1em;
+}
+.key_to_add {
+background-color: #CCFFCC !important;
+font-size: 1.1em;
+margin-top: 1.5em;
+}
+.keys_to_revise {
+font-size: 1.2em;
+color:orange !important;
+text-decoration: underline;
+margin-top:1em;
+}
+.key_to_revise {
+background-color: orange !important;
+font-size: 1.1em;
+margin-top: 1.5em;
+}
+.text_changes {
+border: 1px dashed gray !important;
+background-color: #FFFFCC;
+margin-top: 0em;
+text-align: left;
+}
+.text_changes_report {
+border: 1px dashed gray !important;
+background-color: #FFFFCC;
+margin-top: -0.7em;
+text-align: left;
+}
+

@@ -14,6 +14,15 @@
   <url></url>
   <packager></packager>
   <packagerurl></packagerurl>
+  <allowdev>0</allowdev>
+  <keepcustomisedfiles>1</keepcustomisedfiles>
+  <githubuser></githubuser>
+  <githubproject></githubproject>
+  <devtrunk></devtrunk>
+  <githubadministratorlanguagepath></githubadministratorlanguagepath>
+  <githubsitelanguagepath></githubsitelanguagepath>
+  <githubinstallationlanguagepath></githubinstallationlanguagepath>
+  <githubtoken></githubtoken>
   <servername>Accredited Joomla! Translations</servername>
   <serverurl>http://update.joomla.org/language/translationlist_3.xml</serverurl>
   <site>
@@ -99,6 +108,7 @@
     <filename>tpl_protostar.ini</filename>
     <filename>tpl_protostar.sys.ini</filename>
   </site>
+  <siteindev/>
   <administrator>
     <filename>joomla.ini</filename>
     <filename>com_admin.ini</filename>
@@ -302,4 +312,7 @@
     <filename>tpl_isis.ini</filename>
     <filename>tpl_isis.sys.ini</filename>
   </administrator>
+  <administratorindev/>
+  <installation/>
+  <installationindev/>
 </package>

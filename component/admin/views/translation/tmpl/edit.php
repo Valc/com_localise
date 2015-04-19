@@ -57,6 +57,7 @@ $document->addScriptDeclaration("
 
 $fieldSets = $this->form->getFieldsets();
 $sections  = $this->form->getFieldsets('strings');
+$sectionsindev  = $this->form->getFieldsets('stringsindev');
 $ftpSets   = $this->formftp->getFieldsets();
 
 // Prepare Bing translation
@@ -192,7 +193,7 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 								</div>
 							</div>
 						</div>
-						<div class="key">
+
 							<div id="translationbar">
 								<?php if ($istranslation) : ?>
 									<div class="pull-left">
@@ -216,6 +217,9 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 									<i class="icon-reset"></i> <?php echo JText::_('COM_LOCALISE_BUTTON_RESET_ALL');?>
 								</a>
 							</div>
+					<?php echo JHtml::_('bootstrap.startTabSet', 'myTab2', array('active' => 'released')); ?>
+					<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'released', JText::_('COM_LOCALISE_FIELDSET_TRANSLATION_RELEASED')); ?>
+						<div class="key">
 							<?php
 								if (count($sections) > 1) :
 									echo '<br />';
@@ -278,6 +282,73 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 							?>
 
 						</div>
+					<?php echo JHtml::_('bootstrap.endTab'); ?>
+					<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'in_dev', JText::_('COM_LOCALISE_FIELDSET_TRANSLATION_IN_DEV')); ?>
+						<div class="key">
+							<?php
+								if (count($sectionsindev) > 1) :
+									echo '<br />';
+									echo JHtml::_('bootstrap.startAccordion', 'localise-translation-sliders');
+								endif;
+									//$i = 0;
+									foreach ($sectionsindev as $name => $fieldSet) :
+										if (count($sectionsindev) > 1) :
+										echo JHtml::_('bootstrap.addSlide',
+										'localise-translation-sliders',
+										JText::_($fieldSet->label), 'collapse' . $i++);
+										endif;
+							?>
+							<ul class="adminformlist">
+								<?php
+								foreach ($this->form->getFieldset($name) as $field) :
+									$showkey = 0;
+									if ($filter != 'allkeys' && !empty($keystofilter)) :
+										foreach ($keystofilter as $data => $ids) :
+											foreach ($ids as $keytofilter) :
+												$showkey = 0;
+												$pregkey = preg_quote('<b>'
+												. $keytofilter
+												.'</b>', '/<>');
+												if (preg_match("/$pregkey/", $field->label)) :
+													$showkey = 1;
+													break;
+												endif;
+											endforeach;
+										endforeach;
+										if ($showkey == '1') : ?>
+											<li>
+												<?php echo $field->label; ?>
+												<?php echo $field->input; ?>
+											</li>
+										<?php else : ?>
+											<div style="display:none;">
+												<?php echo $field->label; ?>
+												<?php echo $field->input; ?>
+											</div>
+										<?php endif; ?>
+									<?php elseif ($filter == 'allkeys') : ?>
+										<li>
+											<?php echo $field->label; ?>
+											<?php echo $field->input; ?>
+										</li>
+									<?php endif; ?>
+								<?php endforeach; ?>
+							</ul>
+							<?php
+								if (count($sectionsindev) > 1) :
+								echo JHtml::_('bootstrap.endSlide');
+								endif;
+
+								endforeach;
+
+								if (count($sectionsindev) > 1) :
+								echo JHtml::_('bootstrap.endAccordion');
+								endif;
+							?>
+
+						</div>
+					<?php echo JHtml::_('bootstrap.endTab'); ?>
+<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 					<?php echo JHtml::_('bootstrap.endTab'); ?>
 					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_($fieldSets['permissions']->label, true)); ?>
 						<?php if (!empty($fieldSets['permissions']->description)):?>

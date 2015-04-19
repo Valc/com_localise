@@ -165,7 +165,6 @@
 			default=""
 			label="COM_LOCALISE_LABEL_KEYS_TO_KEEP"
 			description="COM_LOCALISE_LABEL_KEYS_TO_KEEP_DESC" />
-
 	</fieldset>
 	<fieldset
 		name="permissions"

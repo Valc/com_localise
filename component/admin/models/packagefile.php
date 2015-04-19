@@ -83,6 +83,7 @@ class LocaliseModelPackageFile extends JModelAdmin
 		}
 
 		$form->setFieldAttribute('translations', 'packagefile', $name, 'translations');
+		$form->setFieldAttribute('translationsindev', 'packagefile', $name, 'translationsindev');
 
 		// Check for an error.
 		if (JError::isError($form))
@@ -158,6 +159,7 @@ class LocaliseModelPackageFile extends JModelAdmin
 		$package->checked_out = 0;
 		$package->standalone  = true;
 		$package->manifest    = null;
+		$package->title       = null;
 		$package->description = null;
 		$package->id          = $id;
 
@@ -213,6 +215,17 @@ class LocaliseModelPackageFile extends JModelAdmin
 				$package->serverurl   = (string) $xml->serverurl;
 				$package->writable    = LocaliseHelper::isWritable($package->path);
 
+				// Adding dev fields
+				$package->allowdev                        = (string) $xml->allowdev;
+				$package->keepcustomisedfiles             = (string) $xml->keepcustomisedfiles;
+				$package->githubuser                      = (string) $xml->githubuser;
+				$package->githubproject                   = (string) $xml->githubproject;
+				$package->devtrunk                        = (string) $xml->devtrunk;
+				$package->githubadministratorlanguagepath = (string) $xml->githubadministratorlanguagepath;
+				$package->githubsitelanguagepath          = (string) $xml->githubsitelanguagepath;
+				$package->githubinstallationlanguagepath  = (string) $xml->githubinstallationlanguagepath;
+				$package->githubtoken                     = (string) $xml->githubtoken;
+
 				$user = JFactory::getUser($table->checked_out);
 				$package->setProperties($table->getProperties());
 
@@ -264,6 +277,49 @@ class LocaliseModelPackageFile extends JModelAdmin
 						}
 
 						$package->site[] = $data;
+					}
+				}
+				// Get the translations indev
+				$package->translationsindev  = array();
+				$package->administratorindev = array();
+
+				if ($xml->administratorindev)
+				{
+					foreach ($xml->administratorindev->children() as $file)
+					{
+						$data = (string) $file;
+
+						if ($data)
+						{
+							$package->translationsindev[] = "administrator_$data";
+						}
+						else
+						{
+							$package->translationsindev[] = "administrator_joomla";
+						}
+
+						$package->administratorindev[] = $data;
+					}
+				}
+
+				$package->siteindev = array();
+
+				if ($xml->siteindev)
+				{
+					foreach ($xml->siteindev->children() as $file)
+					{
+						$data = (string) $file;
+
+						if ($data)
+						{
+							$package->translationsindev[] = "site_$data";
+						}
+						else
+						{
+							$package->translationsindev[] = "site_joomla";
+						}
+
+						$package->siteindev[] = $data;
 					}
 				}
 			}
@@ -318,7 +374,15 @@ class LocaliseModelPackageFile extends JModelAdmin
 
 		if ($package->standalone)
 		{
+			if (!empty($data['title']))
+			{
+			$title = $data['title'];
+			}
+			else
+			{
 			$title = $name;
+			}
+
 			$description = $data['description'];
 
 			$dom = new DOMDocument('1.0', 'utf-8');
@@ -343,6 +407,17 @@ class LocaliseModelPackageFile extends JModelAdmin
 			$servernameElement = $dom->createElement('servername', $data['servername']);
 			$serverurlElement = $dom->createElement('serverurl', $data['serverurl']);
 
+			// Adding dev fields.
+			$allowdevElement            = $dom->createElement('allowdev', $data['allowdev']);
+			$keepcustomisedfilesElement = $dom->createElement('keepcustomisedfiles', $data['keepcustomisedfiles']);
+			$githubuserElement          = $dom->createElement('githubuser', $data['githubuser']);
+			$githubprojectElement       = $dom->createElement('githubproject', $data['githubproject']);
+			$devtrunkElement            = $dom->createElement('devtrunk', $data['devtrunk']);
+			$githubadministratorlanguagepathElement = $dom->createElement('githubadministratorlanguagepath', $data['githubadministratorlanguagepath']);
+			$githubsitelanguagepathElement          = $dom->createElement('githubsitelanguagepath', $data['githubsitelanguagepath']);
+			$githubinstallationlanguagepathElement   = $dom->createElement('githubinstallationlanguagepath', $data['githubinstallationlanguagepath']);
+			$githubtokenElement            = $dom->createElement('githubtoken', $data['githubtoken']);
+
 			// Set the client attribute on the manifest element
 
 			// $clientAttribute = $dom->createAttribute('client');
@@ -366,11 +441,25 @@ class LocaliseModelPackageFile extends JModelAdmin
 			$packageXml->appendChild($copyrightElement);
 			$packageXml->appendChild($packagerElement);
 			$packageXml->appendChild($packagerUrlElement);
+
+			// Adding dev fields.
+			$packageXml->appendChild($allowdevElement);
+			$packageXml->appendChild($keepcustomisedfilesElement);
+			$packageXml->appendChild($githubuserElement);
+			$packageXml->appendChild($githubprojectElement);
+			$packageXml->appendChild($devtrunkElement);
+			$packageXml->appendChild($githubadministratorlanguagepathElement);
+			$packageXml->appendChild($githubsitelanguagepathElement);
+			$packageXml->appendChild($githubinstallationlanguagepathElement);
+			$packageXml->appendChild($githubtokenElement);
+
 			$packageXml->appendChild($servernameElement);
 			$packageXml->appendChild($serverurlElement);
 
 			$administrator = array();
 			$site          = array();
+			$administratorindev = array();
+			$siteindev          = array();
 
 			foreach ($data['translations'] as $translation)
 			{
@@ -411,6 +500,55 @@ class LocaliseModelPackageFile extends JModelAdmin
 				}
 
 				$packageXml->appendChild($adminXml);
+			}
+
+			if ($data['allowdev'] == '1')
+			{
+				foreach ($data['translationsindev'] as $translation)
+				{
+					if (preg_match('/^site_(.*)$/', $translation, $matches))
+					{
+						$siteindev[] = $matches[1];
+					}
+
+					if (preg_match('/^administrator_(.*)$/', $translation, $matches))
+					{
+						$administratorindev[] = $matches[1];
+					}
+
+					if (preg_match('/^installation_(.*)$/', $translation, $matches))
+					{
+						$installationindev[] = $matches[1];
+					}
+				}
+
+				// Add the site language files in dev.
+				if (count($siteindev))
+				{
+					$siteXmlindev = $dom->createElement('siteindev');
+
+					foreach ($siteindev as $translation)
+					{
+						$fileElementindev = $dom->createElement('filename', $translation . '.ini');
+						$siteXmlindev->appendChild($fileElementindev);
+					}
+
+					$packageXml->appendChild($siteXmlindev);
+				}
+
+				// Add the administrator language files in dev.
+				if (count($administratorindev))
+				{
+					$adminXmlindev = $dom->createElement('administratorindev');
+
+					foreach ($administratorindev as $translation)
+					{
+						$fileElementindev = $dom->createElement('filename', $translation . '.ini');
+						$adminXmlindev->appendChild($fileElementindev);
+					}
+
+					$packageXml->appendChild($adminXmlindev);
+				}
 			}
 
 			$dom->appendChild($packageXml);
@@ -773,6 +911,322 @@ class LocaliseModelPackageFile extends JModelAdmin
 				}
 			}
 			*/
+			$text .= "\t\t" . '</files>' . "\n";
+
+			foreach ($admin_package_files as $file)
+			{
+				$main_package_files[] = array('name' => 'admin/' . $data['language'] . '/' . $file['name'], 'data' => $file['data']);
+			}
+		}
+
+		if ($msg)
+		{
+			$msg .= '<p>...</p>';
+			$msg .= JText::_('COM_LOCALISE_UNTRANSLATED');
+			$app->enqueueMessage($msg, 'error');
+			$app->redirect(JRoute::_('index.php?option=com_localise&view=packagefile&layout=edit&id=' . $this->getState('packagefile.id'), false));
+
+			return false;
+		}
+
+		$text .= "\t" . '</fileset>' . "\n";
+
+		if (!empty($data['serverurl']))
+		{
+			$text .= "\t" . '<updateservers>' . "\n";
+			$text .= "\t\t" . '<server type="collection" priority="1" name="' . $data['servername'] . '">' . $data['serverurl'] . '</server>' . "\n";
+			$text .= "\t" . '</updateservers>' . "\n";
+		}
+
+		$text .= '</extension>' . "\n";
+
+		$main_package_files[] = array('name' => $data['name'] . $data['language'] . '.xml', 'data' => $text);
+
+		$ziproot = JPATH_ROOT . '/tmp/' . uniqid('com_localise_main_') . '.zip';
+
+		// Run the packager
+		if (!$packager = JArchive::getAdapter('zip'))
+		{
+			$this->setError(JText::_('COM_LOCALISE_ERROR_EXPORT_ADAPTER'));
+
+			return false;
+		}
+		else
+		{
+			if (!$packager->create($ziproot, $main_package_files))
+			{
+				$this->setError(JText::_('COM_LOCALISE_ERROR_EXPORT_ZIPCREATE'));
+
+				return false;
+			}
+		}
+
+		ob_clean();
+		$zipdata = file_get_contents($ziproot);
+		header("Expires: 0");
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+		header('Content-Type: application/zip');
+		header('Content-Disposition: attachment; filename="'
+				. $data['name'] . '_' . $data['language'] . '_' . $data['version'] . 'v' . $data['packversion'] . '.zip"');
+		header('Content-Length: ' . strlen($zipdata));
+		header("Cache-Control: maxage=1");
+		header("Pragma: public");
+		header("Content-Transfer-Encoding: binary");
+		echo $zipdata;
+		exit;
+	}
+
+	/**
+	 * Method to generate and download a package in dev
+	 *
+	 * @param   array  $data  the data to generate the package
+	 *
+	 * @return  boolean  success or failure
+	 */
+	public function downloaddev($data)
+	{
+		$app = JFactory::getApplication();
+
+		/** Prevent generating and downloading Master package */
+		if (strpos($data['name'], 'master_') !== false)
+		{
+			$app->enqueueMessage(JText::sprintf('COM_LOCALISE_ERROR_MASTER_PACKAGE_DOWNLOAD_FORBIDDEN', $data['name']), 'warning');
+			$app->redirect(JRoute::_('index.php?option=com_localise&view=packagefile&layout=edit&id=' . $this->getState('packagefile.id'), false));
+
+			return false;
+		}
+
+		// Necessary vars for develop.
+		$tag = $data['language'];
+		$allowdev = $data['allowdev'];
+		$gh_user = $data['githubuser'];
+		$gh_project = $data['githubproject'];
+		$gh_trunk = $data['devtrunk'];
+		$gh_admin_path = $data['githubadministratorlanguagepath'];
+		$gh_site_path = $data['githubsitelanguagepath'];
+		$admin_dev_path = LocaliseHelper::getDevpath($gh_user, $gh_project, $gh_trunk, $gh_admin_path);
+		$site_dev_path = LocaliseHelper::getDevpath($gh_user, $gh_project, $gh_trunk, $gh_site_path);
+		$admin_task_path = LocaliseHelper::getTaskpath($tag, $gh_user, $gh_project, $gh_trunk, $gh_admin_path);
+		$site_task_path = LocaliseHelper::getTaskpath($tag, $gh_user, $gh_project, $gh_trunk, $gh_site_path);
+
+		// Prevent generating and downloading a pack without allow dev.
+		if ($allowdev == 0)
+		{
+			$app->enqueueMessage(JText::sprintf('COM_LOCALISE_ERROR_MASTER_PACKAGE_DOWNLOAD_NO_ALLOW_DEV', $data['name']), 'warning');
+			$app->redirect(JRoute::_('index.php?option=com_localise&view=packagefile&layout=edit&id=' . $this->getState('packagefile.id'), false));
+
+			return false;
+		}
+
+		$administrator = array();
+		$site          = array();
+		$msg = null;
+
+		// Delete old files
+		$delete = JFolder::files(JPATH_ROOT . '/tmp/', 'com_localise_', false, true);
+
+		if (!empty($delete))
+		{
+			if (!JFile::delete($delete))
+			{
+				// JFile::delete throws an error
+				$this->setError(JText::_('COM_LOCALISE_ERROR_EXPORT_ZIPDELETE'));
+
+				return false;
+			}
+		}
+
+		foreach ($data['translationsindev'] as $translation)
+		{
+			if (preg_match('/^site_(.*)$/', $translation, $matches))
+			{
+				$site[] = $matches[1];
+			}
+
+			if (preg_match('/^administrator_(.*)$/', $translation, $matches))
+			{
+				$administrator[] = $matches[1];
+			}
+		}
+
+		$parts = explode('.', $data['version']);
+		$small_version = implode('.', array($parts[0],$parts[1]));
+
+		// Prepare text to save for the xml package description
+		$text = '';
+		$text .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+		$text .= '<extension type="file" version="' . $small_version . '" method="upgrade">' . "\n";
+		$text .= "\t" . '<name>' . $data['name'] . $data['language'] . '</name>' . "\n";
+		$text .= "\t" . '<version>' . $data['version'] . '.' . $data['packversion'] . '</version>' . "\n";
+		$text .= "\t" . '<creationDate>' . date('d/m/Y') . '</creationDate>' . "\n";
+		$text .= "\t" . '<author>' . $data['author'] . '</author>' . "\n";
+		$text .= "\t" . '<authorEmail>' . $data['authoremail'] . '</authorEmail>' . "\n";
+		$text .= "\t" . '<authorUrl>' . $data['authorurl'] . '</authorUrl>' . "\n";
+		$text .= "\t" . '<copyright>' . $data['copyright'] . '</copyright>' . "\n";
+		$text .= "\t" . '<license>' . $data['license'] . '</license>' . "\n";
+		$text .= "\t" . '<packager>' . $data['packager'] . '</packager>' . "\n";
+		$text .= "\t" . '<packagerurl>' . $data['packagerurl'] . '</packagerurl>' . "\n";
+		$text .= "\t" . '<description><![CDATA[' . $data['description'] . ']]></description>' . "\n";
+		$text .= "\t" . '<fileset>' . "\n";
+
+		if (count($site))
+		{
+			$text .= "\t\t" . '<files ';
+			$text .= 'folder="site/' . $data['language'] . '"';
+			$text .= ' target="language/' . $data['language'] . '">' . "\n";
+			$site_package_files = array();
+
+			// $site_package_zip_path = JPATH_ROOT . '/tmp/' . uniqid('com_localise_') . '.zip';
+
+			foreach ($site as $translation)
+			{
+				$ref_path = '';
+				$frozen_path = LocaliseHelper::findTranslationPath($client = 'site', $tag = $data['language'], $filename = $translation);
+
+				$dev_path = $site_dev_path . '/' . $reftag . '.' . $translation . '.ini';
+				$task_path = $site_task_path . '/' . $data['language'] . '.' . $translation . '.ini';
+				$headers_path = $frozen_path;
+				$ref_keys_path = '';
+
+				$frozenref = array();
+				$frozentask = array();
+				$devref = array();
+				$devtask = array();
+
+				if (JFile::exists($ref_path))
+				{
+				$frozenref  = LocaliseHelper::parseSections($ref_path);
+				$frozenref = $frozenref['keys'];
+
+				// Case only exists this reference.
+				$ref_keys_path = $ref_path;
+				}
+
+				if (JFile::exists($dev_path))
+				{
+				$devref  = LocaliseHelper::parseSections($dev_path);
+				$devref = $devref['keys'];
+
+				// Case we have develop reference.
+				$ref_keys_path = $dev_path;
+				}
+
+				if (JFile::exists($frozen_path))
+				{
+				$frozentask = LocaliseHelper::parseSections($frozen_path);
+				$frozentask = $frozentask['keys'];
+
+					if (!JFile::exists($ref_path) && !JFile::exists($dev_path))
+					{
+						// Case not in reference file.
+						$ref_keys_path = $frozen_path;
+					}
+				}
+
+				if (JFile::exists($task_path))
+				{
+				$devtask = LocaliseHelper::parseSections($task_path);
+				$devtask = $devtask['keys'];
+				}
+
+				$file_data = LocaliseHelper::getDevcontents($tag, $headers_path, $ref_keys_path, $frozenref, $frozentask, $devref, $devtask);
+
+				if (JFile::exists($frozen_path) && !empty($file_data['contents']))
+				{
+					$text .= "\t\t\t" . '<filename>' . $data['language'] . '.' . $translation . '.ini</filename>' . "\n";
+					$site_package_files[] = array('name' => $data['language'] . '.' . $translation . '.ini','data' => $file_data);
+				}
+				else
+				{
+					$msg .= JText::sprintf('COM_LOCALISE_FILE_NOT_TRANSLATED', $data['language'] . '.' . $translation . '.ini', JText::_('JSITE'));
+				}
+			}
+
+			$text .= "\t\t" . '</files>' . "\n";
+
+			if ($msg)
+			{
+				$msg .= '<p>...</p>';
+			}
+
+			foreach ($site_package_files as $file)
+			{
+				$main_package_files[] = array('name' => 'site/' . $data['language'] . '/' . $file['name'], 'data' => $file['data']);
+			}
+		}
+
+		if (count($administrator))
+		{
+			$text .= "\t\t" . '<files ';
+			$text .= 'folder="admin/' . $data['language'] . '"';
+			$text .= ' target="administrator/language/' . $data['language'] . '">' . "\n";
+
+			$admin_package_files = array();
+
+			foreach ($administrator as $translation)
+			{
+				$ref_path = '';
+				$frozen_path = LocaliseHelper::findTranslationPath($client = 'administrator', $tag = $data['language'], $filename = $translation);
+
+				$dev_path = $admin_dev_path . '/' . $reftag . '.' . $translation . '.ini';
+				$task_path = $admin_task_path . '/' . $data['language'] . '.' . $translation . '.ini';
+				$headers_path = $frozen_path;
+				$ref_keys_path = '';
+
+				$frozenref = array();
+				$frozentask = array();
+				$devref = array();
+				$devtask = array();
+
+				if (JFile::exists($ref_path))
+				{
+				$frozenref  = LocaliseHelper::parseSections($ref_path);
+				$frozenref = $frozenref['keys'];
+
+				// Case only exists this reference.
+				$ref_keys_path = $ref_path;
+				}
+
+				if (JFile::exists($dev_path))
+				{
+				$devref  = LocaliseHelper::parseSections($dev_path);
+				$devref = $devref['keys'];
+
+				// Case we have develop reference.
+				$ref_keys_path = $dev_path;
+				}
+
+				if (JFile::exists($frozen_path))
+				{
+				$frozentask = LocaliseHelper::parseSections($frozen_path);
+				$frozentask = $frozentask['keys'];
+
+					if (!JFile::exists($ref_path) && !JFile::exists($dev_path))
+					{
+						// Case not in reference file.
+						$ref_keys_path = $frozen_path;
+					}
+				}
+
+				if (JFile::exists($task_path))
+				{
+				$devtask = LocaliseHelper::parseSections($task_path);
+				$devtask = $devtask['keys'];
+				}
+
+				$file_data = LocaliseHelper::getDevcontents($tag, $headers_path, $ref_keys_path, $frozenref, $frozentask, $devref, $devtask);
+
+				if (JFile::exists($frozen_path) && !empty($file_data['contents']))
+				{
+					$text .= "\t\t\t" . '<filename>' . $data['language'] . '.' . $translation . '.ini</filename>' . "\n";
+					$admin_package_files[] = array('name' => $data['language'] . '.' . $translation . '.ini','data' => $file_data);
+				}
+				else
+				{
+					$msg .= JText::sprintf('COM_LOCALISE_FILE_NOT_TRANSLATED', $data['language'] . '.' . $translation . '.ini', JText::_('JADMINISTRATOR'));
+				}
+			}
+
 			$text .= "\t\t" . '</files>' . "\n";
 
 			foreach ($admin_package_files as $file)

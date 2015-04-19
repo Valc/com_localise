@@ -210,6 +210,7 @@
 		<filename>tpl_isis</filename>
 		<filename>tpl_isis.sys</filename>
 	</administrator>
+	<administratorindev/>
 	<site>
 		<filename>com_ajax</filename>
 		<filename>com_config</filename>
@@ -293,4 +294,7 @@
 		<filename>tpl_protostar</filename>
 		<filename>tpl_protostar.sys</filename>
 	</site>
+	<siteindev/>
+	<installation/>
+	<installationindev/>
 </package>

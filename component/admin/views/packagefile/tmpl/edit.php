@@ -26,7 +26,7 @@ JText::script('COM_LOCALISE_MSG_CONFIRM_PACKAGE_SAVE');
 				Joomla.submitform(task, document.getElementById('localise-package-form'));
 			}
 		}
-		else if (task == 'packagefile.cancel' || task == 'packagefile.download')
+		else if (task == 'packagefile.cancel' || task == 'packagefile.download' || task == 'packagefile.downloaddev')
 		{
 			Joomla.submitform(task, document.getElementById('localise-package-form'));
 		}
@@ -75,6 +75,8 @@ JText::script('COM_LOCALISE_MSG_CONFIRM_PACKAGE_SAVE');
 							<?php endforeach; ?>
 						</div>
 						<div class="span6">
+						<?php echo JHtml::_('bootstrap.startTabSet', 'myTab2', array('active' => 'released')); ?>
+						<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'released', 'Released') ?>
 							<?php echo JText::_($fieldSets['translations']->label); ?>
 							<?php if (!empty($fieldSets['translations']->description)):?>
 									<p class="tip"><?php echo JText::_($fieldSets['translations']->description); ?></p>
@@ -89,7 +91,40 @@ JText::script('COM_LOCALISE_MSG_CONFIRM_PACKAGE_SAVE');
 										</div>
 									</div>
 							<?php endforeach; ?>
+						<?php echo JHtml::_('bootstrap.endTab'); ?>
+						<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'indev', 'In dev'); ?>
+							<?php echo JText::_($fieldSets['translationsindev']->label); ?>
+							<?php if (!empty($fieldSets['translationsindev']->description)):?>
+									<p class="tip"><?php echo JText::_($fieldSets['translationsindev']->description); ?></p>
+							<?php endif;?>
+							<?php foreach($this->form->getFieldset('translationsindev') as $field): ?>
+									<div class="control-group form-vertical">
+										<div class="control-label">
+											<?php echo $field->label; ?>
+										</div>
+										<div class="controls">
+											<?php echo $field->input; ?>
+										</div>
+									</div>
+							<?php endforeach; ?>
+						<?php echo JHtml::_('bootstrap.endTab'); ?>
+						<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 						</div>
+					<?php echo JHtml::_('bootstrap.endTab'); ?>
+					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'indevconfig', JText::_($fieldSets['indevconfig']->label, true)); ?>
+						<?php if (!empty($fieldSets['indevconfig']->description)):?>
+								<p class="tip"><?php echo JText::_($fieldSets['indevconfig']->description); ?></p>
+						<?php endif;?>
+						<?php foreach($this->form->getFieldset('indevconfig') as $field): ?>
+								<div class="control-group form-vertical">
+									<div class="control-label">
+											<?php echo $field->label; ?>
+									</div>
+									<div class="controls">
+										<?php echo $field->input; ?>
+									</div>
+								</div>
+						<?php endforeach; ?>
 					<?php echo JHtml::_('bootstrap.endTab'); ?>
 					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_($fieldSets['permissions']->label, true)); ?>
 						<?php if (!empty($fieldSets['permissions']->description)):?>

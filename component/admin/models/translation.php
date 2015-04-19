@@ -169,7 +169,86 @@ class LocaliseModelTranslation extends JModelAdmin
 					? $this->getState('translation.path')
 					: $this->getState('translation.refpath');
 
-				// Get Special keys cases
+				$tag        = $this->getState('translation.tag');
+				$reftag        = $this->getState('translation.reference');
+				$scans_in_dev  = LocaliseHelper::scanFilesindev($tag);
+
+				$task_file = basename($this->getState('translation.path'));
+				$ref_file = basename($this->getState('translation.refpath'));
+				$client_in_dev = $this->getState('translation.client');
+				$client_files_in_dev = array();
+				$client_data_in_dev = array();
+				$istranslation = 0;
+
+				if (!empty($tag) && $tag != $reftag)
+				{
+					$istranslation = 1;
+				}
+
+				if (!empty($scans_in_dev[$client_in_dev]))
+				{
+					foreach ($scans_in_dev[$client_in_dev] as $ref_path_in_dev => $data_in_dev)
+					{
+						if ($data_in_dev['language_tag'] == $reftag && isset($data_in_dev['files_in_dev_list']))
+						{
+							foreach ($data_in_dev['files_in_dev_list'] as $file_in_dev)
+							{
+								$client_files_in_dev[$file_in_dev][] = $ref_path_in_dev;
+								$client_data_in_dev[$ref_path_in_dev]['github_user'] = $data_in_dev['github_user'];
+								$client_data_in_dev[$ref_path_in_dev]['github_project'] = $data_in_dev['github_project'];
+								$client_data_in_dev[$ref_path_in_dev]['dev_trunk'] = $data_in_dev['dev_trunk'];
+
+								$client_data_in_dev[$ref_path_in_dev]['full_client_task_path'] = $data_in_dev['full_client_task_path'];
+							}
+						}
+					}
+				}
+
+				$have_dev = 0;
+				$devs_amount = 0;
+				$dev_paths = array();
+				$task_dev_paths = array();
+				$github_users = array();
+				$github_projects = array();
+				$github_dev_trunks = array();
+				$github_task_dev_paths = array();
+
+					if (array_key_exists($ref_file, $client_files_in_dev))
+					{
+						$have_dev = 1;
+
+						if (count($client_files_in_dev[$ref_file]) >= 1)
+						{
+							$devs_amount = count($client_files_in_dev[$ref_file]);
+							$dev_paths = $client_files_in_dev[$ref_file];
+
+							foreach ($dev_paths as $dev_path)
+							{
+							$github_users[$dev_path] = $client_data_in_dev[$dev_path]['github_user'];
+							$github_projects[$dev_path] = $client_data_in_dev[$dev_path]['github_project'];
+							$github_dev_trunks[$dev_path] = $client_data_in_dev[$dev_path]['dev_trunk'];
+							$github_task_dev_paths[$dev_path] = $client_data_in_dev[$dev_path]['full_client_task_path'];
+							}
+						}
+					}
+
+				$this->setState('translation.havedev', $have_dev);
+				$this->setState('translation.devsamount', $devs_amount);
+				$this->setState('translation.devpaths', $dev_paths);
+				$this->setState('translation.githubusers', $github_users);
+				$this->setState('translation.githubprojects', $github_projects);
+				$this->setState('translation.githubdevtrunks', $github_dev_trunks);
+				$this->setState('translation.taskdevpaths', $github_task_dev_paths);
+
+				$have_dev = $this->getState('translation.havedev');
+				$devs_amount = $this->getState('translation.devsamount');
+				$dev_paths = $this->getState('translation.devpaths');
+				$github_users = $this->getState('translation.githubusers');
+				$github_projects = $this->getState('translation.githubprojects');
+				$github_dev_trunks = $this->getState('translation.githubdevtrunks');
+				$task_dev_paths = $this->getState('translation.taskdevpaths');
+
+				// Get Special keys cases.
 				$params                       = JComponentHelper::getParams('com_localise');
 				$tag                          = $this->getState('translation.tag');
 				$target_tag                   = preg_quote($tag, '-');
@@ -205,11 +284,21 @@ class LocaliseModelTranslation extends JModelAdmin
 				$this->setState('translation.untranslatedkeys', array());
 				$this->setState('translation.blockedkeys', array());
 				$this->setState('translation.untranslatablekeys', array());
+				$this->setState('translation.extrakeysindev', array());
+				$this->setState('translation.textchangesindev', array());
+				$this->setState('translation.textchangesref', array());
+				$this->setState('translation.textchangesdefault', array());
+				$this->setState('translation.stringsintasks', array());
 
 				$translatedkeys     = $this->getState('translation.translatedkeys');
 				$untranslatedkeys   = $this->getState('translation.untranslatedkeys');
 				$blockedkeys        = $this->getState('translation.blockedkeys');
 				$untranslatablekeys = $this->getState('translation.untranslatablekeys');
+				$extrakeysindev     = $this->getState('translation.extrakeysindev');
+				$textchangesindev   = $this->getState('translation.textchangesindev');
+				$textchangesref     = $this->getState('translation.textchangesref');
+				$textchangesdefault = $this->getState('translation.textchangesdefault');
+				$stringsintasks     = $this->getState('translation.stringsintasks');
 
 				$this->item = new JObject(
 									array
@@ -219,12 +308,26 @@ class LocaliseModelTranslation extends JModelAdmin
 										'svn'                   => '',
 										'version'               => '',
 										'description'           => '',
+										'textchange '           => '',
 										'creationdate'          => '',
 										'author'                => '',
 										'maincopyright'         => '',
 										'additionalcopyright'   => array(),
 										'license'               => '',
 										'exists'                => JFile::exists($this->getState('translation.path')),
+										'istranslation'         => $istranslation,
+										'havedev'               => $have_dev,
+										'devsamount'            => $devs_amount,
+										'devpaths'              => $dev_paths,
+										'taskdevpaths'          => $task_dev_paths,
+										'stringsintasks'        => $stringsintasks,
+										'githubusers'           => $github_users,
+										'githubprojects'        => $github_projects,
+										'githubdevtrunks'       => $github_dev_trunks,
+										'extrakeysindev'        => (array) $extrakeysindev,
+										'textchangesref'        => (array) $textchangesref,
+										'textchangesdefault'        => (array) $textchangesdefault,
+										'textchangesindev'      => (array) $textchangesindev,
 										'translatedkeys'        => (array) $translatedkeys,
 										'untranslatedkeys'      => (array) $untranslatedkeys,
 										'blockedkeys'           => (array) $blockedkeys,
@@ -234,7 +337,9 @@ class LocaliseModelTranslation extends JModelAdmin
 										'untranslatable'        => 0,
 										'blocked'               => 0,
 										'extra'                 => 0,
+										'extraindev'            => 0,
 										'keytodelete'           => 0,
+										'textchange'            => 0,
 										'sourcestrings'         => 0,
 										'total'                 => 0,
 										'source'                => '',
@@ -439,19 +544,139 @@ class LocaliseModelTranslation extends JModelAdmin
 				{
 					$sections    = LocaliseHelper::parseSections($this->getState('translation.path'));
 					$refsections = LocaliseHelper::parseSections($this->getState('translation.refpath'));
+					$refsectionsindev = array();
+					$keys_in_devs = array();
+					$strings_in_devs = array();
+					$keys_in_tasks = array();
+					$dataintasks = array();
+					$extra_in_devs = array();
+
+					if ($have_dev == '1')
+					{
+						foreach ($dev_paths as $dev_path)
+						{
+						$refsectionsindev[$dev_path] = LocaliseHelper::parseSections("$dev_path/$ref_file");
+
+							if (!empty($refsectionsindev[$dev_path]['keys']))
+							{
+							$keys_in_devs[$dev_path] = array_keys($refsectionsindev[$dev_path]['keys']);
+							$strings_in_devs[$dev_path] = $refsectionsindev[$dev_path]['keys'];
+
+								if (!empty($task_dev_paths[$dev_path]) && $istranslation == 1)
+								{
+									$task_dev_path = $task_dev_paths[$dev_path];
+									$short_name    = $github_users[$dev_path]
+											. '|'
+											. $github_projects[$dev_path]
+											. '|'
+											. $github_dev_trunks[$dev_path];
+
+									if (!JFile::exists("$task_dev_path/$task_file"))
+									{
+										$comment = ";CREATED AS EMPTY FILE\n";
+										JFile::write("$task_dev_path/$task_file", $comment);
+									}
+
+									if (JFile::exists("$task_dev_path/$task_file"))
+									{
+										$dataintasks[$dev_path] = LocaliseHelper::parseSections("$task_dev_path/$task_file");
+										$keys_in_tasks[$dev_path] = array_keys($dataintasks[$dev_path]['keys']);
+										$stringsintasks[$short_name] = $dataintasks[$dev_path]['keys'];
+									}
+								}
+								else
+								{
+								// $stringsintasks[$dev_path] = array();
+								}
+							}
+						}
+					}
 
 					if (!empty($refsections['keys']))
 					{
+					$keys_in_ref = array_keys($refsections['keys']);
+
+						if (!empty($keys_in_devs))
+						{
+							// $dp means dev path.
+							foreach ($keys_in_devs as $dp => $keys_in_dev)
+							{
+								$extra_in_dev = array_diff($keys_in_dev, $keys_in_ref);
+								$extra_in_devs[$dp] = $extra_in_dev;
+
+								if (!empty($extra_in_devs[$dp]))
+								{
+									foreach ($extra_in_devs[$dp] as $extra_in_dev)
+									{
+										$this->item->extraindev++;
+
+										$target_dev = $github_users[$dp]
+											. '|'
+											. $github_projects[$dp]
+											. '|'
+											. $github_dev_trunks[$dp];
+
+										$extrakeysindev[$target_dev][$extra_in_dev] = $refsectionsindev[$dp]['keys'][$extra_in_dev];
+									}
+								}
+							}
+						}
+
 						foreach ($refsections['keys'] as $key => $string)
 						{
 							$this->item->total++;
 							$full_line = $key . '="' . $string . '"';
 
+							foreach ($strings_in_devs as $dp => $strings_in_dev)
+							{
+								$short_name    = $github_users[$dp]
+										. '|'
+										. $github_projects[$dp]
+										. '|'
+										. $github_dev_trunks[$dp];
+
+								if (!empty($strings_in_devs[$dp]) && array_key_exists($key, $strings_in_dev))
+								{
+								$text_changes = localiseHelper::htmlgetTextchanges($string, $strings_in_dev[$key]);
+
+									if (!empty($text_changes))
+									{
+									$string_in_ref = $string;
+									$string_in_dev = $strings_in_dev[$key];
+										$target_dev = $github_users[$dp]
+											. '|'
+											. $github_projects[$dp]
+											. '|'
+											. $github_dev_trunks[$dp];
+
+										$this->item->textchange++;
+										$textchangesindev[$target_dev][$key] = $text_changes;
+										$textchangesref[$target_dev][$key] = $strings_in_dev[$key];
+										$string_in_translation = '';
+
+										if (!empty($sections['keys']) && array_key_exists($key, $sections['keys']))
+										{
+											$string_in_translation = $sections['keys'][$key];
+										}
+
+										$string_in_task = '';
+
+										if (isset($stringsintasks[$short_name][$key]))
+										{
+										$string_in_task = $stringsintasks[$short_name][$key];
+										}
+
+										$default_textchange = localiseHelper::getDefaultvalue($string_in_dev, $string_in_ref, $string_in_translation, $string_in_task);
+										$textchangesdefault[$target_dev][$key] = $default_textchange;
+									}
+								}
+							}
+
 							if (!empty($sections['keys']) && array_key_exists($key, $sections['keys']))
 							{
 								if (in_array($full_line, $blockedstrings))
 								{
-									//blocked keys with untranslated value
+									// Blocked keys with untranslated value.
 									$this->item->translated++;
 									$this->item->blocked++;
 									$blockedkeys[] = $key;
@@ -466,7 +691,7 @@ class LocaliseModelTranslation extends JModelAdmin
 								{
 									$translated_line = $key . '="' . $sections['keys'][$key] . '"';
 
-									//blocked keys with translated value
+									// Blocked keys with translated value.
 									if (in_array($translated_line, $blockedstrings))
 									{
 										$this->item->translated++;
@@ -478,7 +703,6 @@ class LocaliseModelTranslation extends JModelAdmin
 										$this->item->translated++;
 										$translatedkeys[] = $key;
 									}
-
 								}
 								elseif ($this->getState('translation.path') == $this->getState('translation.refpath'))
 								{
@@ -543,11 +767,21 @@ class LocaliseModelTranslation extends JModelAdmin
 					$this->item->untranslatedkeys   = $untranslatedkeys;
 					$this->item->blockedkeys        = $blockedkeys;
 					$this->item->untranslatablekeys = $untranslatablekeys;
+					$this->item->textchangesindev   = $textchangesindev;
+					$this->item->textchangesref     = $textchangesref;
+					$this->item->textchangesdefault = $textchangesdefault;
+					$this->item->extrakeysindev     = $extrakeysindev;
+					$this->item->stringsintasks     = $stringsintasks;
 
 					$this->setState('translation.translatedkeys', $translatedkeys);
 					$this->setState('translation.untranslatedkeys', $untranslatedkeys);
 					$this->setState('translation.blockedkeys', $blockedkeys);
 					$this->setState('translation.untranslatablekeys', $untranslatablekeys);
+					$this->setState('translation.textchangesindev', $textchangesindev);
+					$this->setState('translation.textchangesinref', $textchangesref);
+					$this->setState('translation.textchangesdefault', $textchangesdefault);
+					$this->setState('translation.extrakeysindev', $extrakeysindev);
+					$this->setState('translation.stringsintasks', $stringsintasks);
 				}
 
 				if ($this->getState('translation.id'))
@@ -689,7 +923,16 @@ class LocaliseModelTranslation extends JModelAdmin
 			$form->setFieldAttribute('legend', 'blocked', $item->blocked, 'legend');
 			$form->setFieldAttribute('legend', 'untranslated', $item->total - $item->translated, 'legend');
 			$form->setFieldAttribute('legend', 'extra', $item->extra, 'legend');
+			$form->setFieldAttribute('legend', 'extraindev', $item->extraindev, 'legend');
 			$form->setFieldAttribute('legend', 'keytodelete', $item->keytodelete, 'legend');
+			$form->setFieldAttribute('legend', 'textchange', $item->textchange, 'legend');
+
+			$extrakeysindev        = (array) $item->extrakeysindev;
+			$textchangesindev      = (array) $item->textchangesindev;
+			$textchangesref        = (array) $item->textchangesref;
+			$textchangesdefault    = (array) $item->textchangesdefault;
+			$stringsintasks        = (array) $item->stringsintasks;
+			$sectionsindev         = LocaliseHelper::getSectionsindev($extrakeysindev, $textchangesindev);
 		}
 
 		if ($this->getState('translation.layout') != 'raw')
@@ -809,12 +1052,10 @@ class LocaliseModelTranslation extends JModelAdmin
 							}
 							elseif ($sections['keys'][$key] == $refsections['keys'][$key])
 							{
-
 								$status = "untranslated";
 								$default = $string;
 								$field->addAttribute('default', $default);
 							}
-
 						}
 						else
 						{
@@ -825,10 +1066,13 @@ class LocaliseModelTranslation extends JModelAdmin
 
 						$label      = '<b>' . $key . '</b><br />' . htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 						$field->addAttribute('status', $status);
+						$field->addAttribute('textchange', '');
 						$field->addAttribute('description', $string);
 						$field->addAttribute('label', $label);
 						$field->addAttribute('name', $key);
 						$field->addAttribute('istranslation', $istranslation);
+						$field->addAttribute('istextchange', 0);
+						$field->addAttribute('isextraindev', 0);
 						$field->addAttribute('type', 'key');
 						$field->addAttribute('filter', 'raw');
 						continue;
@@ -884,7 +1128,10 @@ class LocaliseModelTranslation extends JModelAdmin
 								$default = $string;
 								$label   = '<b>' . $key . '</b>';
 								$field->addAttribute('istranslation', $istranslation);
+								$field->addAttribute('istextchange', 0);
+								$field->addAttribute('isextraindev', 0);
 								$field->addAttribute('status', $status);
+								$field->addAttribute('textchange', '');
 								$field->addAttribute('description', $string);
 								$field->addAttribute('default', $default);
 								$field->addAttribute('label', $label);
@@ -935,13 +1182,136 @@ class LocaliseModelTranslation extends JModelAdmin
 							$default = $string;
 							$label   = '<b>' . $key . '</b>';
 							$field->addAttribute('istranslation', $istranslation);
+							$field->addAttribute('istextchange', 0);
+							$field->addAttribute('isextraindev', 0);
 							$field->addAttribute('status', $status);
+							$field->addAttribute('textchange', '');
 							$field->addAttribute('description', $string);
 							$field->addAttribute('default', $default);
 							$field->addAttribute('label', $label);
 							$field->addAttribute('name', $key);
 							$field->addAttribute('type', 'key');
 							$field->addAttribute('filter', 'raw');
+						}
+					}
+
+					if (!empty($sectionsindev))
+					{
+					$i = 0;
+
+						foreach ($sectionsindev as $sectionname => $sectionindevdata)
+						{
+							if (!isset($sectionindevdata['extra_keys_in_dev']) && !isset($sectionindevdata['text_changes']))
+							{
+								continue;
+							}
+
+							$ghparts = explode('|', $sectionname);
+							$gh_user = $ghparts[0];
+							$gh_project = $ghparts[1];
+							$gh_trunk = $ghparts[2];
+
+							$section_title = 'DEVELOP | PROJECT: ' . strtoupper($gh_project)
+									. ' - USER: ' . strtoupper($gh_user)
+									. ' - TRUNK: ' . strtoupper($gh_trunk);
+
+							$dev_name = $gh_project . 'LOCSEP' . $gh_user . 'LOCSEP' . $gh_trunk;
+							$short_name = $gh_user . '|' . $gh_project . '|' . $gh_trunk;
+
+							$devname = "develop{$i++}";
+							$form->load($addform, false);
+
+							$addform = new SimpleXMLElement('<form />');
+							$group   = $addform->addChild('fields');
+							$group->addAttribute('name', 'stringsindev');
+							$fieldset = $group->addChild('fieldset');
+							$fieldset->addAttribute('name', $sectionname);
+							$fieldset->addAttribute('label', $section_title);
+
+							if (isset($sectionindevdata['extra_keys_in_dev']))
+							{
+								$extrasindev = $sectionindevdata['extra_keys_in_dev'];
+
+								foreach ($extrasindev as $key => $string)
+								{
+								$field   = $fieldset->addChild('field');
+								$default = $string;
+								$status  = "untranslated";
+
+									if (isset($stringsintasks[$short_name][$key]))
+									{
+										if ($string != $stringsintasks[$short_name][$key])
+										{
+											$default = $stringsintasks[$short_name][$key];
+											$status  = "translated";
+										}
+									}
+
+								$label   = '<b>' . $key . '</b><br />' . $string;
+								$field->addAttribute('istranslation', $istranslation);
+								$field->addAttribute('istextchange', 0);
+								$field->addAttribute('isextraindev', 1);
+
+									if ($istranslation == 1)
+									{
+										$field->addAttribute('status', $status);
+									}
+									else
+									{
+										$field->addAttribute('status', 'sourcestrings');
+									}
+
+								$field->addAttribute('textchange', '');
+								$field->addAttribute('description', $string);
+								$field->addAttribute('default', $default);
+								$field->addAttribute('label', $label);
+								$field->addAttribute('name', $key);
+								$field->addAttribute('key', $key);
+								$field->addAttribute('devname', $dev_name);
+								$field->addAttribute('type', 'key');
+								$field->addAttribute('filter', 'raw');
+								}
+							}
+
+							if (isset($sectionindevdata['text_changes']))
+							{
+								$changesindev = $sectionindevdata['text_changes'];
+								$tc_refs = $textchangesref[$sectionname];
+								$tc_defaults = $textchangesdefault[$sectionname];
+
+								foreach ($changesindev as $key => $change)
+								{
+								$field   = $fieldset->addChild('field');
+								$default = $tc_defaults[$key]['default'];
+								$status  = $tc_defaults[$key]['status'];
+								$description = $tc_refs[$key];
+								$label   = '<b>' . $key
+									. '</b><br /><p class="text_changes">'
+									. $change . '</p>';
+								$field->addAttribute('istranslation', $istranslation);
+								$field->addAttribute('istextchange', 1);
+								$field->addAttribute('isextraindev', 0);
+
+									if ($istranslation == 1)
+									{
+										$field->addAttribute('status', $status);
+									}
+									else
+									{
+										$field->addAttribute('status', 'sourcestrings');
+									}
+
+								$field->addAttribute('textchange', $change);
+								$field->addAttribute('description', $description);
+								$field->addAttribute('default', $default);
+								$field->addAttribute('label', $label);
+								$field->addAttribute('name', $key);
+								$field->addAttribute('key', $key);
+								$field->addAttribute('devname', $dev_name);
+								$field->addAttribute('type', 'key');
+								$field->addAttribute('filter', 'raw');
+								}
+							}
 						}
 					}
 				}
@@ -1090,7 +1460,7 @@ class LocaliseModelTranslation extends JModelAdmin
 			}
 
 			$contents2 .= "; @note        Client " . ucfirst($client) . "\n";
-			$contents2 .= "; @note        All ini files need to be saved as UTF-8 - No BOM\n\n";
+			$contents2 .= "; @note        All ini files need to be saved as UTF-8\n\n";
 
 			$contents = array();
 			$stream   = new JStream;
@@ -1215,6 +1585,95 @@ class LocaliseModelTranslation extends JModelAdmin
 
 		$return = JFile::write($path, $contents);
 
+		if (!empty($data['stringsindev']))
+		{
+			$frozenref  = LocaliseHelper::parseSections($refpath);
+			$frozenref = $frozenref['keys'];
+
+			$frozentask = LocaliseHelper::parseSections($path);
+			$frozentask = $frozentask['keys'];
+
+			foreach ($data['stringsindev'] as $short_name => $stringstosave)
+			{
+				$taskpath = $data[$short_name]['taskpathindev'];
+				$refindev = $data[$short_name]['refpathindev'];
+
+				$contentsindev = array();
+
+				if (JFile::exists($taskpath))
+				{
+					$storedtaskindev = LocaliseHelper::parseSections($taskpath);
+					$storedtaskindev = $storedtaskindev['keys'];
+
+					$refindev = LocaliseHelper::parseSections($refindev);
+					$refindev = $refindev['keys'];
+
+					foreach ($stringstosave as $keytosave => $stringtosave)
+					{
+						$stringinref = '';
+						$frozenstring = '';
+						$stringindev = '';
+
+						if (isset($frozenref[$keytosave]))
+						{
+							$stringinref = $frozenref[$keytosave];
+
+							// Unset the task if equal than ref.
+							if (isset($storedtaskindev[$keytosave]) && $storedtaskindev[$keytosave] == $stringinref)
+							{
+								unset($storedtaskindev[$keytosave]);
+							}
+						}
+
+						if (isset($frozentask[$keytosave]))
+						{
+							$frozenstring = $frozentask[$keytosave];
+
+							// Unset the task if equal than frozen.
+							if (isset($storedtaskindev[$keytosave]) && $storedtaskindev[$keytosave] == $frozenstring)
+							{
+								unset($storedtaskindev[$keytosave]);
+							}
+						}
+
+						if (isset($refindev[$keytosave]))
+						{
+							$stringindev = $refindev[$keytosave];
+
+							// Unset the task if equal than in dev.
+							if (isset($storedtaskindev[$keytosave]) && $storedtaskindev[$keytosave] == $stringindev)
+							{
+								unset($storedtaskindev[$keytosave]);
+							}
+						}
+
+						// Only the real changes in task are saved as task.
+						// This will help to keep the stored values alrready translared for other users.
+						if ($stringtosave != $stringinref && $stringtosave != $frozenstring && $stringtosave != $refindevstring)
+						{
+							if (!isset($storedtaskindev[$keytosave]))
+							{
+							$storedtaskindev[] = $keytosave;
+							}
+
+							$storedtaskindev[$keytosave] = $stringtosave;
+						}
+					}
+
+					if (!empty($storedtaskindev))
+					{
+						foreach ($storedtaskindev as $keyindev => $stringindev)
+						{
+						$contentsindev[] = $keyindev . '="' . str_replace('"', '"_QQ_"', $stringindev) . "\"\n";
+						}
+
+						$contentsindev = implode($contentsindev);
+						JFile::write($taskpath, $contentsindev);
+					}
+				}
+			}
+		}
+
 		// Try to make the template file unwriteable.
 
 		// Get the parameters
@@ -1265,17 +1724,37 @@ class LocaliseModelTranslation extends JModelAdmin
 		// Fix DOT saving issue
 		$input    = JFactory::getApplication()->input;
 		$formData = $input->get('jform', array(), 'ARRAY');
+		$tag = $this->getState('translation.tag');
+		$client = $this->getState('translation.client');
+		$fileindev    = basename($this->getState('translation.refpath'));
+		$fileintask = basename($this->getState('translation.path'));
 
 		if (!empty($formData['strings']))
 		{
 			$data['strings'] = $formData['strings'];
 		}
 
+		if (!empty($formData['stringsindev']))
+		{
+			$data['stringsindev'] = $formData['stringsindev'];
+		}
+
+		foreach ($data['stringsindev'] as $short_name => $stringsindev)
+		{
+			$ghparts = explode('LOCSEP', $short_name);
+			$gh_user = $ghparts[1];
+			$gh_project = $ghparts[0];
+			$gh_trunk = $ghparts[2];
+			$taskpath = LocaliseHelper::getTaskfilepath($client, $tag, $gh_user, $gh_project, $gh_trunk, $fileintask);
+			$refpathindev = LocaliseHelper::getReffilepathindev($client, $gh_user, $gh_project, $gh_trunk, $fileindev);
+
+			$data[$short_name]['taskpathindev'] = $taskpath;
+			$data[$short_name]['refpathindev'] = $refpathindev;
+		}
+
 		// Special case for lib_joomla
 		if ($this->getState('translation.filename') == 'lib_joomla')
 		{
-			$tag = $this->getState('translation.tag');
-
 			if (JFolder::exists(JPATH_SITE . "/language/$tag"))
 			{
 				$this->setState('translation.client', 'site');

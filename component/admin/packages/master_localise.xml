@@ -8,10 +8,21 @@
   <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
   <authoremail></authoremail>
   <authorurl></authorurl>
+  <allowdev>0</allowdev>
+  <keepcustomisedfiles>1</keepcustomisedfiles>
+  <githubuser>joomla-projects</githubuser>
+  <githubproject>com_localise</githubproject>
+  <devtrunk>develop</devtrunk>
+  <githubadministratorlanguagepath>component/admin/language/en-GB</githubadministratorlanguagepath>
+  <githubsitelanguagepath></githubsitelanguagepath>
+  <githubtoken></githubtoken>
   <language>en-GB</language>
   <copyright>Copyright (C) 2012 - today Localise Team. All rights reserved.</copyright>
   <administrator>
     <filename>com_localise.ini</filename>
     <filename>com_localise.sys.ini</filename>
   </administrator>
+  <site/>
+  <siteindev/>
+  <administratorindev/>
 </package>

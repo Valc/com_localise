@@ -17,6 +17,13 @@
 			label="COM_LOCALISE_LABEL_PACKAGE_NAME"
 			description="COM_LOCALISE_LABEL_PACKAGE_NAME_DESC" />
 		<field
+			id="title"
+			name="title"
+			type="text"
+			required="true"
+			label="COM_LOCALISE_LABEL_PACKAGE_TITLE"
+			description="COM_LOCALISE_LABEL_PACKAGE_TITLE_DESC" />
+		<field
 			id="description"
 			name="description"
 			type="textarea"
@@ -125,6 +132,80 @@
 			hidden="true"
 			class="span12"
 			required="true" />
+	</fieldset>
+	<fieldset
+		name="translationsindev"
+		label="COM_LOCALISE_FIELDSET_COREPACKAGE_TRANSLATIONSINDEV">
+		<field
+			id="translationsindev"
+			name="translationsindev"
+			type="extensiontranslationsindev"
+			label="COM_LOCALISE_LABEL_PACKAGE_TRANSLATIONSINDEV"
+			description="COM_LOCALISE_LABEL_PACKAGE_TRANSLATIONSINDEV_DESC"
+			multiple="true"
+			size="20"
+			hidden="true"
+			class="span12"
+			required="false" />
+	</fieldset>
+	<fieldset
+		name="indevconfig"
+		label="COM_LOCALISE_LABEL_IN_DEV_TAB"
+		description="COM_LOCALISE_LABEL_IN_DEV_TAB_DESC">
+		<field
+			name="allowdev"
+			type="radio"
+			default="0"
+			label="COM_LOCALISE_LABEL_ALLOW_DEV"
+			description="COM_LOCALISE_LABEL_ALLOW_DEV_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="keepcustomisedfiles"
+			type="radio"
+			default="1"
+			label="COM_LOCALISE_LABEL_KEEP_CUSTOMISED_FILES_DEV"
+			description="COM_LOCALISE_LABEL_KEEP_CUSTOMISED_FILES_DEV_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="githubuser"
+			type="text"
+			default="joomla"
+			label="COM_LOCALISE_LABEL_GITHUB_USER"
+			description="COM_LOCALISE_LABEL_GITHUB_USER_DESC" />
+		<field
+			name="githubproject"
+			type="text"
+			default="joomla-cms"
+			label="COM_LOCALISE_LABEL_GITHUB_PROJECT"
+			description="COM_LOCALISE_LABEL_GITHUB_PROJECT_DESC" />
+		<field
+			name="devtrunk"
+			type="text"
+			default="staging"
+			label="Github trunk"
+			description="COM_LOCALISE_LABEL_GITHUB_DEV_TRUNK_DESC" />
+		<field
+			name="githubadministratorlanguagepath"
+			type="text"
+			default=""
+			label="COM_LOCALISE_LABEL_GITHUB_ADMIN_LANGUAGE_PATH"
+			description="COM_LOCALISE_LABEL_GITHUB_ADMIN_LANGUAGE_PATH_DESC" />
+		<field
+			name="githubsitelanguagepath"
+			type="text"
+			default=""
+			label="COM_LOCALISE_LABEL_GITHUB_SITE_LANGUAGE_PATH"
+			description="COM_LOCALISE_LABEL_GITHUB_SITE_LANGUAGE_PATH_DESC" />
+		<field
+			name="githubtoken"
+			type="text"
+			default="15a139209fd42f7008750762933d2cb90374f4df"
+			label="COM_LOCALISE_LABEL_GITHUB_TOKEN"
+			description="COM_LOCALISE_LABEL_GITHUB_TOKEN_DESC" />
 	</fieldset>
 	<fieldset
 		name="permissions"
