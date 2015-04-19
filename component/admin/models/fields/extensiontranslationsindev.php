@@ -171,6 +171,10 @@ class JFormFieldExtensionTranslationsindev extends JFormFieldGroupedList
 						}
 					}
 				}
+				elseif ($is_tag == false)
+				{
+					JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_CLIENT_PATH_WITHOUT_TAG' . strtoupper($client)), 'warning');
+				}
 			}
 		}
 

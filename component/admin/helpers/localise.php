@@ -1118,7 +1118,7 @@ abstract class LocaliseHelper
 
 							$full_client_task_path = JFolder::makeSafe($taskrootpath . '/' . $client_task_path);
 						}
-						elseif ($is_tag == 'false')
+						elseif ($is_tag == false)
 						{
 							JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_CLIENT_PATH_WITHOUT_TAG'), 'warning');
 						}
