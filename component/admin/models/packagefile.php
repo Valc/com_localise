@@ -1012,7 +1012,7 @@ class LocaliseModelPackageFile extends JModelAdmin
 		// Prevent generating and downloading a pack without allow dev.
 		if ($allowdev == 0)
 		{
-			$app->enqueueMessage(JText::sprintf('COM_LOCALISE_ERROR_MASTER_PACKAGE_DOWNLOAD_NO_ALLOW_DEV', $data['name']), 'warning');
+			$app->enqueueMessage(JText::_('COM_LOCALISE_ERROR_PACKAGE_DOWNLOAD_NO_ALLOW_DEV'), 'warning');
 			$app->redirect(JRoute::_('index.php?option=com_localise&view=packagefile&layout=edit&id=' . $this->getState('packagefile.id'), false));
 
 			return false;
@@ -1047,6 +1047,14 @@ class LocaliseModelPackageFile extends JModelAdmin
 			{
 				$administrator[] = $matches[1];
 			}
+		}
+
+		if (empty($site) && empty($administrator))
+		{
+			$app->enqueueMessage(JText::_('COM_LOCALISE_ERROR_PACKAGE_DOWNLOAD_EMPTY'), 'warning');
+			$app->redirect(JRoute::_('index.php?option=com_localise&view=packagefile&layout=edit&id=' . $this->getState('packagefile.id'), false));
+
+			return false;
 		}
 
 		$parts = explode('.', $data['version']);

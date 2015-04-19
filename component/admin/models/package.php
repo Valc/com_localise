@@ -1303,10 +1303,10 @@ class LocaliseModelPackage extends JModelAdmin
 		$admin_task_path = LocaliseHelper::getTaskpath($tag, $gh_user, $gh_project, $gh_trunk, $gh_admin_path);
 		$site_task_path = LocaliseHelper::getTaskpath($tag, $gh_user, $gh_project, $gh_trunk, $gh_site_path);
 
-		// Prevent generating and downloading a pack without allow dev
+		// Prevent generating and downloading a pack without allow dev.
 		if ($allowdev == 0)
 		{
-			$app->enqueueMessage(JText::sprintf('COM_LOCALISE_ERROR_MASTER_PACKAGE_DOWNLOAD_NO_ALLOW_DEV', $data['name']), 'warning');
+			$app->enqueueMessage(JText::_('COM_LOCALISE_ERROR_PACKAGE_DOWNLOAD_NO_ALLOW_DEV'), 'warning');
 			$app->redirect(JRoute::_('index.php?option=com_localise&view=packagefile&layout=edit&id=' . $this->getState('packagefile.id'), false));
 
 			return false;
@@ -1341,6 +1341,14 @@ class LocaliseModelPackage extends JModelAdmin
 			{
 				$administrator[] = $matches[1];
 			}
+		}
+
+		if (empty($site) && empty($administrator))
+		{
+			$app->enqueueMessage(JText::_('COM_LOCALISE_ERROR_PACKAGE_DOWNLOAD_EMPTY'), 'warning');
+			$app->redirect(JRoute::_('index.php?option=com_localise&view=packagefile&layout=edit&id=' . $this->getState('packagefile.id'), false));
+
+			return false;
 		}
 
 		$parts = explode('.', $data['version']);
