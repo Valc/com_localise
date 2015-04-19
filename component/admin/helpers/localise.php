@@ -805,6 +805,8 @@ abstract class LocaliseHelper
 						return true;
 					}
 
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_UNABLE_TO_CREATE_INDEX_FILE'), 'warning');
+
 				return false;
 				}
 
@@ -812,7 +814,9 @@ abstract class LocaliseHelper
 			}
 			else
 			{
-			return false;
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_UNABLE_TO_CREATE_FOLDERS'), 'warning');
+
+				return false;
 			}
 		}
 
@@ -941,7 +945,7 @@ abstract class LocaliseHelper
 			}
 			catch (Exception $e)
 			{
-				JFactory::getApplication()->enqueueMessage($e);
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_GETTING_REPOSITORY_FILES'), 'warning');
 
 				return false;
 			}
@@ -953,6 +957,8 @@ abstract class LocaliseHelper
 
 			if ($client_folder_exists == '0')
 			{
+				JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_NO_CLIENT_FOLDER_PRESENT'), 'warning');
+
 				return false;
 			}
 
@@ -985,6 +991,8 @@ abstract class LocaliseHelper
 
 						if (!JFile::exists($file_path))
 						{
+							JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_UNABLE_TO_CREATE_DEV_FILE'), 'warning');
+
 							return false;
 						}
 				}
@@ -995,6 +1003,8 @@ abstract class LocaliseHelper
 
 				if (!JFile::exists($sha_path))
 				{
+					JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_NO_SHA_FILE_PRESENT'), 'warning');
+
 					return false;
 				}
 			}
@@ -1015,6 +1025,8 @@ abstract class LocaliseHelper
 
 							if (JFile::exists($file_path))
 							{
+								JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_FILE_TO_DELETE_IS_PRESENT'), 'warning');
+
 								return false;
 							}
 						}
@@ -1024,6 +1036,8 @@ abstract class LocaliseHelper
 
 			return true;
 		}
+
+		JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_NO_DATA_PRESENT'), 'warning');
 
 		return false;
 	}
@@ -1103,6 +1117,10 @@ abstract class LocaliseHelper
 							}
 
 							$full_client_task_path = JFolder::makeSafe($taskrootpath . '/' . $client_task_path);
+						}
+						elseif ($is_tag == 'false')
+						{
+							JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_CLIENT_PATH_WITHOUT_TAG'), 'warning');
 						}
 
 					$full_client_path_exists = JFolder::exists($full_client_path);
@@ -1215,6 +1233,10 @@ abstract class LocaliseHelper
 
 					$full_client_path = JFolder::makeSafe($rootpath . '/' . $client_path);
 					}
+					else
+					{
+						JFactory::getApplication()->enqueueMessage(JText::_('COM_LOCALISE_ERROR_GITHUB_CLIENT_PATH_WITHOUT_TAG'), 'warning');
+					}
 
 					$full_client_path_exists = JFolder::exists($full_client_path);
 
@@ -1224,7 +1246,7 @@ abstract class LocaliseHelper
 
 						if (!JFile::exists($path))
 						{
-								$path = '';
+							$path = '';
 						}
 					}
 				}
@@ -1442,7 +1464,7 @@ abstract class LocaliseHelper
 
 						if (!JFile::exists($taskpath))
 						{
-								$taskpath = '';
+							$taskpath = '';
 						}
 					}
 				}
