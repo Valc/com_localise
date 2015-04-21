@@ -1699,9 +1699,7 @@ abstract class LocaliseHelper
 			{
 				foreach ($file_data['keys_to_delete'] as $key_to_delete => $string_to_delete)
 				{
-					$line = $key_to_delete . '="' . $string_to_delete . '"';
-
-					if (in_array($line, $keys_to_keep))
+					if (in_array($key_to_delete, $keys_to_keep))
 					{
 						// Now is sure that is extra.
 						$file_data['keys_to_add'][$key_to_delete] = $string_to_delete;
