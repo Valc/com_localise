@@ -5,10 +5,10 @@
 		<description>Localise - nice and easy management of languages and translation files modified by Valc.</description>
 		<element>com_localise</element>
 		<type>component</type>
-		<version>4.2</version>
+		<version>4.3</version>
 		<infourl title="com_localise">https://github.com/Valc/com_localise/</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/Valc/com_localise/releases/download/all-addons/com_localise_all_features_v4.2.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://github.com/Valc/com_localise/releases/download/all-addons/com_localise_all_features_v4.3.zip</downloadurl>
 		</downloads>
 		<targetplatform name="joomla" version=".*" />
 	</update>
