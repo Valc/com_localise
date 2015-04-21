@@ -1084,6 +1084,11 @@ abstract class LocaliseHelper
 					$taskrootpath  = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/task_in_dev/github');
 					$rootpath       = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/in_dev/github');
 
+						if (empty($xml->$gh_client_path))
+						{
+							continue;
+						}
+
 					$client_path    = $xml->githubuser
 							. '/'
 							. $xml->githubproject
@@ -1214,6 +1219,12 @@ abstract class LocaliseHelper
 				if ($xml->allowdev == '1' && $xml->githubuser == $gh_user && $xml->githubproject == $gh_project && $xml->devtrunk == $gh_trunk)
 				{
 					$gh_client_path = 'github' . $client . 'languagepath';
+
+						if (empty($xml->$gh_client_path))
+						{
+							continue;
+						}
+
 					$rootpath  = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/in_dev/github');
 
 					$client_path    = $xml->githubuser . '/' . $xml->githubproject . '/' . $xml->devtrunk . '/' . $xml->$gh_client_path;
