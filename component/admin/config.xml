@@ -76,7 +76,7 @@
 			name="suffixes"
 			type="textarea"
 			class="ltr"
-			default=".sys"
+			default=".sys, .dev, .dev-sys"
 			label="COM_LOCALISE_LABEL_SUFFIXES"
 			description="COM_LOCALISE_LABEL_SUFFIXES_DESC" />
 		<field

@@ -200,7 +200,7 @@ abstract class LocaliseHelper
 	public static function getScans($client = '', $type = '')
 	{
 		$params   = JComponentHelper::getParams('com_localise');
-		$suffixes = explode(',', $params->get('suffixes', '.sys'));
+		$suffixes = explode(',', $params->get('suffixes', '.sys, .dev, .dev-sys'));
 
 		$filter_type   = $type ? $type : '.';
 		$filter_client = $client ? $client : '.';
