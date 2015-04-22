@@ -76,7 +76,7 @@ JText::script('COM_LOCALISE_MSG_CONFIRM_PACKAGE_SAVE');
 						</div>
 						<div class="span6">
 						<?php echo JHtml::_('bootstrap.startTabSet', 'myTab2', array('active' => 'released')); ?>
-						<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'released', 'Released') ?>
+						<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'released', JText::_('COM_LOCALISE_TRANSLATION_EDIT_RELEASED_TAB')) ?>
 							<?php echo JText::_($fieldSets['translations']->label); ?>
 							<?php if (!empty($fieldSets['translations']->description)):?>
 									<p class="tip"><?php echo JText::_($fieldSets['translations']->description); ?></p>
@@ -92,7 +92,7 @@ JText::script('COM_LOCALISE_MSG_CONFIRM_PACKAGE_SAVE');
 									</div>
 							<?php endforeach; ?>
 						<?php echo JHtml::_('bootstrap.endTab'); ?>
-						<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'indev', 'In dev'); ?>
+						<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'indev', JText::_('COM_LOCALISE_TRANSLATION_EDIT_IN_DEV_TAB')); ?>
 							<?php echo JText::_($fieldSets['translationsindev']->label); ?>
 							<?php if (!empty($fieldSets['translationsindev']->description)):?>
 									<p class="tip"><?php echo JText::_($fieldSets['translationsindev']->description); ?></p>

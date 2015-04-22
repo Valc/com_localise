@@ -39,7 +39,7 @@ $sortFields = $this->getSortFields();
 	<?php echo $this->loadTemplate('filter');?>
 		<?php echo $this->loadTemplate('legend');?>
 		<?php echo JHtml::_('bootstrap.startTabSet', 'translationsTab', array('active' => 'frozen')); ?>
-			<?php echo JHtml::_('bootstrap.addTab', 'translationsTab', 'frozen', 'Frozen', true); ?>
+			<?php echo JHtml::_('bootstrap.addTab', 'translationsTab', 'frozen', JText::_('COM_LOCALISE_TRANSLATIONS_RELEASED_TAB'), true); ?>
 			<table class="table table-striped" id="localiseList">
 				<thead>
 					<?php echo $this->loadTemplate('head');?>
@@ -52,7 +52,7 @@ $sortFields = $this->getSortFields();
 				</tbody>
 			</table>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
-			<?php echo JHtml::_('bootstrap.addTab', 'translationsTab', 'in_dev', 'In dev changes', true); ?>
+			<?php echo JHtml::_('bootstrap.addTab', 'translationsTab', 'in_dev', JText::_('COM_LOCALISE_TRANSLATIONS_IN_DEV_REPORT_TAB'), true); ?>
 				<?php echo $this->loadTemplate('dev');?>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
