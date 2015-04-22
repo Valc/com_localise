@@ -15,7 +15,6 @@
   <packager></packager>
   <packagerurl></packagerurl>
   <allowdev>0</allowdev>
-  <keepcustomisedfiles>1</keepcustomisedfiles>
   <githubuser></githubuser>
   <githubproject></githubproject>
   <devtrunk></devtrunk>

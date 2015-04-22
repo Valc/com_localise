@@ -217,7 +217,6 @@ class LocaliseModelPackageFile extends JModelAdmin
 
 				// Adding dev fields
 				$package->allowdev                        = (string) $xml->allowdev;
-				$package->keepcustomisedfiles             = (string) $xml->keepcustomisedfiles;
 				$package->githubuser                      = (string) $xml->githubuser;
 				$package->githubproject                   = (string) $xml->githubproject;
 				$package->devtrunk                        = (string) $xml->devtrunk;
@@ -409,7 +408,6 @@ class LocaliseModelPackageFile extends JModelAdmin
 
 			// Adding dev fields.
 			$allowdevElement            = $dom->createElement('allowdev', $data['allowdev']);
-			$keepcustomisedfilesElement = $dom->createElement('keepcustomisedfiles', $data['keepcustomisedfiles']);
 			$githubuserElement          = $dom->createElement('githubuser', $data['githubuser']);
 			$githubprojectElement       = $dom->createElement('githubproject', $data['githubproject']);
 			$devtrunkElement            = $dom->createElement('devtrunk', $data['devtrunk']);
@@ -444,7 +442,6 @@ class LocaliseModelPackageFile extends JModelAdmin
 
 			// Adding dev fields.
 			$packageXml->appendChild($allowdevElement);
-			$packageXml->appendChild($keepcustomisedfilesElement);
 			$packageXml->appendChild($githubuserElement);
 			$packageXml->appendChild($githubprojectElement);
 			$packageXml->appendChild($devtrunkElement);

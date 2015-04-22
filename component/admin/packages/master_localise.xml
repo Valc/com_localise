@@ -9,7 +9,6 @@
   <authoremail></authoremail>
   <authorurl></authorurl>
   <allowdev>0</allowdev>
-  <keepcustomisedfiles>1</keepcustomisedfiles>
   <githubuser>joomla-projects</githubuser>
   <githubproject>com_localise</githubproject>
   <devtrunk>develop</devtrunk>

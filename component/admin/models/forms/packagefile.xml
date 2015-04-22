@@ -162,15 +162,6 @@
 			<option value="1">JYES</option>
 		</field>
 		<field
-			name="keepcustomisedfiles"
-			type="radio"
-			default="1"
-			label="COM_LOCALISE_LABEL_KEEP_CUSTOMISED_FILES_DEV"
-			description="COM_LOCALISE_LABEL_KEEP_CUSTOMISED_FILES_DEV_DESC">
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
-		</field>
-		<field
 			name="githubuser"
 			type="text"
 			default="joomla"

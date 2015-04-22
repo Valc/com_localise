@@ -1141,7 +1141,6 @@ abstract class LocaliseHelper
 						$filesindev[$client][$fcp]['client_path'] = $client_path;
 						$filesindev[$client][$fcp]['language_tag'] = $language_tag;
 						$filesindev[$client][$fcp]['allow_dev'] = $xml->allowdev;
-						$filesindev[$client][$fcp]['keep_customised_files'] = $xml->keepcustomisedfiles;
 						$filesindev[$client][$fcp]['github_user'] = $xml->githubuser;
 						$filesindev[$client][$fcp]['github_project'] = $xml->githubproject;
 						$filesindev[$client][$fcp]['dev_trunk'] = $xml->devtrunk;
