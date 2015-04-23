@@ -1628,14 +1628,31 @@ abstract class LocaliseHelper
 			if (!empty($frozenref))
 			{
 				$keys_in_frozen_ref = array_keys($frozenref);
-				$keys_to_delete = array_diff($keys_in_frozen_ref, $keys_in_dev_ref);
+				$ktd = array_diff($keys_in_frozen_ref, $keys_in_dev_ref);
+
+				if (!empty($ktd))
+				{
+					foreach ($ktd as $key_to_delete)
+					{
+						$keys_to_delete[$key_to_delete] = $frozenref[$key_to_delete];
+					}
+				}
+
 				$keys_to_add_in_dev = array_diff($keys_in_dev_ref, $keys_in_frozen_ref);
 			}
 
 			if (!empty($frozentask))
 			{
 				$keys_in_frozen_task = array_keys($frozentask);
-				$keys_to_add = array_diff($keys_in_frozen_task, $keys_in_dev_ref);
+				$kta = array_diff($keys_in_frozen_task, $keys_in_dev_ref);
+
+				if (!empty($kta))
+				{
+					foreach ($kta as $key_to_add)
+					{
+						$keys_to_add[$key_to_add] = $frozentask[$key_to_add];
+					}
+				}
 			}
 
 			if (!empty($devtask))
@@ -1693,7 +1710,7 @@ abstract class LocaliseHelper
 				}
 			}
 
-			// Determine what is key to add or extra.
+			// Determine what is extra key or key to delete.
 			if (!empty($file_data['keys_to_delete']))
 			{
 				foreach ($file_data['keys_to_delete'] as $key_to_delete => $string_to_delete)
@@ -1714,8 +1731,25 @@ abstract class LocaliseHelper
 			if (!empty($frozentask))
 			{
 				$keys_in_frozen_task = array_keys($frozentask);
-				$keys_to_delete = array_diff($keys_in_frozen_task, $keys_in_frozen_ref);
-				$keys_to_add = array_diff($keys_in_frozen_ref, $keys_in_frozen_task);
+				$ktd = array_diff($keys_in_frozen_task, $keys_in_frozen_ref);
+
+				if (!empty($ktd))
+				{
+					foreach ($ktd as $key_to_delete)
+					{
+						$keys_to_delete[$key_to_delete] = $frozentask[$key_to_delete];
+					}
+				}
+
+				$kta = array_diff($keys_in_frozen_ref, $keys_in_frozen_task);
+
+				if (!empty($kta))
+				{
+					foreach ($kta as $key_to_add)
+					{
+						$keys_to_add[$key_to_add] = $frozenref[$key_to_add];
+					}
+				}
 			}
 
 			// Revising all keys in frozen ref.
@@ -1763,14 +1797,12 @@ abstract class LocaliseHelper
 				}
 			}
 
-			// Determine what is key to add or extra.
+			// Determine what is extra key or key to delete.
 			if (!empty($file_data['keys_to_delete']))
 			{
 				foreach ($file_data['keys_to_delete'] as $key_to_delete => $string_to_delete)
 				{
-					$line = $key_to_delete . '="' . $string_to_delete . '"';
-
-					if (in_array($line, $keys_to_keep))
+					if (in_array($key_to_delete, $keys_to_keep))
 					{
 						// Now is sure that is extra.
 						$file_data['keys_to_add'][$key_to_delete] = $string_to_delete;
@@ -1853,13 +1885,14 @@ abstract class LocaliseHelper
 			if (!empty($keys_to_add))
 			{
 				$contents .= "\n[Keys to keep in target]\n\n";
-				$contents .= ";The next keys are not present in en-GB language but are used as extra in this language
-							(extra plural cases, custom CAPTCHA translations, etc).\n\n";
+				$contents .= ";The next keys are not present in en-GB language but are used as extra in this language (extra plural cases, custom CAPTCHA translations, etc).\n\n";
 
 				foreach ($keys_to_add as $key => $string)
 				{
 					$contents .= $key . '="' . str_replace('"', '"_QQ_"', $string) . "\"\n";
 				}
+
+				$contents .= "\n";
 			}
 
 			if (!empty($keys_to_delete))
@@ -1871,6 +1904,8 @@ abstract class LocaliseHelper
 				{
 					$contents .= $key . '="' . str_replace('"', '"_QQ_"', $string) . "\"\n";
 				}
+
+				$contents .= "\n";
 			}
 		}
 
