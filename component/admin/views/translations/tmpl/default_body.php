@@ -28,6 +28,8 @@ $have_raw_mode = 1;
 		}
 	}
 
+$max_vars = ini_get('max_input_vars');
+
 $lang = JFactory::getLanguage();
 $dev_files_report = array();
 ?>
@@ -71,6 +73,13 @@ $dev_files_report = array();
 				$dev_files_report[$gh_project][$gh_trunk][$gh_user][$gh_filename]['extra_keys_in_dev'][$key] = $extrakey;
 			}
 		}
+	}
+
+	$limit = 0;
+
+	if ($max_vars > 0 && $item->total > $max_vars)
+	{
+		$limit = 1;
 	}
 ?>
 	<?php $canEdit = $user->authorise('localise.edit', 'com_localise' . (isset($item->id) ? ('.' . $item->id) : '')); ?>
@@ -118,9 +127,14 @@ $dev_files_report = array();
 				<input type="checkbox" id="cb<?php echo $i; ?>" class="hidden" name="cid[]" value="<?php echo $item->id; ?>">
 			<?php endif; ?>
 			<?php if ($item->writable && !$item->error && $canEdit) : ?>
-				<a class="hasTooltip" href="<?php echo JRoute::_('index.php?option=com_localise&task=translation.edit&client='.$item->client.'&tag='.$item->tag.'&filename='.$item->filename.'&storage='.$item->storage.'&id='.LocaliseHelper::getFileId(LocaliseHelper::getTranslationPath($item->client,$item->tag, $item->filename, $item->storage))); ?>" title="<?php echo JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_' . ($item->state=='unexisting' ? 'NEW' : 'EDIT')); ?>">
-				<?php echo $item->name; ?>.ini
-				</a>
+				<?php if ($limit == 0) : ?>
+					<a class="hasTooltip" href="<?php echo JRoute::_('index.php?option=com_localise&task=translation.edit&client='.$item->client.'&tag='.$item->tag.'&filename='.$item->filename.'&storage='.$item->storage.'&id='.LocaliseHelper::getFileId(LocaliseHelper::getTranslationPath($item->client,$item->tag, $item->filename, $item->storage))); ?>" title="<?php echo JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_' . ($item->state=='unexisting' ? 'NEW' : 'EDIT')); ?>">
+					<?php echo $item->name; ?>.ini
+					</a>
+				<?php else : ?>
+					<?php echo "<font color=\"red\">" . $item->name . ".ini (Strings protection.)</font>"; ?>
+					<?php $app->enqueueMessage("The PHP directve 'max_input_vars' value is minor than the required one to edit the file: " . $item->tag . "." . $item->name . ".ini", 'warning'); ?>
+				<?php endif; ?>
 			<?php elseif (!$canEdit) : ?>
 				<?php echo JHtml::_('jgrid.action', $i, '', array('tip'=>true, 'inactive_title'=>JText::sprintf('COM_LOCALISE_TOOLTIP_TRANSLATIONS_NOTEDITABLE', substr($item->path, strlen(JPATH_ROOT))), 'inactive_class'=>'16-error', 'enabled' => false, 'translate'=>false)); ?>
 				<?php echo $item->name; ?>.ini
