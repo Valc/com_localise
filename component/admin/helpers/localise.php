@@ -1485,7 +1485,7 @@ abstract class LocaliseHelper
 	}
 
 	/**
-	 * Gets the ini file headers from a path
+	 * Gets the ini file headers from a path filtering by knowed ones.
 	 *
 	 * @param   string  $path  The language tag.
 	 *
@@ -1587,6 +1587,46 @@ abstract class LocaliseHelper
 			{
 				$file_headers['headers'] .= "; @note        " . $note . "\n";
 			}
+		}
+
+	return $file_headers;
+	}
+
+	/**
+	 * Gets the ini file headers from a path without filter by knowed ones.
+	 *
+	 * @param   string  $path  The language tag.
+	 *
+	 * @return  array
+	 *
+	 * @since   4.11
+	 */
+	public static function getRawfileheaders($path = '')
+	{
+	$file_headers = array();
+	$file_headers['headers'] = "";
+
+		if (!empty($path) && JFile::exists($path))
+		{
+			$stream = new JStream;
+			$stream->open($path);
+			$stream->seek(0);
+
+			while (!$stream->eof())
+			{
+				$line = $stream->gets();
+
+				if (!preg_match('/^([A-Z][A-Z0-9_\-\.]*)\s*=/', $line, $matches))
+				{
+					$file_headers['headers'] .= $line;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			$stream->close();
 		}
 
 	return $file_headers;
@@ -1822,7 +1862,7 @@ abstract class LocaliseHelper
 		if (!empty($headers_path) && JFile::exists($headers_path) && !empty($file_data['stringindev']) && empty($file_data['contents']))
 		{
 			// Headers for the translated file
-			$headers = self::getfileheaders($headers_path);
+			$headers = self::getRawfileheaders($headers_path);
 			$file_data['headers'] = $headers['headers'];
 			$file_data['contents'] = self::getRevisedcontent($file_data, $ref_keys_path);
 		}
@@ -1843,7 +1883,7 @@ abstract class LocaliseHelper
 	public static function getRevisedcontent($file_data = array(), $ref_keys_path = '')
 	{
 		$contents = array();
-		$contents_header = $file_data['headers'] . "\n";
+		$contents_header = $file_data['headers'];
 
 		if (!empty($file_data['stringindev']) && !empty($ref_keys_path) && JFile::exists($ref_keys_path))
 		{
