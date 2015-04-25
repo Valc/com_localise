@@ -1454,6 +1454,19 @@ class LocaliseModelPackage extends JModelAdmin
 			}
 		}
 
+		foreach ($data['translationsextrasindev'] as $translation)
+		{
+			if (preg_match('/^site_(.*)$/', $translation, $matches))
+			{
+				$site[] = $matches[1];
+			}
+
+			if (preg_match('/^administrator_(.*)$/', $translation, $matches))
+			{
+				$administrator[] = $matches[1];
+			}
+		}
+
 		if (empty($site) && empty($administrator))
 		{
 			$app->enqueueMessage(JText::_('COM_LOCALISE_ERROR_PACKAGE_DOWNLOAD_EMPTY'), 'warning');

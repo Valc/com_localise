@@ -63,8 +63,8 @@ class JFormFieldTranslationsextrasindev extends JFormFieldGroupedList
 				{
 					if (preg_match('/^site_(.*)$/', $file_to_add, $matches))
 					{
-						$key = $matches[1];
-						$value    = $matches[1];
+						$key      = substr($matches[1], 0, strlen($matches[1]) - 4);
+						$value    = $key;
 
 						if ($key == 'joomla')
 						{
@@ -76,8 +76,8 @@ class JFormFieldTranslationsextrasindev extends JFormFieldGroupedList
 
 					if (preg_match('/^administrator_(.*)$/', $file_to_add, $matches))
 					{
-						$key = $matches[1];
-						$value    = $matches[1];
+						$key      = substr($matches[1], 0, strlen($matches[1]) - 4);
+						$value    = $key;
 
 						if ($key == 'joomla')
 						{
