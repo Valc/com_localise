@@ -937,6 +937,7 @@ abstract class LocaliseHelper
 			{
 				// Without a token runs fatal.
 				// $github = new JGithub;
+
 				// Trying with a 'read only' public repositories token
 				// But base 64 encoded to avoid Github alarms sharing it.
 				$gh_token = base64_decode('MzY2NzYzM2ZkMzZmMWRkOGU5NmRiMTdjOGVjNTFiZTIyMzk4NzVmOA==');

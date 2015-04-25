@@ -1330,7 +1330,7 @@ class LocaliseModelPackage extends JModelAdmin
 		if ($allowdev == 0)
 		{
 			$app->enqueueMessage(JText::_('COM_LOCALISE_ERROR_PACKAGE_DOWNLOAD_NO_ALLOW_DEV'), 'warning');
-			$app->redirect(JRoute::_('index.php?option=com_localise&view=packagefile&layout=edit&id=' . $this->getState('packagefile.id'), false));
+			$app->redirect(JRoute::_('index.php?option=com_localise&view=package&layout=edit&id=' . $this->getState('package.id'), false));
 
 			return false;
 		}
@@ -1369,7 +1369,7 @@ class LocaliseModelPackage extends JModelAdmin
 		if (empty($site) && empty($administrator))
 		{
 			$app->enqueueMessage(JText::_('COM_LOCALISE_ERROR_PACKAGE_DOWNLOAD_EMPTY'), 'warning');
-			$app->redirect(JRoute::_('index.php?option=com_localise&view=packagefile&layout=edit&id=' . $this->getState('packagefile.id'), false));
+			$app->redirect(JRoute::_('index.php?option=com_localise&view=package&layout=edit&id=' . $this->getState('package.id'), false));
 
 			return false;
 		}
