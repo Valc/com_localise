@@ -108,6 +108,7 @@
     <filename>tpl_protostar.sys.ini</filename>
   </site>
   <siteindev/>
+  <siteextrasindev/>
   <administrator>
     <filename>joomla.ini</filename>
     <filename>com_admin.ini</filename>
@@ -312,6 +313,7 @@
     <filename>tpl_isis.sys.ini</filename>
   </administrator>
   <administratorindev/>
+  <administratorextrasindev/>
   <installation/>
   <installationindev/>
 </package>

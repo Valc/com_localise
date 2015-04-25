@@ -84,6 +84,7 @@ class LocaliseModelPackage extends JModelAdmin
 
 		$form->setFieldAttribute('translations', 'package', $name, 'translations');
 		$form->setFieldAttribute('translationsindev', 'package', $name, 'translationsindev');
+		$form->setFieldAttribute('translationsextrasindev', 'package', $name, 'translationsextrasindev');
 
 		// Check for an error.
 		if (JError::isError($form))
@@ -364,6 +365,51 @@ class LocaliseModelPackage extends JModelAdmin
 						$package->installationindev[] = $data;
 					}
 				}
+
+				// Get the translations extras indev.
+				$package->translationsextrasindev  = array();
+				$package->administratorextrasindev = array();
+
+				if ($xml->administratorextrasindev)
+				{
+					foreach ($xml->administratorextrasindev->children() as $file)
+					{
+						$data = (string) $file;
+
+						if ($data)
+						{
+							$package->translationsextrasindev[] = "administrator_$data";
+						}
+						else
+						{
+							$package->translationsextrasindev[] = "administrator_joomla";
+						}
+
+						$package->administratorextrasindev[] = $data;
+					}
+				}
+
+				$package->siteextrasindev = array();
+
+				if ($xml->siteextrasindev)
+				{
+					foreach ($xml->siteextrasindev->children() as $file)
+					{
+						$data = (string) $file;
+
+						if ($data)
+						{
+							$package->translationsextrasindev[] = "site_$data";
+						}
+						else
+						{
+							$package->translationsextrasindev[] = "site_joomla";
+						}
+
+						$package->siteextrasindev[] = $data;
+					}
+				}
+
 			}
 			else
 			{
@@ -502,12 +548,14 @@ class LocaliseModelPackage extends JModelAdmin
 			$packageXml->appendChild($servernameElement);
 			$packageXml->appendChild($serverurlElement);
 
-			$administrator      = array();
-			$site               = array();
-			$installation       = array();
-			$administratorindev = array();
-			$siteindev          = array();
-			$installationindev  = array();
+			$administrator            = array();
+			$site                     = array();
+			$installation             = array();
+			$administratorindev       = array();
+			$siteindev                = array();
+			$administratorextrasindev = array();
+			$siteextrasindev          = array();
+			$installationindev        = array();
 
 			foreach ($data['translations'] as $translation)
 			{
@@ -629,6 +677,47 @@ class LocaliseModelPackage extends JModelAdmin
 					}
 
 					$packageXml->appendChild($installXmlindev);
+				}
+
+				foreach ($data['translationsextrasindev'] as $translation)
+				{
+					if (preg_match('/^site_(.*)$/', $translation, $matches))
+					{
+						$siteextrasindev[] = $matches[1];
+					}
+
+					if (preg_match('/^administrator_(.*)$/', $translation, $matches))
+					{
+						$administratorextrasindev[] = $matches[1];
+					}
+				}
+
+				// Add the site extra language files in dev
+				if (count($siteextrasindev))
+				{
+					$siteXmlextrasindev = $dom->createElement('siteextrasindev');
+
+					foreach ($siteextrasindev as $translation)
+					{
+						$fileElementextrasindev = $dom->createElement('filename', $translation . '.ini');
+						$siteXmlextrasindev->appendChild($fileElementextrasindev);
+					}
+
+					$packageXml->appendChild($siteXmlextrasindev);
+				}
+
+				// Add the administrator extra language files in dev
+				if (count($administratorextrasindev))
+				{
+					$adminXmlextrasindev = $dom->createElement('administratorextrasindev');
+
+					foreach ($administratorextrasindev as $translation)
+					{
+						$fileElementextrasindev = $dom->createElement('filename', $translation . '.ini');
+						$adminXmlextrasindev->appendChild($fileElementextrasindev);
+					}
+
+					$packageXml->appendChild($adminXmlextrasindev);
 				}
 			}
 

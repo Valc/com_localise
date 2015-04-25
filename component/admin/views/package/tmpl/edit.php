@@ -115,7 +115,9 @@ JFactory::getDocument()->addScriptDeclaration("
 									</div>
 							<?php endforeach; ?>
 						<?php echo JHtml::_('bootstrap.endTab'); ?>
-						<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'indev', JText::_('COM_LOCALISE_TRANSLATION_EDIT_IN_DEV_TAB')); ?>
+						<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'develop', JText::_('COM_LOCALISE_TRANSLATION_EDIT_DEVELOP_TAB')); ?>
+							<?php echo JHtml::_('bootstrap.startTabSet', 'myTab3', array('active' => 'indev')); ?>
+							<?php echo JHtml::_('bootstrap.addTab', 'myTab3', 'indev', JText::_('COM_LOCALISE_TRANSLATION_EDIT_IN_DEV_TAB')); ?>
 							<?php echo JText::_($fieldSets['translationsindev']->label); ?>
 							<?php if (!empty($fieldSets['translationsindev']->description)):?>
 									<p class="tip"><?php echo JText::_($fieldSets['translationsindev']->description); ?></p>
@@ -130,6 +132,24 @@ JFactory::getDocument()->addScriptDeclaration("
 										</div>
 									</div>
 							<?php endforeach; ?>
+							<?php echo JHtml::_('bootstrap.endTab'); ?>
+							<?php echo JHtml::_('bootstrap.addTab', 'myTab3', 'extrasindev', JText::_('COM_LOCALISE_TRANSLATION_EDIT_EXTRAS_IN_DEV_TAB')); ?>
+							<?php echo JText::_($fieldSets['translationsextrasindev']->label); ?>
+							<?php if (!empty($fieldSets['translationsextrasindev']->description)):?>
+									<p class="tip"><?php echo JText::_($fieldSets['translationsextrasindev']->description); ?></p>
+							<?php endif;?>
+							<?php foreach($this->form->getFieldset('translationsextrasindev') as $field): ?>
+									<div class="control-group form-vertical">
+										<div class="control-label">
+											<?php echo $field->label; ?>
+										</div>
+										<div class="controls">
+											<?php echo $field->input; ?>
+										</div>
+									</div>
+							<?php endforeach; ?>
+							<?php echo JHtml::_('bootstrap.endTab'); ?>
+							<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 						<?php echo JHtml::_('bootstrap.endTab'); ?>
 						<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 						</div>
