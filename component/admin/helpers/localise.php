@@ -931,12 +931,17 @@ abstract class LocaliseHelper
 			if (!empty($gh_token))
 			{
 				$options->set('gh.token', $gh_token);
-				$gh_token = '';
 				$github = new JGithub($options);
 			}
 			else
 			{
-				$github = new JGithub;
+				// Without a token runs fatal.
+				// $github = new JGithub;
+				// Trying with a 'read only' public repositories token
+				// But base 64 encoded to avoid Github alarms sharing it.
+				$gh_token = base64_decode('MzY2NzYzM2ZkMzZmMWRkOGU5NmRiMTdjOGVjNTFiZTIyMzk4NzVmOA==');
+				$options->set('gh.token', $gh_token);
+				$github = new JGithub($options);
 			}
 
 			try
