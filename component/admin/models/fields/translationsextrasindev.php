@@ -37,7 +37,6 @@ class JFormFieldTranslationsextrasindev extends JFormFieldGroupedList
 	 */
 	protected function getGroups()
 	{
-
 		// Remove '.ini' from values
 		if (is_array($this->value))
 		{
@@ -46,6 +45,7 @@ class JFormFieldTranslationsextrasindev extends JFormFieldGroupedList
 				$this->value[$key] = substr($val, 0, -4);
 			}
 		}
+
 		$groups  = array('Site' => array(), 'Administrator' => array());
 		$allowdev = $this->form->getValue('allowdev');
 		$translations_list = $this->form->getValue('translations');
@@ -88,7 +88,6 @@ class JFormFieldTranslationsextrasindev extends JFormFieldGroupedList
 					}
 				}
 			}
-
 
 		foreach ($groups as $client => $extensions)
 		{

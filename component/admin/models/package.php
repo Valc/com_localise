@@ -409,7 +409,6 @@ class LocaliseModelPackage extends JModelAdmin
 						$package->siteextrasindev[] = $data;
 					}
 				}
-
 			}
 			else
 			{
