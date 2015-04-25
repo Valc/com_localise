@@ -341,6 +341,8 @@ class LocaliseModelTranslation extends JModelAdmin
 										'keytodelete'           => 0,
 										'textchange'            => 0,
 										'sourcestrings'         => 0,
+										'revisedtextchanges'    => 0,
+										'revisedextrasindev'    => 0,
 										'total'                 => 0,
 										'source'                => '',
 										'untranslatablestrings' => (array) $untranslatablestrings,
@@ -617,6 +619,16 @@ class LocaliseModelTranslation extends JModelAdmin
 											. $github_dev_trunks[$dp];
 
 										$extrakeysindev[$target_dev][$extra_in_dev] = $refsectionsindev[$dp]['keys'][$extra_in_dev];
+	
+										if (isset($stringsintasks[$target_dev][$extra_in_dev]))
+										{
+											$sit = $stringsintasks[$target_dev][$extra_in_dev];
+											$sid = $extrakeysindev[$target_dev][$extra_in_dev];
+											if ($sit != $sid)
+											{
+												$this->item->revisedextrasindev++;
+											}
+										}
 									}
 								}
 							}
@@ -668,6 +680,10 @@ class LocaliseModelTranslation extends JModelAdmin
 
 										$default_textchange = localiseHelper::getDefaultvalue($string_in_dev, $string_in_ref, $string_in_translation, $string_in_task);
 										$textchangesdefault[$target_dev][$key] = $default_textchange;
+										if ($textchangesdefault[$target_dev][$key]['status'] == 'translated')
+										{
+											$this->item->revisedtextchanges++;
+										}
 									}
 								}
 							}

@@ -38,6 +38,8 @@ $dev_files_report = array();
 
 	$textchangesindevs = $item->textchangesindev;
 	$extrakeysindevs = $item->extrakeysindev;
+	$revisedtextchanges = $item->revisedtextchanges;
+	$revisedextrasindev = $item->revisedextrasindev;
 
 	if (!empty($textchangesindevs))
 	{
@@ -201,15 +203,15 @@ $dev_files_report = array();
 				<?php
 				elseif ($item->tag == $reference) : ?>
 					<?php echo $item->sourcestrings
-					. ($item->extraindev ? "<br />Extra in dev: " . $item->extraindev : '')
-					. ($item->textchange ? "<br />Text changes: " . $item->textchange : ''); ?>
+					. ($item->extraindev ? "<br /><b>Extra in dev: </b>" . $item->extraindev : '')
+					. ($item->textchange ? "<br /><b>Text changes: </b>" . $item->textchange : ''); ?>
 				<?php
 				else : ?>
 					<?php echo $item->translated . "/" . $item->total
-					. ($item->extra ? "<br />Extra keys: " . $item->extra : '')
-					. ($item->keytodelete ? "<br />Keys to delete: " . $item->keytodelete : '')
-					. ($item->extraindev ? "<br />Extra in dev: " . $item->extraindev : '')
-					. ($item->textchange ? "<br />Text changes: " . $item->textchange : ''); ?>
+					. ($item->extra ? "<br /><b>Extra keys: </b>" . $item->extra : '')
+					. ($item->keytodelete ? "<br /><b>Keys to delete: </b>" . $item->keytodelete : '')
+					. ($item->extraindev ? "<br /><b>Extra in dev:</b><br /> Revised " . $revisedextrasindev . " of " . $item->extraindev : '')
+					. ($item->textchange ? "<br /><b>Text changes:</b><br /> Revised " . $revisedtextchanges . " of " . $item->textchange : ''); ?>
 				<?php endif; ?>
 			<?php endif; ?>
 		</td>
