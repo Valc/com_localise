@@ -2185,8 +2185,8 @@ abstract class LocaliseHelper
 			return $text_changes;
 		}
 
-		$old = str_replace('  ', ' LOCALISEDOUBLESPACES', $old);
-		$new = str_replace('  ', ' LOCALISEDOUBLESPACES', $new);
+		$old = str_replace('  ', 'LOCALISEDOUBLESPACES', $old);
+		$new = str_replace('  ', 'LOCALISEDOUBLESPACES', $new);
 
 		$diff = self::getTextchanges(explode(' ', $old), explode(' ', $new));
 
@@ -2210,7 +2210,7 @@ abstract class LocaliseHelper
 		$text_changes = preg_replace('/LOCALISEDELSTART/', "<del class='diff_del'>", $text_changes);
 		$text_changes = preg_replace('/LOCALISEDELSTOP/', "</del>", $text_changes);
 		$double_spaces = '<span class="red-space"><font color="red">XX</font></span>';
-		$text_changes = preg_replace('/ LOCALISEDOUBLESPACES/', $double_spaces, $text_changes);
+		$text_changes = str_replace('LOCALISEDOUBLESPACES', $double_spaces, $text_changes);
 
 	return $text_changes;
 	}

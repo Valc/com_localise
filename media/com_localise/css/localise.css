@@ -411,4 +411,8 @@ background-color: #FFFFCC;
 margin-top: -0.7em;
 text-align: left;
 }
+.red-space {
+background-color: red !important;
+
+}
 
