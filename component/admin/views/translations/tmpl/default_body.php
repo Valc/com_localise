@@ -24,7 +24,7 @@ $have_raw_mode = 1;
 	{
 		if (!array_intersect($allowed_groups, $user_groups))
 		{
-		$have_raw_mode = 0;
+			$have_raw_mode = 0;
 		}
 	}
 
