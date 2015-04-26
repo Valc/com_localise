@@ -1304,9 +1304,10 @@ class LocaliseModelTranslation extends JModelAdmin
 
 								foreach ($changesindev as $key => $change)
 								{
-								$field   = $fieldset->addChild('field');
-								$default = $tc_defaults[$key]['default'];
-								$status  = $tc_defaults[$key]['status'];
+								$field        = $fieldset->addChild('field');
+								$default      = $tc_defaults[$key]['default'];
+								$status       = $tc_defaults[$key]['status'];
+								$frozen_task  = $tc_defaults[$key]['frozen_task'];
 								$description = $tc_refs[$key];
 								$label   = '<b>' . $key
 									. '</b><br /><p class="text_changes">'
@@ -1324,6 +1325,7 @@ class LocaliseModelTranslation extends JModelAdmin
 										$field->addAttribute('status', 'sourcestrings');
 									}
 
+								$field->addAttribute('frozen_task', $frozen_task);
 								$field->addAttribute('textchange', $change);
 								$field->addAttribute('description', $description);
 								$field->addAttribute('default', $default);

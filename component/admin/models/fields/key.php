@@ -189,22 +189,48 @@ class JFormFieldKey extends JFormField
 				$button2  .= '<i class="icon-translate-bing hasTooltip translate pointer" title="';
 				$button2  .= JText::_('COM_LOCALISE_TOOLTIP_TRANSLATION_AZURE');
 				$button2  .= '" onclick="' . $onclick2 . '" rel="' . $real_id . '"></i>';
-
 				$onkeyup = "javascript:";
-				$onkeyup .= "if (this.get('value')=='')
-						{
-						this.set('class','width-45 untranslated');
-						}
-						else if (this.get('value')=='"
-						. addslashes(htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8'))
-						. "')
-						{
-						this.set('class','width-45 untranslated');
-						}
-						else
-						{
-						this.set('class','width-45 translated');
-						}";
+
+				if ($istextchange == 1)
+				{
+					$onkeyup .= "if (this.get('value')=='')
+							{
+							this.set('class','width-45 untranslated');
+							}
+							else if (this.get('value')=='"
+							. addslashes(htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8'))
+							. "')
+							{
+							this.set('class','width-45 untranslated');
+							}
+							else if (this.get('value')=='"
+							. addslashes(htmlspecialchars($this->element['frozen_task'], ENT_COMPAT, 'UTF-8'))
+							. "')
+							{
+							this.set('class','width-45 untranslated');
+							}
+							else
+							{
+							this.set('class','width-45 translated');
+							}";
+				}
+				else
+				{
+					$onkeyup .= "if (this.get('value')=='')
+							{
+							this.set('class','width-45 untranslated');
+							}
+							else if (this.get('value')=='"
+							. addslashes(htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8'))
+							. "')
+							{
+							this.set('class','width-45 untranslated');
+							}
+							else
+							{
+							this.set('class','width-45 translated');
+							}";
+				}
 
 				$onfocus = "javascript:this.select();";
 

@@ -2109,18 +2109,18 @@ abstract class LocaliseHelper
 	{
 		if (!empty($string_in_task) && ($string_in_task != $string_in_dev) && ($string_in_task != $string_in_translation) && ($string_in_task != $string_in_ref))
 		{
-			return array ('default' => $string_in_task, 'status' => 'translated');
+			return array ('default' => $string_in_task, 'status' => 'translated', 'frozen_task' => $string_in_translation);
 		}
 		elseif (!empty($string_in_translation))
 		{
-			return array ('default' => $string_in_translation, 'status' => 'untranslated');
+			return array ('default' => $string_in_translation, 'status' => 'untranslated', 'frozen_task' => $string_in_translation);
 		}
 		elseif (!empty($string_in_dev))
 		{
-			return array ('default' => $string_in_dev, 'status' => 'untranslated');
+			return array ('default' => $string_in_dev, 'status' => 'untranslated', 'frozen_task' => '');
 		}
 
-	return array ('default' => $string_in_ref, 'status' => 'untranslated');
+	return array ('default' => $string_in_ref, 'status' => 'untranslated', 'frozen_task' => '');
 	}
 
 	/**
