@@ -63,12 +63,13 @@ class LocaliseControllerTranslation extends JControllerForm
 		$input    = JFactory::getApplication()->input;
 		$client   = $input->get('client', '');
 		$tag      = $input->get('tag', '');
+		$tab      = $input->get('tab', '');
 		$filename = $input->get('filename', '');
 		$storage  = $input->get('storage', '');
 
 		// Get the append string
 		$append = parent::getRedirectToItemAppend($recordId, $urlVar);
-		$append .= '&client=' . $client . '&tag=' . $tag . '&filename=' . $filename . '&storage=' . $storage;
+		$append .= '&client=' . $client . '&tag=' . $tag . '&filename=' . $filename . '&storage=' . $storage . '&tab=' . $tab;
 
 		return $append;
 	}

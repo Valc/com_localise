@@ -64,7 +64,7 @@ $dev_files_report = array();
 				if ($limit == 0)
 				{
 					$dev_files_report[$gh_project][$gh_trunk][$gh_user][$gh_filename]['link'] =
-						'<a class="hasTooltip" href="' . JRoute::_('index.php?option=com_localise&task=translation.edit&client=' . $item->client . '&tag=' . $item->tag . '&filename=' . $item->filename . '&storage=' . $item->storage . '&id=' . LocaliseHelper::getFileId(LocaliseHelper::getTranslationPath($item->client, $item->tag,  $item->filename, $item->storage))) . '" title="'. JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_' . ($item->state=='unexisting' ? 'NEW' : 'EDIT')) . '">[Revise it]</a>';
+						'<a class="hasTooltip" href="' . JRoute::_('index.php?option=com_localise&task=translation.edit&client=' . $item->client . '&tag=' . $item->tag . '&filename=' . $item->filename . '&storage=' . $item->storage . '&id=' . LocaliseHelper::getFileId(LocaliseHelper::getTranslationPath($item->client, $item->tag,  $item->filename, $item->storage))) . '&tab=in_dev" title="'. JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_' . ($item->state=='unexisting' ? 'NEW' : 'EDIT')) . '">[Revise it]</a>';
 				}
 				else
 				{
@@ -89,6 +89,19 @@ $dev_files_report = array();
 		$gh_user = $ghparts[0];
 		$gh_project = $ghparts[1];
 		$gh_trunk = $ghparts[2];
+
+			if ($item->writable && !$item->error && $canEdit)
+			{
+				if ($limit == 0)
+				{
+					$dev_files_report[$gh_project][$gh_trunk][$gh_user][$gh_filename]['link'] =
+						'<a class="hasTooltip" href="' . JRoute::_('index.php?option=com_localise&task=translation.edit&client=' . $item->client . '&tag=' . $item->tag . '&filename=' . $item->filename . '&storage=' . $item->storage . '&id=' . LocaliseHelper::getFileId(LocaliseHelper::getTranslationPath($item->client, $item->tag,  $item->filename, $item->storage))) . '&tab=in_dev" title="'. JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_' . ($item->state=='unexisting' ? 'NEW' : 'EDIT')) . '">[Revise it]</a>';
+				}
+				else
+				{
+					$dev_files_report[$gh_project][$gh_trunk][$gh_user][$gh_filename]['link'] = '';
+				}
+			}
 
 			foreach ($extrakeysindev as $key => $extrakey)
 			{
@@ -143,7 +156,7 @@ $dev_files_report = array();
 			<?php endif; ?>
 			<?php if ($item->writable && !$item->error && $canEdit) : ?>
 				<?php if ($limit == 0) : ?>
-					<a class="hasTooltip" href="<?php echo JRoute::_('index.php?option=com_localise&task=translation.edit&client='.$item->client.'&tag='.$item->tag.'&filename='.$item->filename.'&storage='.$item->storage.'&id='.LocaliseHelper::getFileId(LocaliseHelper::getTranslationPath($item->client,$item->tag, $item->filename, $item->storage))); ?>" title="<?php echo JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_' . ($item->state=='unexisting' ? 'NEW' : 'EDIT')); ?>">
+					<a class="hasTooltip" href="<?php echo JRoute::_('index.php?option=com_localise&task=translation.edit&client='.$item->client.'&tag='.$item->tag.'&filename='.$item->filename.'&storage='.$item->storage.'&tab='.$item->tab.'&id='.LocaliseHelper::getFileId(LocaliseHelper::getTranslationPath($item->client,$item->tag, $item->filename, $item->storage))); ?>" title="<?php echo JText::_('COM_LOCALISE_TOOLTIP_TRANSLATIONS_' . ($item->state=='unexisting' ? 'NEW' : 'EDIT')); ?>">
 					<?php echo $item->name; ?>.ini
 					</a>
 				<?php else : ?>

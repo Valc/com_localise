@@ -782,6 +782,7 @@ class LocaliseModelTranslations extends JModelList
 				$model->setState('translation.reference', $this->getState('translations.reference'));
 				$model->setState('translation.client', $translation->client);
 				$model->setState('translation.tag', $translation->tag);
+				$model->setState('translation.tab', 'released');
 				$model->setState('translation.filename', $translation->filename);
 
 				$item = $model->getItem();

@@ -47,11 +47,13 @@ class LocaliseModelTranslation extends JModelAdmin
 		$tag      = $input->getCmd('tag', '');
 		$filename = $input->getCmd('filename', '');
 		$storage  = $input->getCmd('storage', '');
+		$tab      = $input->getCmd('tab', '');
 
 		$this->setState('translation.client', !empty($client) ? $client : 'site');
 		$this->setState('translation.tag', $tag);
 		$this->setState('translation.filename', $filename);
 		$this->setState('translation.storage', $storage);
+		$this->setState('translation.tab', !empty($tab) ? $tab : 'released');
 
 		// Get the id
 		$id = $input->getInt('id', '0');
@@ -315,6 +317,7 @@ class LocaliseModelTranslation extends JModelAdmin
 										'additionalcopyright'   => array(),
 										'license'               => '',
 										'exists'                => JFile::exists($this->getState('translation.path')),
+										'tab'                   => $this->getState('translation.tab'),
 										'istranslation'         => $istranslation,
 										'havedev'               => $have_dev,
 										'devsamount'            => $devs_amount,

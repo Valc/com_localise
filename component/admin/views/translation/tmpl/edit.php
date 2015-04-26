@@ -27,6 +27,7 @@ else
 	$istranslation = 0;
 }
 
+$tab    = $this->state->get('translation.tab');
 $input	= JFactory::getApplication()->input;
 $posted	= $input->post->get('jform', array(), 'array');
 
@@ -38,12 +39,25 @@ if (isset($posted['select']['keystatus'])
 	$filter       = $posted['select']['keystatus'];
 	$keystofilter = array ($this->item->$filter);
 	$tabchoised   = 'strings';
+	$tabchoised2   = 'released';
+
+		if ($tab == 'in_dev')
+		{
+			$tabchoised2   = $tab;
+		}
 }
 else
 {
 	$filter       = 'allkeys';
 	$keystofilter = array();
 	$tabchoised   = 'default';
+	$tabchoised2   = 'released';
+
+		if ($tab == 'in_dev')
+		{
+			$tabchoised   = 'strings';
+			$tabchoised2   = $tab;
+		}
 }
 
 $document = JFactory::getDocument();
@@ -217,7 +231,7 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 									<i class="icon-reset"></i> <?php echo JText::_('COM_LOCALISE_BUTTON_RESET_ALL');?>
 								</a>
 							</div>
-					<?php echo JHtml::_('bootstrap.startTabSet', 'myTab2', array('active' => 'released')); ?>
+					<?php echo JHtml::_('bootstrap.startTabSet', 'myTab2', array('active' => $tabchoised2)); ?>
 					<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'released', JText::_('COM_LOCALISE_FIELDSET_TRANSLATION_RELEASED')); ?>
 						<div class="key">
 							<?php
