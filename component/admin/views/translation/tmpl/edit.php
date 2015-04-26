@@ -53,7 +53,7 @@ else
 	$tabchoised   = 'default';
 	$tabchoised2   = 'released';
 
-		if ($tab == 'in_dev')
+		if ($tab == 'in_dev' || $tab == 'released')
 		{
 			$tabchoised   = 'strings';
 			$tabchoised2   = $tab;
