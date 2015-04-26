@@ -73,7 +73,7 @@ $i = 0;
 
 					foreach ($user_data as $gh_filename => $filename_data)
 					{
-					echo '<p class="new_file">' . $gh_filename . '</p>';
+					echo '<p class="new_file">' . $gh_filename . ' ' . $filename_data['link'] . '</p>';
 
 						if (isset($filename_data['extra_keys_in_dev']))
 						{
