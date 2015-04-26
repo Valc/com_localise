@@ -235,6 +235,7 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 					<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'released', JText::_('COM_LOCALISE_FIELDSET_TRANSLATION_RELEASED')); ?>
 						<div class="key">
 							<?php
+								$showed_data = 0;
 								if (count($sections) > 1) :
 									echo '<br />';
 									echo JHtml::_('bootstrap.startAccordion', 'localise-translation-sliders');
@@ -264,7 +265,7 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 												endif;
 											endforeach;
 										endforeach;
-										if ($showkey == '1') : ?>
+										if ($showkey == '1') : $showed_data = 1; ?>
 											<li>
 												<?php echo $field->label; ?>
 												<?php echo $field->input; ?>
@@ -275,7 +276,7 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 												<?php echo $field->input; ?>
 											</div>
 										<?php endif; ?>
-									<?php elseif ($filter == 'allkeys') : ?>
+									<?php elseif ($filter == 'allkeys') : $showed_data = 1; ?>
 										<li>
 											<?php echo $field->label; ?>
 											<?php echo $field->input; ?>
@@ -294,12 +295,15 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 								echo JHtml::_('bootstrap.endAccordion');
 								endif;
 							?>
-
+						<?php if ($showed_data == '0') : ?>
+						<?php echo "<p>No matches to show.</p>"; ?>
+						<?php endif; ?>
 						</div>
 					<?php echo JHtml::_('bootstrap.endTab'); ?>
 					<?php echo JHtml::_('bootstrap.addTab', 'myTab2', 'in_dev', JText::_('COM_LOCALISE_FIELDSET_TRANSLATION_IN_DEV')); ?>
 						<div class="key">
 							<?php
+								$showed_dev_data = 0;
 								if (count($sectionsindev) > 1) :
 									echo '<br />';
 									echo JHtml::_('bootstrap.startAccordion', 'localise-translation-sliders');
@@ -329,7 +333,7 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 												endif;
 											endforeach;
 										endforeach;
-										if ($showkey == '1') : ?>
+										if ($showkey == '1') : $showed_dev_data = 1; ?>
 											<li>
 												<?php echo $field->label; ?>
 												<?php echo $field->input; ?>
@@ -340,26 +344,24 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 												<?php echo $field->input; ?>
 											</div>
 										<?php endif; ?>
-									<?php elseif ($filter == 'allkeys') : ?>
+									<?php elseif ($filter == 'allkeys') : $showed_dev_data = 1; ?>
 										<li>
 											<?php echo $field->label; ?>
 											<?php echo $field->input; ?>
 										</li>
 									<?php endif; ?>
 								<?php endforeach; ?>
+
 							</ul>
 							<?php
 								if (count($sectionsindev) > 1) :
 								echo JHtml::_('bootstrap.endSlide');
 								endif;
-
 								endforeach;
-
-								if (count($sectionsindev) > 1) :
-								echo JHtml::_('bootstrap.endAccordion');
-								endif;
 							?>
-
+						<?php if ($showed_dev_data == '0') : ?>
+						<?php echo "<p>No matches in develop to show.</p>"; ?>
+						<?php endif; ?>
 						</div>
 					<?php echo JHtml::_('bootstrap.endTab'); ?>
 <?php echo JHtml::_('bootstrap.endTabSet'); ?>
