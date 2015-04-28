@@ -1212,8 +1212,8 @@ abstract class LocaliseHelper
 	{
 		$params = JComponentHelper::getParams('com_localise');
 		$ref = $params->get('reference', 'en-GB');
-		$path = JFolder::makeSafe(JPATH_COMPONENT_ADMINISTRATOR . '/packages');
-		$files = JFolder::files($path, ".xml$");
+		$xml_path = JFolder::makeSafe(JPATH_COMPONENT_ADMINISTRATOR . '/packages');
+		$files = JFolder::files($xml_path, ".xml$");
 		$allowed_clients = array('site', 'administrator', 'installation');
 		$filesindev = array();
 		$path = '';
@@ -1222,7 +1222,7 @@ abstract class LocaliseHelper
 		{
 			foreach ($files as $file)
 			{
-			$xml = simplexml_load_file("$path/$file");
+			$xml = simplexml_load_file("$xml_path/$file");
 
 				if ($xml->allowdev == '1' && $xml->githubuser == $gh_user && $xml->githubproject == $gh_project && $xml->devtrunk == $gh_trunk)
 				{
@@ -1245,7 +1245,7 @@ abstract class LocaliseHelper
 					{
 						foreach ($clientpathparts as $clientpathpart)
 						{
-							$client_task_path .= $clientpathpart . '/';
+							$client_path .= $clientpathpart . '/';
 						}
 
 					$full_client_path = JFolder::makeSafe($rootpath . '/' . $client_path);
@@ -1259,7 +1259,7 @@ abstract class LocaliseHelper
 
 					if (!empty($xml->$gh_client_path) && $is_tag == 'true' && $full_client_path_exists == '1')
 					{
-						$path = $full_client_path . '/' . $fileindev;
+						$path = $full_client_path . $fileindev;
 
 						if (!JFile::exists($path))
 						{
