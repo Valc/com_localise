@@ -72,28 +72,28 @@ class JFormFieldKey extends JFormField
 	protected function getInput()
 	{
 		// Set the class for the label.
-		$class = !empty($this->descText) ? 'key-label hasTooltip fltrt' : 'key-label fltrt';
+		$class         = !empty($this->descText) ? 'key-label hasTooltip fltrt' : 'key-label fltrt';
 		$istranslation = (int) $this->element['istranslation'];
-		$istextchange = (int) $this->element['istextchange'];
-		$isextraindev = (int) $this->element['isextraindev'];
-		$status = (string) $this->element['status'];
+		$istextchange  = (int) $this->element['istextchange'];
+		$isextraindev  = (int) $this->element['isextraindev'];
+		$status        = (string) $this->element['status'];
 
 		if ($istextchange == 1 || $isextraindev == 1)
 		{
-			$dev_name = $this->element['devname'];
-			$label_id = 'jform[stringsindev][' . $dev_name . '][' . $this->element['key'] . ']';
-			$label_for = 'jform_stringsindev_' . $dev_name . '_' . $this->element['key'];
+			$dev_name      = $this->element['devname'];
+			$label_id      = 'jform[stringsindev][' . $dev_name . '][' . $this->element['key'] . ']';
+			$label_for     = 'jform_stringsindev_' . $dev_name . '_' . $this->element['key'];
 			$textarea_name = 'jform[stringsindev][' . $dev_name . '][' . $this->element['key'] . ']';
-			$textarea_id = 'jform_stringsindev_' . $dev_name . '_' . $this->element['key'];
-			$real_id = 'jform_stringsindev_' . $dev_name . '_' . $this->element['key'];
+			$textarea_id   = 'jform_stringsindev_' . $dev_name . '_' . $this->element['key'];
+			$real_id       = 'jform_stringsindev_' . $dev_name . '_' . $this->element['key'];
 		}
 		else
 		{
-			$label_id = $this->id . '-lbl';
-			$label_for = $this->id;
+			$label_id      = $this->id . '-lbl';
+			$label_for     = $this->id;
 			$textarea_name = $this->name;
-			$textarea_id = $this->id;
-			$real_id = $this->id;
+			$textarea_id   = $this->id;
+			$real_id       = $this->id;
 		}
 
 		if ($istranslation == '1')
@@ -189,6 +189,7 @@ class JFormFieldKey extends JFormField
 				$button2  .= '<i class="icon-translate-bing hasTooltip translate pointer" title="';
 				$button2  .= JText::_('COM_LOCALISE_TOOLTIP_TRANSLATION_AZURE');
 				$button2  .= '" onclick="' . $onclick2 . '" rel="' . $real_id . '"></i>';
+
 				$onkeyup = "javascript:";
 
 				if ($istextchange == 1)
@@ -243,26 +244,7 @@ class JFormFieldKey extends JFormField
 		}
 		else
 		{
-			if ($istextchange == 1 || $isextraindev == 1)
-			{
-				$readonly = ' readonly="readonly" ';
-				$textvalue = htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8');
-			}
-			else
-			{
-				$readonly = '';
 
-				if ($this->value == '' || $this->value == $this->element['description'])
-				{
-					$status = 'untranslated';
-				}
-				else
-				{
-					$status = 'translated';
-				}
-
-				$textvalue = htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8');
-			}
 			// Set the class for the label.
 			$class = !empty($this->descText) ? 'key-label hasTooltip fltrt' : 'key-label fltrt';
 
@@ -280,21 +262,21 @@ class JFormFieldKey extends JFormField
 			JText::script('COM_LOCALISE_LABEL_TRANSLATION_GOOGLE_ERROR');
 			$label .= $this->element['label'] . '<br />' . $this->element['description'];
 			$label .= '</label>';
+
+			//Adjusting the stuff when all them are reference keys.
+			$readonly = '';
+			$textvalue = htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8');
+
+			if ($istextchange == 1 || $isextraindev == 1)
+			{
+				//There is no translation task in develop for the reference files in develop.
+				$readonly = ' readonly="readonly" ';
+				$textvalue = htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8');
+			}
+
 			$status = (string) $this->element['status'];
 
-			if ($status == 'extra')
-			{
-				$onclick = '';
-				$button  = '<span style="width:5%;">'
-							. JHtml::_('image', 'com_localise/icon-16-arrow-gray.png', '', array('class' => 'pointer'), true) . '</span>';
-
-				$onclick2 = '';
-				$button2  = '<span style="width:5%;">'
-							. JHtml::_('image', 'com_localise/icon-16-bing-gray.png', '', array('class' => 'pointer'), true) . '</span>';
-			}
-			else
-			{
-				$onclick = "javascript:document.id(
+			$onclick = "javascript:document.id(
 							'" . $this->id . "'
 							)
 							.set(
@@ -302,22 +284,27 @@ class JFormFieldKey extends JFormField
 							);
 							if (document.id('" . $this->id . "').get('value')=='') {document.id('" . $this->id . "').set('class','width-45 untranslated');}
 							else {document.id('" . $this->id . "').set('class','width-45 " . $status . "');}";
-				$button  = '<i class="icon-reset hasTooltip return pointer" title="' . JText::_('COM_LOCALISE_TOOLTIP_TRANSLATION_INSERT')
-							. '" onclick="' . $onclick . '"></i>';
+			$button  = '<i class="icon-reset hasTooltip return pointer" title="' . JText::_('COM_LOCALISE_TOOLTIP_TRANSLATION_INSERT') . '" onclick="' . $onclick . '"></i>';
 
-				$token    = JSession::getFormToken();
-				$onclick2 = "javascript:AzureTranslator(this, [], 0, '$token');";
-				$button2  = '<input type="hidden" id="' . $this->id . 'text" value=\''
-							. addslashes(htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8')) . '\' />';
-				$button2 .= '<i class="icon-translate-bing hasTooltip translate pointer" title="'
-							. JText::_('COM_LOCALISE_TOOLTIP_TRANSLATION_AZURE') . '" onclick="' . $onclick2 . '" rel="' . $this->id . '"></i>';
+			// No sense translate the reference keys by the same language.
+			$onclick2 = '';
+			$button2  = '<span style="width:5%;">'
+						. JHtml::_('image', 'com_localise/icon-16-bing-gray.png', '', array('class' => 'pointer'), true) . '</span>';
+
+			if ($istextchange == 1 || $isextraindev == 1)
+			{
+				// Is read only, so no changes.
+				$onkeyup = "";
+			}
+			else
+			{
+				$onkeyup = "javascript:";
+				$onkeyup .= "if (this.get('value')=='') {this.set('class','width-45 untranslated');}
+							else {if (this.get('value')=='" . addslashes(htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'))
+							. "') this.set('class','width-45 " . $status . "');
+							" . "else this.set('class','width-45 translated');}";
 			}
 
-			$onkeyup = "javascript:";
-			$onkeyup .= "if (this.get('value')=='') {this.set('class','width-45 untranslated');}
-						else {if (this.get('value')=='" . addslashes(htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'))
-						. "') this.set('class','width-45 " . $status . "');
-						" . ($status == 'extra' ? "else this.set('class','width-45 extra');}" : "else this.set('class','width-45 translated');}");
 			$input  = '';
 			$input .= '<textarea name="' . $this->name . '" id="';
 			$input .= $this->id . '"' . $readonly . ' onfocus="this.select()" class="width-45 ';

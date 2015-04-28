@@ -1004,6 +1004,7 @@ abstract class LocaliseHelper
 				}
 
 				// Saved for each time due few times get all the github files at same time can crash.
+				// This one can help to remember the last one saved correctly and next time continue from there.
 				$sha .= $repostoryfile->name . "::" . $repostoryfile->sha . "\n";
 				JFile::write($sha_path, $sha);
 
@@ -1087,7 +1088,7 @@ abstract class LocaliseHelper
 					{
 					$gh_client_path = 'github' . $client . 'languagepath';
 					$client_in_dev  = $client . 'indev';
-					$taskrootpath  = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/task_in_dev/github');
+					$taskrootpath   = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/task_in_dev/github');
 					$rootpath       = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/in_dev/github');
 
 						if (empty($xml->$gh_client_path))
@@ -1230,15 +1231,13 @@ abstract class LocaliseHelper
 							continue;
 						}
 
-					$rootpath  = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/in_dev/github');
-
-					$client_path    = $xml->githubuser . '/' . $xml->githubproject . '/' . $xml->devtrunk . '/' . $xml->$gh_client_path;
-
-					$clientpathparts = explode("/", $client_path);
-					$language_tag = end($clientpathparts);
-					$is_tag = self::isTag($language_tag);
+					$rootpath         = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/in_dev/github');
+					$client_path      = $xml->githubuser . '/' . $xml->githubproject . '/' . $xml->devtrunk . '/' . $xml->$gh_client_path;
+					$clientpathparts  = explode("/", $client_path);
+					$language_tag     = end($clientpathparts);
+					$is_tag           = self::isTag($language_tag);
 					$full_client_path = '';
-					$client_path = '';
+					$client_path      = '';
 
 					if ($is_tag == 'true')
 					{
@@ -1286,11 +1285,9 @@ abstract class LocaliseHelper
 	 */
 	public static function getDevpath($gh_user = '', $gh_project = '', $gh_trunk = '', $gh_client_path = '')
 	{
-		$params = JComponentHelper::getParams('com_localise');
-		$ref = $params->get('reference', 'en-GB');
-
-		$path = '';
-
+		$params    = JComponentHelper::getParams('com_localise');
+		$ref       = $params->get('reference', 'en-GB');
+		$path      = '';
 		$rootpath  = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/in_dev/github');
 
 		$client_path    = $gh_user
@@ -1301,11 +1298,11 @@ abstract class LocaliseHelper
 				. '/'
 				. $gh_client_path;
 
-		$clientpathparts = explode("/", $client_path);
-		$path_tag = end($clientpathparts);
-		$is_tag = self::isTag($path_tag);
+		$clientpathparts  = explode("/", $client_path);
+		$path_tag         = end($clientpathparts);
+		$is_tag           = self::isTag($path_tag);
 		$full_client_path = '';
-		$client_path = '';
+		$client_path      = '';
 
 		if ($is_tag == 'true' && $path_tag == $ref)
 		{
@@ -1314,7 +1311,7 @@ abstract class LocaliseHelper
 				$client_path .= $clientpathpart . '/';
 			}
 
-		$full_client_path = JFolder::makeSafe($rootpath . '/' . $client_path);
+			$full_client_path = JFolder::makeSafe($rootpath . '/' . $client_path);
 		}
 
 		$full_client_path_exists = JFolder::exists($full_client_path);
@@ -1328,7 +1325,7 @@ abstract class LocaliseHelper
 	}
 
 	/**
-	 * Gets the task path from the language tag
+	 * Gets the translation task path from the language tag
 	 *
 	 * @param   string  $tag             The language tag.
 	 * @param   string  $gh_user         The Github user.
@@ -1342,19 +1339,17 @@ abstract class LocaliseHelper
 	 */
 	public static function getTaskpath($tag = '', $gh_user = '', $gh_project = '', $gh_trunk = '', $gh_client_path = '')
 	{
-		$params = JComponentHelper::getParams('com_localise');
-		$ref = $params->get('reference', 'en-GB');
-
+		$params    = JComponentHelper::getParams('com_localise');
+		$ref       = $params->get('reference', 'en-GB');
 		$have_task = 0;
-		$have_tag = self::isTag($tag);
+		$have_tag  = self::isTag($tag);
 
 		if ($have_tag == 'true' && ($tag != $ref))
 		{
 			$have_task = 1;
 		}
 
-		$path = '';
-
+		$path      = '';
 		$rootpath  = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/task_in_dev/github');
 
 		$client_path    = $gh_user
@@ -1365,11 +1360,11 @@ abstract class LocaliseHelper
 				. '/'
 				. $gh_client_path;
 
-		$clientpathparts = explode("/", $client_path);
-		$path_tag = end($clientpathparts);
-		$is_tag = self::isTag($path_tag);
+		$clientpathparts  = explode("/", $client_path);
+		$path_tag         = end($clientpathparts);
+		$is_tag           = self::isTag($path_tag);
 		$full_client_path = '';
-		$client_path = '';
+		$client_path      = '';
 
 		if ($is_tag == 'true' && $path_tag == $ref)
 		{
@@ -1380,7 +1375,7 @@ abstract class LocaliseHelper
 				if ($clientpathpart == $path_tag && $have_tag == 1)
 				{
 					$client_path .= $tag;
-					$replaced = 1;
+					$replaced     = 1;
 					break;
 				}
 				else
@@ -1406,14 +1401,14 @@ abstract class LocaliseHelper
 	}
 
 	/**
-	 * Gets the task path from the file name
+	 * Gets the translation task path from the file name
 	 *
 	 * @param   string  $client      The client.
 	 * @param   string  $tag         The language tag.
 	 * @param   string  $gh_user     The Github user.
 	 * @param   string  $gh_project  The Github project.
 	 * @param   string  $gh_trunk    The Github trunk.
-	 * @param   string  $fileintask  The file with translation in dev task.
+	 * @param   string  $fileintask  The file with translated task in develop.
 	 *
 	 * @return  string
 	 *
@@ -1445,15 +1440,14 @@ abstract class LocaliseHelper
 				if ($xml->allowdev == '1' && $xml->githubuser == $gh_user && $xml->githubproject == $gh_project && $xml->devtrunk == $gh_trunk)
 				{
 					$gh_client_path = 'github' . $client . 'languagepath';
-					$taskrootpath  = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/task_in_dev/github');
-
+					$taskrootpath   = JFolder::makeSafe(JPATH_ROOT . '/media/com_localise/task_in_dev/github');
 					$client_path    = $xml->githubuser . '/' . $xml->githubproject . '/' . $xml->devtrunk . '/' . $xml->$gh_client_path;
 
-					$clientpathparts = explode("/", $client_path);
-					$language_tag = end($clientpathparts);
-					$is_tag = self::isTag($language_tag);
+					$clientpathparts       = explode("/", $client_path);
+					$language_tag          = end($clientpathparts);
+					$is_tag                = self::isTag($language_tag);
 					$full_client_task_path = '';
-					$client_task_path = '';
+					$client_task_path      = '';
 
 					if ($is_tag == 'true')
 					{
@@ -1461,11 +1455,11 @@ abstract class LocaliseHelper
 						{
 							if ($clientpathpart == $language_tag)
 							{
-							$client_task_path .= $tag;
+								$client_task_path .= $tag;
 							}
 							else
 							{
-							$client_task_path .= $clientpathpart . '/';
+								$client_task_path .= $clientpathpart . '/';
 							}
 						}
 
@@ -1502,12 +1496,12 @@ abstract class LocaliseHelper
 	public static function getfileheaders($path = '')
 	{
 	$file_headers = array();
-	$file_headers['svn'] = '';
-	$file_headers['date'] = '';
-	$file_headers['autor'] = '';
+	$file_headers['svn']       = '';
+	$file_headers['date']      = '';
+	$file_headers['autor']     = '';
 	$file_headers['copyright'] = array();
-	$file_headers['note'] = array();
-	$file_headers['headers'] = "";
+	$file_headers['note']      = array();
+	$file_headers['headers']   = "";
 
 		if (!empty($path) && JFile::exists($path))
 		{
@@ -1609,7 +1603,7 @@ abstract class LocaliseHelper
 	 */
 	public static function getRawfileheaders($path = '')
 	{
-	$file_headers = array();
+	$file_headers            = array();
 	$file_headers['headers'] = "";
 
 		if (!empty($path) && JFile::exists($path))
@@ -1645,9 +1639,9 @@ abstract class LocaliseHelper
 	 * @param   string  $headers_path   The translated file path to get the headers.
 	 * @param   string  $ref_keys_path  The path to reference keys file.
 	 * @param   array   $frozenref      The keys in frozen reference.
-	 * @param   array   $frozentask     The keys in translated frozen task.
+	 * @param   array   $frozentask     The keys in frozen translation with tranlated task.
 	 * @param   array   $devref         The keys in develop reference.
-	 * @param   array   $devtask        The keys in develop task.
+	 * @param   array   $devtask        The keys in develop with translated task.
 	 *
 	 * @return  array
 	 *
@@ -1655,17 +1649,17 @@ abstract class LocaliseHelper
 	 */
 	public static function getDevcontents($tag = '', $headers_path = '', $ref_keys_path = '', $frozenref = array(), $frozentask = array(), $devref = array(), $devtask = array())
 	{
-		$file_data = array();
-		$file_data['stringsindev'] = array();
-		$file_data['keys_to_add'] = array();
+		$file_data                   = array();
+		$file_data['stringsindev']   = array();
+		$file_data['keys_to_add']    = array();
 		$file_data['keys_to_delete'] = array();
-		$file_data['headers'] = '';
-		$file_data['contents'] = '';
-		$keys_to_add_in_dev = array();
-		$keys_to_add = array();
-		$keys_to_delete = array();
-		$keys_in_dev_task = array();
-		$keys_to_keep = self::getKeystokeep($tag);
+		$file_data['headers']        = '';
+		$file_data['contents']       = '';
+		$keys_to_add_in_dev          = array();
+		$keys_to_add                 = array();
+		$keys_to_delete              = array();
+		$keys_in_dev_task            = array();
+		$keys_to_keep                = self::getKeystokeep($tag);
 
 		if (!empty($devref))
 		{
@@ -1674,8 +1668,9 @@ abstract class LocaliseHelper
 			if (!empty($frozenref))
 			{
 				$keys_in_frozen_ref = array_keys($frozenref);
-				$ktd = array_diff($keys_in_frozen_ref, $keys_in_dev_ref);
+				$ktd                = array_diff($keys_in_frozen_ref, $keys_in_dev_ref);
 
+				// Keys to delete due are not present between reference files.
 				if (!empty($ktd))
 				{
 					foreach ($ktd as $key_to_delete)
@@ -1683,20 +1678,21 @@ abstract class LocaliseHelper
 						$keys_to_delete[$key_to_delete] = $frozenref[$key_to_delete];
 					}
 				}
-
-				$keys_to_add_in_dev = array_diff($keys_in_dev_ref, $keys_in_frozen_ref);
 			}
 
 			if (!empty($frozentask))
 			{
 				$keys_in_frozen_task = array_keys($frozentask);
-				$kta = array_diff($keys_in_frozen_task, $keys_in_dev_ref);
+				$ktd                 = array_diff($keys_in_frozen_task, $keys_in_dev_ref);
 
-				if (!empty($kta))
+				// Keys to delete again due are not present between frozen translation and reference in develop.
+				if (!empty($ktd))
 				{
-					foreach ($kta as $key_to_add)
+					foreach ($kta as $key_to_delete)
 					{
-						$keys_to_add[$key_to_add] = $frozentask[$key_to_add];
+						// If also was present before nowis overwritted with translated value.
+						// If not, it was an extra key in translation and also is added.
+						$keys_to_delete[$key_to_delete] = $frozentask[$key_to_delete];
 					}
 				}
 			}
@@ -1706,22 +1702,22 @@ abstract class LocaliseHelper
 				$keys_in_dev_task = array_keys($devtask);
 			}
 
-			// Revising all keys in dev
+			// Revising all keys in develop
 			foreach ($devref as $dev_ref_key => $dev_ref_string)
 			{
 				if (isset($devtask[$dev_ref_key]))
 				{
-					// If exists in developed task, set the string in task.
+					// If exists in developed task, set the string with translated task in develop.
 					$file_data['stringindev'][$dev_ref_key] = $devtask[$dev_ref_key];
 				}
 				elseif (isset($frozentask[$dev_ref_key]))
 				{
-					// If exists in frozen a translated value, set the translated string.
+					// If exists in frozen translation a translated value, set the translated string.
 					$file_data['stringindev'][$dev_ref_key] = $frozentask[$dev_ref_key];
 				}
 				else
 				{
-					// If not, keep the string in dev.
+					// If not, keep the string value in dev.
 					$file_data['stringindev'][$dev_ref_key] = $dev_ref_string;
 				}
 			}
@@ -1730,29 +1726,7 @@ abstract class LocaliseHelper
 			{
 				foreach ($keys_to_delete as $key_to_delete => $string_to_delete)
 				{
-					if (!empty($keys_to_add))
-					{
-						if (isset($keys_to_add[$key_to_delete]))
-						{
-							// Also present in frozen task but with translated value.
-							$file_data['keys_to_delete'][$key_to_delete] = $keys_to_add[$key_to_delete];
-							unset($keys_to_add[$key_to_delete]);
-						}
-						else
-						{
-							$file_data['keys_to_delete'][$key_to_delete] = $string_to_delete;
-						}
-					}
-				}
-			}
-
-			// Keys only presents in frozen task
-			if (!empty($keys_to_add))
-			{
-				foreach ($keys_to_add as $key_to_add => $string_to_add)
-				{
-					// Also become to delete due not present in dev.
-					$file_data['keys_to_delete'][$key_to_add] = $string_to_add;
+					$file_data['keys_to_delete'][$key_to_delete] = $string_to_delete;
 				}
 			}
 
@@ -1770,14 +1744,14 @@ abstract class LocaliseHelper
 				}
 			}
 		}
-		elseif (!empty($frozenref)) // Maybe is a selected file not present in dev.
+		elseif (!empty($frozenref)) // Maybe it is a selected file not present in dev.
 		{
 			$keys_in_frozen_ref = array_keys($frozenref);
 
 			if (!empty($frozentask))
 			{
 				$keys_in_frozen_task = array_keys($frozentask);
-				$ktd = array_diff($keys_in_frozen_task, $keys_in_frozen_ref);
+				$ktd                 = array_diff($keys_in_frozen_task, $keys_in_frozen_ref);
 
 				if (!empty($ktd))
 				{
@@ -1789,26 +1763,25 @@ abstract class LocaliseHelper
 
 				$kta = array_diff($keys_in_frozen_ref, $keys_in_frozen_task);
 
+				// In this case means that the frozen translation is missing reference keys.
+				// Good to know it, but at the end this one is solved adding the untranslated string.
 				if (!empty($kta))
 				{
-					foreach ($kta as $key_to_add)
-					{
-						$keys_to_add[$key_to_add] = $frozenref[$key_to_add];
-					}
+					// Maybe send a message.
 				}
 			}
 
-			// Revising all keys in frozen ref.
+			// Revising all keys in frozen reference.
 			foreach ($frozenref as $frozen_ref_key => $frozen_ref_string)
 			{
 				if (isset($keys_in_frozen_task[$frozen_ref_key]))
 				{
-					// If exists in frozen task, set the string in task.
+					// If exists in frozen translation task, set the string in task.
 					$file_data['stringindev'][$frozen_ref_key] = $keys_in_frozen_task[$frozen_ref_key];
 				}
 				else
 				{
-					// If not, keep the string in frozen ref.
+					// If not, keep the string in frozen reference (solving the 'keys to add' issue).
 					$file_data['stringindev'][$dev_ref_key] = $dev_ref_string;
 				}
 			}
@@ -1817,29 +1790,8 @@ abstract class LocaliseHelper
 			{
 				foreach ($keys_to_delete as $key_to_delete => $string_to_delete)
 				{
-					if (!empty($keys_to_add))
-					{
-						if (isset($keys_to_add[$key_to_delete]))
-						{
-							// Also present in frozen task but with translated value.
-							$file_data['keys_to_delete'][$key_to_delete] = $keys_to_add[$key_to_delete];
-							unset($keys_to_add[$key_to_delete]);
-						}
-						else
-						{
-							$file_data['keys_to_delete'][$key_to_delete] = $string_to_delete;
-						}
-					}
-				}
-			}
-
-			// Keys only presents in frozen task
-			if (!empty($keys_to_add))
-			{
-				foreach ($keys_to_add as $key_to_add => $string_to_add)
-				{
-					// Also become to delete due not present frozen dev.
-					$file_data['keys_to_delete'][$key_to_add] = $string_to_add;
+					// In this case we can add them directly
+					$file_data['keys_to_delete'][$key_to_delete] = $string_to_delete;
 				}
 			}
 
@@ -1859,17 +1811,17 @@ abstract class LocaliseHelper
 		}
 		elseif (!empty($frozentask)) // Maybe is a selected file only present in frozen task, without dev or ref.
 		{
-			$file_data['stringindev'] = $frozentask;
-			$file_data['keys_to_add'] = array();
+			$file_data['stringindev']    = $frozentask;
+			$file_data['keys_to_add']    = array();
 			$file_data['keys_to_delete'] = array();
-			$file_data['contents'] = file_get_contents($ref_keys_path);
+			$file_data['contents']       = file_get_contents($ref_keys_path);
 		}
 
 		if (!empty($headers_path) && JFile::exists($headers_path) && !empty($file_data['stringindev']) && empty($file_data['contents']))
 		{
 			// Headers for the translated file
-			$headers = self::getRawfileheaders($headers_path);
-			$file_data['headers'] = $headers['headers'];
+			$headers               = self::getRawfileheaders($headers_path);
+			$file_data['headers']  = $headers['headers'];
 			$file_data['contents'] = self::getRevisedcontent($file_data, $ref_keys_path);
 		}
 
@@ -1930,8 +1882,8 @@ abstract class LocaliseHelper
 
 			if (!empty($keys_to_add))
 			{
-				$contents .= "\n[Keys to keep in target]\n\n";
-				$contents .= ";The next keys are not present in en-GB language but are used as extra in this language (extra plural cases, custom CAPTCHA translations, etc).\n\n";
+				$contents .= "\n[Keys to keep in target]\n";
+				$contents .= ";The next keys are not present in en-GB language but are used as extra in this language (extra plural cases, custom CAPTCHA translations, etc).\n";
 
 				foreach ($keys_to_add as $key => $string)
 				{
@@ -1943,8 +1895,8 @@ abstract class LocaliseHelper
 
 			if (!empty($keys_to_delete))
 			{
-				$contents .= "\n[Keys to delete]\n\n";
-				$contents .= ";This keys are not used in en-GB language and are not required in this language.\n\n";
+				$contents .= "\n[Keys to delete]\n";
+				$contents .= ";This keys are not used in en-GB language and are not required in this language.\n";
 
 				foreach ($keys_to_delete as $key => $string)
 				{
@@ -2171,7 +2123,7 @@ abstract class LocaliseHelper
 	 * Gets the html text changes.
 	 *
 	 * @param   string  $old  The string in reference.
-	 * @param   string  $new  The string parts in develop.
+	 * @param   string  $new  The string in develop.
 	 *
 	 * @return  string
 	 *

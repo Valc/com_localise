@@ -171,16 +171,16 @@ class LocaliseModelTranslation extends JModelAdmin
 					? $this->getState('translation.path')
 					: $this->getState('translation.refpath');
 
-				$tag        = $this->getState('translation.tag');
-				$reftag        = $this->getState('translation.reference');
-				$scans_in_dev  = LocaliseHelper::scanFilesindev($tag);
+				$tag                 = $this->getState('translation.tag');
+				$reftag              = $this->getState('translation.reference');
+				$scans_in_dev        = LocaliseHelper::scanFilesindev($tag);
 
-				$task_file = basename($this->getState('translation.path'));
-				$ref_file = basename($this->getState('translation.refpath'));
-				$client_in_dev = $this->getState('translation.client');
+				$task_file           = basename($this->getState('translation.path'));
+				$ref_file            = basename($this->getState('translation.refpath'));
+				$client_in_dev       = $this->getState('translation.client');
 				$client_files_in_dev = array();
-				$client_data_in_dev = array();
-				$istranslation = 0;
+				$client_data_in_dev  = array();
+				$istranslation       = 0;
 
 				if (!empty($tag) && $tag != $reftag)
 				{
@@ -206,13 +206,13 @@ class LocaliseModelTranslation extends JModelAdmin
 					}
 				}
 
-				$have_dev = 0;
-				$devs_amount = 0;
-				$dev_paths = array();
-				$task_dev_paths = array();
-				$github_users = array();
-				$github_projects = array();
-				$github_dev_trunks = array();
+				$have_dev              = 0;
+				$devs_amount           = 0;
+				$dev_paths             = array();
+				$task_dev_paths        = array();
+				$github_users          = array();
+				$github_projects       = array();
+				$github_dev_trunks     = array();
 				$github_task_dev_paths = array();
 
 					if (array_key_exists($ref_file, $client_files_in_dev))
@@ -547,14 +547,14 @@ class LocaliseModelTranslation extends JModelAdmin
 
 				if ($this->getState('translation.layout') != 'raw' && empty($this->item->error))
 				{
-					$sections    = LocaliseHelper::parseSections($this->getState('translation.path'));
-					$refsections = LocaliseHelper::parseSections($this->getState('translation.refpath'));
+					$sections         = LocaliseHelper::parseSections($this->getState('translation.path'));
+					$refsections      = LocaliseHelper::parseSections($this->getState('translation.refpath'));
 					$refsectionsindev = array();
-					$keys_in_devs = array();
-					$strings_in_devs = array();
-					$keys_in_tasks = array();
-					$dataintasks = array();
-					$extra_in_devs = array();
+					$keys_in_devs     = array();
+					$strings_in_devs  = array();
+					$keys_in_tasks    = array();
+					$dataintasks      = array();
+					$extra_in_devs    = array();
 
 					if ($have_dev == '1')
 					{
@@ -588,10 +588,6 @@ class LocaliseModelTranslation extends JModelAdmin
 										$keys_in_tasks[$dev_path] = array_keys($dataintasks[$dev_path]['keys']);
 										$stringsintasks[$short_name] = $dataintasks[$dev_path]['keys'];
 									}
-								}
-								else
-								{
-								// $stringsintasks[$dev_path] = array();
 								}
 							}
 						}
@@ -657,8 +653,8 @@ class LocaliseModelTranslation extends JModelAdmin
 
 									if (!empty($text_changes))
 									{
-									$string_in_ref = $string;
-									$string_in_dev = $strings_in_dev[$key];
+										$string_in_ref = $string;
+										$string_in_dev = $strings_in_dev[$key];
 										$target_dev = $github_users[$dp]
 											. '|'
 											. $github_projects[$dp]
@@ -679,7 +675,7 @@ class LocaliseModelTranslation extends JModelAdmin
 
 										if (isset($stringsintasks[$short_name][$key]))
 										{
-										$string_in_task = $stringsintasks[$short_name][$key];
+											$string_in_task = $stringsintasks[$short_name][$key];
 										}
 
 										$default_textchange = localiseHelper::getDefaultvalue($string_in_dev, $string_in_ref, $string_in_translation, $string_in_task);
@@ -1105,9 +1101,9 @@ class LocaliseModelTranslation extends JModelAdmin
 				}
 
 				$stream->close();
-				$newstrings = false;
+				$newstrings      = false;
 				$todeletestrings = false;
-				$keystodelete = array();
+				$keystodelete    = array();
 
 				if (!empty($sections['keys']))
 				{
@@ -1162,7 +1158,7 @@ class LocaliseModelTranslation extends JModelAdmin
 							}
 							else
 							{
-							$keystodelete[$key] = $string;
+								$keystodelete[$key] = $string;
 							}
 						}
 					}
@@ -1218,7 +1214,7 @@ class LocaliseModelTranslation extends JModelAdmin
 
 					if (!empty($sectionsindev))
 					{
-					$i = 0;
+						$i = 0;
 
 						foreach ($sectionsindev as $sectionname => $sectionindevdata)
 						{
@@ -1308,7 +1304,7 @@ class LocaliseModelTranslation extends JModelAdmin
 								$default      = $tc_defaults[$key]['default'];
 								$status       = $tc_defaults[$key]['status'];
 								$frozen_task  = $tc_defaults[$key]['frozen_task'];
-								$description = $tc_refs[$key];
+								$description  = $tc_refs[$key];
 								$label   = '<b>' . $key
 									. '</b><br /><p class="text_changes">'
 									. $change . '</p>';
@@ -1655,6 +1651,7 @@ class LocaliseModelTranslation extends JModelAdmin
 							$frozenstring = $frozentask[$keytosave];
 
 							// Unset the task if equal than frozen.
+							// This can help when new language pack after a new joomla release have included the task in dev.
 							if (isset($storedtaskindev[$keytosave]) && $storedtaskindev[$keytosave] == $frozenstring)
 							{
 								unset($storedtaskindev[$keytosave]);
