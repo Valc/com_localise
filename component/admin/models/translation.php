@@ -1589,8 +1589,8 @@ class LocaliseModelTranslation extends JModelAdmin
 			if (!empty($contents_to_add))
 			{
 				$contents .= "\n[Keys to keep in target]\n\n";
-				$contents .= ";The next keys are not present in en-GB language but are used as extra in this language
-							(extra plural cases, custom CAPTCHA translations, etc).\n\n";
+				$contents .= ";The next keys are not present in en-GB language but are used as extra in this language";
+				$contents .= "(extra plural cases, custom CAPTCHA translations, etc).\n\n";
 				$contents_to_add = implode($contents_to_add);
 				$contents .= $contents_to_add;
 			}
@@ -1640,7 +1640,8 @@ class LocaliseModelTranslation extends JModelAdmin
 							$stringinref = $frozenref[$keytosave];
 
 							// Unset the task if equal than ref.
-							if (isset($storedtaskindev[$keytosave]) && $storedtaskindev[$keytosave] == $stringinref)
+							if (	isset($storedtaskindev[$keytosave])
+								&& $storedtaskindev[$keytosave] == $stringinref)
 							{
 								unset($storedtaskindev[$keytosave]);
 							}
@@ -1652,7 +1653,8 @@ class LocaliseModelTranslation extends JModelAdmin
 
 							// Unset the task if equal than frozen.
 							// This can help when new language pack after a new joomla release have included the task in dev.
-							if (isset($storedtaskindev[$keytosave]) && $storedtaskindev[$keytosave] == $frozenstring)
+							if (	isset($storedtaskindev[$keytosave])
+								&& $storedtaskindev[$keytosave] == $frozenstring)
 							{
 								unset($storedtaskindev[$keytosave]);
 							}
@@ -1671,7 +1673,9 @@ class LocaliseModelTranslation extends JModelAdmin
 
 						// Only the real changes in task are saved as task.
 						// This will help to keep the stored values alrready translared for other users.
-						if ($stringtosave != $stringinref && $stringtosave != $frozenstring && $stringtosave != $refindevstring)
+						if (	$stringtosave != $stringinref
+							&& $stringtosave != $frozenstring
+							&& $stringtosave != $stringindev)
 						{
 							if (!isset($storedtaskindev[$keytosave]))
 							{

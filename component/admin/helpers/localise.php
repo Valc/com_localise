@@ -976,7 +976,9 @@ abstract class LocaliseHelper
 				$file_path = JFolder::makeSafe($base_path . '/' . $repostoryfile->path);
 				$file_to_include = $repostoryfile->name;
 
-				if ((array_key_exists($file_to_include, $sha_files_list) && ($sha_files_list[$file_to_include] != $repostoryfile->sha)) || !JFile::exists($file_path))
+				if (	(array_key_exists($file_to_include, $sha_files_list)
+					&& ($sha_files_list[$file_to_include] != $repostoryfile->sha))
+					|| !JFile::exists($file_path))
 				{
 					$in_dev_file = $github->repositories->contents->get($gh_user, $gh_project, $repostoryfile->path, $gh_trunk);
 				}
@@ -1647,7 +1649,14 @@ abstract class LocaliseHelper
 	 *
 	 * @since   4.11
 	 */
-	public static function getDevcontents($tag = '', $headers_path = '', $ref_keys_path = '', $frozenref = array(), $frozentask = array(), $devref = array(), $devtask = array())
+	public static function getDevcontents(
+		$tag = '',
+		$headers_path = '',
+		$ref_keys_path = '',
+		$frozenref = array(),
+		$frozentask = array(),
+		$devref = array(),
+		$devtask = array())
 	{
 		$file_data                   = array();
 		$file_data['stringsindev']   = array();
@@ -1883,7 +1892,8 @@ abstract class LocaliseHelper
 			if (!empty($keys_to_add))
 			{
 				$contents .= "\n[Keys to keep in target]\n";
-				$contents .= ";The next keys are not present in en-GB language but are used as extra in this language (extra plural cases, custom CAPTCHA translations, etc).\n";
+				$contents .= ";The next keys are not present in en-GB language but are used as extra in this language ";
+				$contents .= "(extra plural cases, custom CAPTCHA translations, etc).\n";
 
 				foreach ($keys_to_add as $key => $string)
 				{
@@ -2057,9 +2067,16 @@ abstract class LocaliseHelper
 	 *
 	 * @since   4.11
 	 */
-	public static function getDefaultvalue($string_in_dev = '', $string_in_ref = '', $string_in_translation = '', $string_in_task = '')
+	public static function getDefaultvalue(
+		$string_in_dev = '',
+		$string_in_ref = '',
+		$string_in_translation = '',
+		$string_in_task = '')
 	{
-		if (!empty($string_in_task) && ($string_in_task != $string_in_dev) && ($string_in_task != $string_in_translation) && ($string_in_task != $string_in_ref))
+		if (	!empty($string_in_task)
+			&& ($string_in_task != $string_in_dev)
+			&& ($string_in_task != $string_in_translation)
+			&& ($string_in_task != $string_in_ref))
 		{
 			return array ('default' => $string_in_task, 'status' => 'translated', 'frozen_task' => $string_in_translation);
 		}
@@ -2116,7 +2133,17 @@ abstract class LocaliseHelper
 		return array(array ('d' => $old, 'i' => $new));
 		}
 
-		return array_merge(self::getTextchanges(array_slice($old, 0, $omax), array_slice($new, 0, $nmax)), array_slice($new, $nmax, $maxlen), self::getTextchanges(array_slice($old, $omax + $maxlen), array_slice($new, $nmax + $maxlen)));
+		return array_merge(
+			self::getTextchanges(
+			array_slice($old, 0, $omax),
+			array_slice($new, 0, $nmax)
+			),
+			array_slice($new, $nmax, $maxlen),
+			self::getTextchanges(
+			array_slice($old, $omax + $maxlen),
+			array_slice($new, $nmax + $maxlen)
+			)
+			);
 	}
 
 	/**
@@ -2147,7 +2174,11 @@ abstract class LocaliseHelper
 		{
 			if (is_array($k))
 			{
-			$text_changes .= (!empty ($k['d'])?"LOCALISEDELSTART" . implode(' ', $k['d']) . "LOCALISEDELSTOP ":'') . (!empty($k['i']) ? "LOCALISEINSSTART" . implode(' ', $k['i']) . "LOCALISEINSSTOP " : '');
+			$text_changes .= (!empty ($k['d'])?"LOCALISEDELSTART"
+				. implode(' ', $k['d']) . "LOCALISEDELSTOP ":'')
+				. (!empty($k['i']) ? "LOCALISEINSSTART"
+				. implode(' ', $k['i'])
+				. "LOCALISEINSSTOP " : '');
 			}
 			else
 			{

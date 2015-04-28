@@ -244,7 +244,6 @@ class JFormFieldKey extends JFormField
 		}
 		else
 		{
-
 			// Set the class for the label.
 			$class = !empty($this->descText) ? 'key-label hasTooltip fltrt' : 'key-label fltrt';
 
@@ -263,13 +262,13 @@ class JFormFieldKey extends JFormField
 			$label .= $this->element['label'] . '<br />' . $this->element['description'];
 			$label .= '</label>';
 
-			//Adjusting the stuff when all them are reference keys.
+			// Adjusting the stuff when all them are reference keys.
 			$readonly = '';
 			$textvalue = htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8');
 
 			if ($istextchange == 1 || $isextraindev == 1)
 			{
-				//There is no translation task in develop for the reference files in develop.
+				// There is no translation task in develop for the reference files in develop.
 				$readonly = ' readonly="readonly" ';
 				$textvalue = htmlspecialchars($this->element['description'], ENT_COMPAT, 'UTF-8');
 			}
@@ -284,7 +283,9 @@ class JFormFieldKey extends JFormField
 							);
 							if (document.id('" . $this->id . "').get('value')=='') {document.id('" . $this->id . "').set('class','width-45 untranslated');}
 							else {document.id('" . $this->id . "').set('class','width-45 " . $status . "');}";
-			$button  = '<i class="icon-reset hasTooltip return pointer" title="' . JText::_('COM_LOCALISE_TOOLTIP_TRANSLATION_INSERT') . '" onclick="' . $onclick . '"></i>';
+			$button  = '<i class="icon-reset hasTooltip return pointer"
+			 title="' . JText::_('COM_LOCALISE_TOOLTIP_TRANSLATION_INSERT') . '"
+			 onclick="' . $onclick . '"></i>';
 
 			// No sense translate the reference keys by the same language.
 			$onclick2 = '';
