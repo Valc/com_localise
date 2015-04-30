@@ -357,7 +357,12 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 								if (count($sectionsindev) > 1) :
 								echo JHtml::_('bootstrap.endSlide');
 								endif;
+
 								endforeach;
+
+								if (count($sectionsindev) > 1) :
+								echo JHtml::_('bootstrap.endAccordion');
+								endif;
 							?>
 						<?php if ($showed_dev_data == '0') : ?>
 						<?php echo "<p>No matches in develop to show.</p>"; ?>
