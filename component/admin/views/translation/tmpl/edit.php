@@ -38,6 +38,20 @@ if (isset($posted['select']['keystatus'])
 {
 	$filter       = $posted['select']['keystatus'];
 	$keystofilter = array ($this->item->$filter);
+
+		if ($filter == 'translatedkeys')
+		{
+			$devkeystofilter = array ($this->item->devtranslatedkeys);
+		}
+		elseif ($filter == 'untranslatedkeys')
+		{
+			$devkeystofilter = array ($this->item->devuntranslatedkeys);
+		}
+		else
+		{
+			$devkeystofilter = array();
+		}
+
 	$tabchoised   = 'strings';
 	$tabchoised2   = 'released';
 
@@ -48,10 +62,11 @@ if (isset($posted['select']['keystatus'])
 }
 else
 {
-	$filter       = 'allkeys';
-	$keystofilter = array();
-	$tabchoised   = 'default';
-	$tabchoised2   = 'released';
+	$filter          = 'allkeys';
+	$keystofilter    = array();
+	$devkeystofilter = array();
+	$tabchoised      = 'default';
+	$tabchoised2     = 'released';
 
 		if ($tab == 'in_dev' || $tab == 'released')
 		{
@@ -320,16 +335,21 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 								<?php
 								foreach ($this->form->getFieldset($name) as $field) :
 									$showkey = 0;
-									if ($filter != 'allkeys' && !empty($keystofilter)) :
-										foreach ($keystofilter as $data => $ids) :
-											foreach ($ids as $keytofilter) :
-												$showkey = 0;
-												$pregkey = preg_quote('<b>'
-												. $keytofilter
-												.'</b>', '/<>');
-												if (preg_match("/$pregkey/", $field->label)) :
-													$showkey = 1;
-													break;
+									if (	($filter == 'translatedkeys'
+										|| $filter == 'untranslatedkeys')) :
+										foreach ($devkeystofilter as $dev_id => $dev_data) :
+											foreach ($dev_data as $dev_name => $ids) :
+												if ($dev_name == $name) :
+													foreach ($ids as $keytofilter) :
+														$showkey = 0;
+														$pregkey = preg_quote('<b>'
+														. $keytofilter
+														.'</b>', '/<>');
+														if (preg_match("/$pregkey/", $field->label)) :
+															$showkey = 1;
+															break;
+														endif;
+													endforeach;
 												endif;
 											endforeach;
 										endforeach;
@@ -344,6 +364,11 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 												<?php echo $field->input; ?>
 											</div>
 										<?php endif; ?>
+									<?php elseif ($filter != 'allkeys') : ; ?>
+										<div style="display:none;">
+											<?php echo $field->label; ?>
+											<?php echo $field->input; ?>
+										</div>
 									<?php elseif ($filter == 'allkeys') : $showed_dev_data = 1; ?>
 										<li>
 											<?php echo $field->label; ?>

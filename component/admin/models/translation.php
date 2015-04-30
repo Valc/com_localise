@@ -284,6 +284,8 @@ class LocaliseModelTranslation extends JModelAdmin
 
 				$this->setState('translation.translatedkeys', array());
 				$this->setState('translation.untranslatedkeys', array());
+				$this->setState('translation.devtranslatedkeys', array());
+				$this->setState('translation.devuntranslatedkeys', array());
 				$this->setState('translation.blockedkeys', array());
 				$this->setState('translation.untranslatablekeys', array());
 				$this->setState('translation.extrakeysindev', array());
@@ -292,15 +294,17 @@ class LocaliseModelTranslation extends JModelAdmin
 				$this->setState('translation.textchangesdefault', array());
 				$this->setState('translation.stringsintasks', array());
 
-				$translatedkeys     = $this->getState('translation.translatedkeys');
-				$untranslatedkeys   = $this->getState('translation.untranslatedkeys');
-				$blockedkeys        = $this->getState('translation.blockedkeys');
-				$untranslatablekeys = $this->getState('translation.untranslatablekeys');
-				$extrakeysindev     = $this->getState('translation.extrakeysindev');
-				$textchangesindev   = $this->getState('translation.textchangesindev');
-				$textchangesref     = $this->getState('translation.textchangesref');
-				$textchangesdefault = $this->getState('translation.textchangesdefault');
-				$stringsintasks     = $this->getState('translation.stringsintasks');
+				$translatedkeys        = $this->getState('translation.translatedkeys');
+				$untranslatedkeys      = $this->getState('translation.untranslatedkeys');
+				$devtranslatedkeys     = $this->getState('translation.translatedkeys');
+				$devuntranslatedkeys   = $this->getState('translation.untranslatedkeys');
+				$blockedkeys           = $this->getState('translation.blockedkeys');
+				$untranslatablekeys    = $this->getState('translation.untranslatablekeys');
+				$extrakeysindev        = $this->getState('translation.extrakeysindev');
+				$textchangesindev      = $this->getState('translation.textchangesindev');
+				$textchangesref        = $this->getState('translation.textchangesref');
+				$textchangesdefault    = $this->getState('translation.textchangesdefault');
+				$stringsintasks        = $this->getState('translation.stringsintasks');
 
 				$this->item = new JObject(
 									array
@@ -333,6 +337,8 @@ class LocaliseModelTranslation extends JModelAdmin
 										'textchangesindev'      => (array) $textchangesindev,
 										'translatedkeys'        => (array) $translatedkeys,
 										'untranslatedkeys'      => (array) $untranslatedkeys,
+										'devtranslatedkeys'     => (array) $devtranslatedkeys,
+										'devuntranslatedkeys'   => (array) $devuntranslatedkeys,
 										'blockedkeys'           => (array) $blockedkeys,
 										'untranslatablekeys'    => (array) $untranslatablekeys,
 										'translated'            => 0,
@@ -627,6 +633,11 @@ class LocaliseModelTranslation extends JModelAdmin
 											if ($sit != $sid)
 											{
 												$this->item->revisedextrasindev++;
+												$devtranslatedkeys[$target_dev][] = $extra_in_dev;
+											}
+											else
+											{
+												$devuntranslatedkeys[$target_dev][] = $extra_in_dev;
 											}
 										}
 									}
@@ -684,6 +695,11 @@ class LocaliseModelTranslation extends JModelAdmin
 										if ($textchangesdefault[$target_dev][$key]['status'] == 'translated')
 										{
 											$this->item->revisedtextchanges++;
+											$devtranslatedkeys[$target_dev][] = $key;
+										}
+										else
+										{
+											$devuntranslatedkeys[$target_dev][] = $key;
 										}
 									}
 								}
@@ -780,18 +796,22 @@ class LocaliseModelTranslation extends JModelAdmin
 						}
 					}
 
-					$this->item->translatedkeys     = $translatedkeys;
-					$this->item->untranslatedkeys   = $untranslatedkeys;
-					$this->item->blockedkeys        = $blockedkeys;
-					$this->item->untranslatablekeys = $untranslatablekeys;
-					$this->item->textchangesindev   = $textchangesindev;
-					$this->item->textchangesref     = $textchangesref;
-					$this->item->textchangesdefault = $textchangesdefault;
-					$this->item->extrakeysindev     = $extrakeysindev;
-					$this->item->stringsintasks     = $stringsintasks;
+					$this->item->translatedkeys      = $translatedkeys;
+					$this->item->untranslatedkeys    = $untranslatedkeys;
+					$this->item->devtranslatedkeys   = $devtranslatedkeys;
+					$this->item->devuntranslatedkeys = $devuntranslatedkeys;
+					$this->item->blockedkeys         = $blockedkeys;
+					$this->item->untranslatablekeys  = $untranslatablekeys;
+					$this->item->textchangesindev    = $textchangesindev;
+					$this->item->textchangesref      = $textchangesref;
+					$this->item->textchangesdefault  = $textchangesdefault;
+					$this->item->extrakeysindev      = $extrakeysindev;
+					$this->item->stringsintasks      = $stringsintasks;
 
 					$this->setState('translation.translatedkeys', $translatedkeys);
 					$this->setState('translation.untranslatedkeys', $untranslatedkeys);
+					$this->setState('translation.devtranslatedkeys', $devtranslatedkeys);
+					$this->setState('translation.devuntranslatedkeys', $devuntranslatedkeys);
 					$this->setState('translation.blockedkeys', $blockedkeys);
 					$this->setState('translation.untranslatablekeys', $untranslatablekeys);
 					$this->setState('translation.textchangesindev', $textchangesindev);
