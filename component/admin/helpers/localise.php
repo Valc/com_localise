@@ -2004,7 +2004,9 @@ abstract class LocaliseHelper
 		{
 			list($left_side, $right_side) = explode('-', $language_tag, 2);
 
-			if ((is_string($left_side) && is_string($right_side)) && (strtolower($left_side) == $left_side && strtoupper($right_side) == $right_side))
+			if (	(is_string($left_side) && is_string($right_side))
+				&& (strtolower($left_side) == $left_side
+				&& strtoupper($right_side) == $right_side))
 			{
 				if ((strlen($left_side) == '2' || strlen($left_side) == '3') && strlen($right_side) == '2')
 				{
