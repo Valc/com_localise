@@ -990,7 +990,7 @@ class LocaliseModelTranslation extends JModelAdmin
 
 			if ($this->getState('translation.path') != $this->getState('translation.refpath'))
 			{
-			$istranslation = 1;
+				$istranslation = 1;
 			}
 
 			if (JFile::exists($refpath))
