@@ -177,8 +177,8 @@
 			name="devtrunk"
 			type="text"
 			default="staging"
-			label="Github trunk"
-			description="COM_LOCALISE_LABEL_GITHUB_DEV_TRUNK_DESC" />
+			label="COM_LOCALISE_LABEL_GITHUB_TRUNK"
+			description="COM_LOCALISE_LABEL_GITHUB_TRUNK_DESC" />
 		<field
 			name="githubadministratorlanguagepath"
 			type="text"

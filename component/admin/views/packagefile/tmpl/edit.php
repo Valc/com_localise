@@ -115,6 +115,15 @@ JText::script('COM_LOCALISE_MSG_CONFIRM_PACKAGE_SAVE');
 						<?php if (!empty($fieldSets['indevconfig']->description)):?>
 								<p class="tip"><?php echo JText::_($fieldSets['indevconfig']->description); ?></p>
 						<?php endif;?>
+						<?php
+							echo JHtml::_('bootstrap.startAccordion', 'localise-package-sliders');
+							echo JHtml::_('bootstrap.addSlide', 'localise-package-sliders',	JText::_('COM_LOCALISE_LABEL_IN_DEV_TAB_HELP_TITLE'), 'collapse1');
+							?>
+							<p class="alert alert-tip"><?php echo JText::_('COM_LOCALISE_LABEL_IN_DEV_TAB_HELP'); ?></p>
+							<?php
+							echo JHtml::_('bootstrap.endSlide');
+							echo JHtml::_('bootstrap.endAccordion');
+						?>
 						<?php foreach($this->form->getFieldset('indevconfig') as $field): ?>
 								<div class="control-group form-vertical">
 									<div class="control-label">
