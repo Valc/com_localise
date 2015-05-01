@@ -1566,6 +1566,8 @@ class LocaliseModelTranslation extends JModelAdmin
 
 			while (!$stream->eof())
 			{
+				$line = $stream->gets();
+
 				if (preg_match('/^([A-Z][A-Z0-9_\-\.]*)\s*=/', $line, $matches))
 				{
 					$key = $matches[1];
@@ -1580,8 +1582,6 @@ class LocaliseModelTranslation extends JModelAdmin
 				{
 					$contents[] = $line;
 				}
-
-				$line = $stream->gets();
 			}
 
 			if (!empty($strings))
