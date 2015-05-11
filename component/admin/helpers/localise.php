@@ -1697,9 +1697,9 @@ abstract class LocaliseHelper
 				// Keys to delete again due are not present between frozen translation and reference in develop.
 				if (!empty($ktd))
 				{
-					foreach ($kta as $key_to_delete)
+					foreach ($ktd as $key_to_delete)
 					{
-						// If also was present before nowis overwritted with translated value.
+						// If also was present before now is overwrited with translated value.
 						// If not, it was an extra key in translation and also is added.
 						$keys_to_delete[$key_to_delete] = $frozentask[$key_to_delete];
 					}
