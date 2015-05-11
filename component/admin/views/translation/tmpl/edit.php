@@ -17,6 +17,9 @@ $src   = $parts[0];
 $parts = explode('-', $this->state->get('translation.tag'));
 $dest  = $parts[0];
 
+$session = JFactory::getSession();
+$time_left = ($session->getExpire() / 60) + 1;
+
 // No use to filter if target language is also reference language
 if ($this->state->get('translation.reference') != $this->state->get('translation.tag'))
 {
@@ -156,6 +159,62 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 		}
 	}
 </script>
+<script type="text/javascript">
+	var countdown;
+	var session_expiration;
+
+	function countdown_init()
+	{
+		session_expiration = '<?php echo $time_left; ?>';
+		revise_countdown();
+	}
+
+	function revise_countdown()
+	{
+		if (session_expiration > 0)
+		{
+			session_expiration--;
+			document.getElementById('show_countdown').innerHTML = session_expiration;
+
+			if (session_expiration == 5)
+			{
+				var position_x; 
+				var position_y; 
+				position_x=(screen.width/2)-(100); 
+				position_y=(screen.height/2)-(100);
+
+				var w = window.open('','',"width=200,height=200,left="+position_x+",top="+position_y+"");
+				w.document.write('Please, save your translation task. The session live time is 5 minutes left to finish!');
+				w.focus();
+				setTimeout(function() {w.close();}, 5000);
+				countdown = setTimeout('revise_countdown()', 60000);
+			}
+			else if (session_expiration == 1)
+			{
+				var position_x; 
+				var position_y; 
+				position_x=(screen.width/2)-(100); 
+				position_y=(screen.height/2)-(100);
+				var w = window.open('','',"width=200,height=200,left="+position_x+",top="+position_y+"");
+				w.document.write('Please, save your translation task. The session live time is 1 minute left to finish!');
+				w.focus();
+				setTimeout(function() {w.close();}, 5000);
+				countdown = setTimeout('revise_countdown()', 60000);
+			}
+			else if (session_expiration > 0)
+			{
+				countdown = setTimeout('revise_countdown()', 60000);
+			}
+			else
+			{
+				document.getElementById('show_countdown').innerHTML = 'Expired! 0';
+				window.alert("Your translation time is expired!");
+				Joomla.submitform('translation.cancel', document.getElementById('localise-translation-form'));
+
+			}
+		}
+	}
+</script>
 <form action="" method="post" name="adminForm" id="localise-translation-form" class="form-validate">
 	<div class="row-fluid">
 		<!-- Begin Localise Translation -->
@@ -239,6 +298,9 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 										<?php endforeach; ?>
 									</div>
 								<?php endif; ?>
+<div class="pull-right">
+<div>Session time left: <span id="show_countdown">Unset</span> minutes. </div>
+</div>
 								<a href="javascript:void(0);" class="btn bnt-small" id="translateall" onclick="translateAll();">
 									<i class="icon-translate-bing"></i> <?php echo JText::_('COM_LOCALISE_BUTTON_TRANSLATE_ALL');?>
 								</a>
@@ -418,3 +480,6 @@ JText::script('COM_LOCALISE_BINGTRANSLATING_NOW');
 		<!-- End Localise Translation -->
 	</div>
 </form>
+<script>
+window.onload = countdown_init; 
+</script>
